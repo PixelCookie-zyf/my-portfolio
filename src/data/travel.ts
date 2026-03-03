@@ -4,17 +4,28 @@ export interface City {
   lat: number;
   lng: number;
   current?: boolean;
+  home?: boolean;
 }
 
 export const visitedCities: City[] = [
+  // Home
+  { name: "Fuzhou", country: "China", lat: 26.07, lng: 119.30, home: true },
+  // Current
   { name: "Shanghai", country: "China", lat: 31.23, lng: 121.47, current: true },
-  { name: "Beijing", country: "China", lat: 39.9, lng: 116.4 },
-  { name: "Hangzhou", country: "China", lat: 30.27, lng: 120.15 },
-  { name: "Chengdu", country: "China", lat: 30.57, lng: 104.07 },
+  // China domestic
+  { name: "Beijing", country: "China", lat: 39.90, lng: 116.40 },
+  { name: "Changsha", country: "China", lat: 28.23, lng: 112.94 },
+  { name: "Wuhan", country: "China", lat: 30.59, lng: 114.31 },
+  { name: "Nanjing", country: "China", lat: 32.06, lng: 118.80 },
+  { name: "Changzhou", country: "China", lat: 31.81, lng: 119.97 },
+  { name: "Suzhou", country: "China", lat: 31.30, lng: 120.62 },
+  { name: "Chongqing", country: "China", lat: 29.56, lng: 106.55 },
   { name: "Shenzhen", country: "China", lat: 22.54, lng: 114.06 },
+  { name: "Zhuhai", country: "China", lat: 22.27, lng: 113.58 },
+  { name: "Guangzhou", country: "China", lat: 23.13, lng: 113.26 },
+  // International
   { name: "Tokyo", country: "Japan", lat: 35.68, lng: 139.69 },
-  { name: "Osaka", country: "Japan", lat: 34.69, lng: 135.5 },
-  { name: "Seoul", country: "South Korea", lat: 37.57, lng: 126.98 },
-  { name: "Bangkok", country: "Thailand", lat: 13.76, lng: 100.5 },
-  { name: "Singapore", country: "Singapore", lat: 1.35, lng: 103.82 },
-];
+  { name: "Sydney", country: "Australia", lat: -33.87, lng: 151.21 },
+  { name: "New York", country: "USA", lat: 40.71, lng: -74.01 },
+  { name: "Bali", country: "Indonesia", lat: -8.34, lng: 115.09 },
+] as const;
