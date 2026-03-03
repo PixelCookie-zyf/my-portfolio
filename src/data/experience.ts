@@ -8,27 +8,27 @@ export interface Experience {
 
 export const experiences: Experience[] = [
   {
-    company: "Company A",
-    role: "Senior Frontend Developer",
-    period: "2023 - Present",
+    company: "AI Startup",
+    role: "Senior AI Agent Engineer",
+    period: "2024 - Present",
     description:
-      "Led the frontend architecture for the main product, built component library and design system.",
-    tags: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
+      "Architecting and building production-grade AI agent systems powered by large language models. Leading research on multi-agent orchestration, tool use, and long-horizon task planning.",
+    tags: ["Python", "LLM", "AI Agents", "LangChain", "RAG"],
   },
   {
-    company: "Company B",
-    role: "Full Stack Developer",
-    period: "2021 - 2023",
+    company: "Tech Company",
+    role: "Machine Learning Engineer",
+    period: "2022 - 2024",
     description:
-      "Developed and maintained multiple web applications, improved CI/CD pipeline and deployment process.",
-    tags: ["Vue.js", "Node.js", "PostgreSQL", "Docker"],
+      "Developed and deployed NLP pipelines for document understanding and information extraction. Worked on fine-tuning and evaluation of domain-specific language models.",
+    tags: ["Python", "PyTorch", "Transformers", "NLP", "MLOps"],
   },
   {
-    company: "Company C",
-    role: "Junior Developer",
-    period: "2019 - 2021",
+    company: "Software Company",
+    role: "Backend Developer",
+    period: "2020 - 2022",
     description:
-      "Started career building internal tools and customer-facing dashboards.",
-    tags: ["JavaScript", "React", "Python", "REST API"],
+      "Built scalable backend services and APIs. Gained strong foundations in distributed systems, data engineering, and cloud infrastructure.",
+    tags: ["Python", "FastAPI", "PostgreSQL", "Docker", "AWS"],
   },
 ];
