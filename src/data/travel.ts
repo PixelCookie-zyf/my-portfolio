@@ -8,9 +8,9 @@ export interface City {
 
 export const visitedCities: City[] = [
   // Current
-  { name: "Shanghai", country: "China", lat: 31.23, lng: 121.47, current: true },
+  { name: "Fuzhou", country: "China", lat: 26.07, lng: 119.30, current: true },
   // China domestic
-  { name: "Fuzhou", country: "China", lat: 26.07, lng: 119.30 },
+  { name: "Shanghai", country: "China", lat: 31.23, lng: 121.47 },
   { name: "Beijing", country: "China", lat: 39.90, lng: 116.40 },
   { name: "Changsha", country: "China", lat: 28.23, lng: 112.94 },
   { name: "Wuhan", country: "China", lat: 30.59, lng: 114.31 },

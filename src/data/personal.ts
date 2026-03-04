@@ -1,7 +1,7 @@
 import { FaGithub, FaTwitter, FaBilibili, FaInstagram } from "react-icons/fa6";
 
 export const personalInfo = {
-  name: "Your Name",
+  name: "PixelCookie",
   city: "Shanghai, China",
   roles: [
     "AI Agent Engineer",
