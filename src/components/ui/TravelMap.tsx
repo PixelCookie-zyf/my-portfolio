@@ -6,14 +6,6 @@ import L from "leaflet";
 import { visitedCities, type City } from "@/data/travel";
 
 function getMarkerIcon(city: City) {
-  if (city.home) {
-    return L.divIcon({
-      className: "",
-      iconSize: [16, 16],
-      iconAnchor: [8, 8],
-      html: `<div style="width:16px;height:16px;border-radius:50%;background:#f97316;box-shadow:0 0 12px #f97316,0 0 24px #f9731640;animation:mapPulse 2s ease-in-out infinite;"></div>`,
-    });
-  }
   if (city.current) {
     return L.divIcon({
       className: "",
@@ -38,12 +30,6 @@ function getMarkerIcon(city: City) {
   });
 }
 
-function getPopupLabel(city: City) {
-  if (city.home) return "Home";
-  if (city.current) return "Current";
-  return null;
-}
-
 export default function TravelMap() {
   return (
     <>
@@ -61,47 +47,43 @@ export default function TravelMap() {
         }
       `}</style>
       <MapContainer
-        center={[28, 110]}
-        zoom={4}
+        center={[20, 120]}
+        zoom={2}
+        minZoom={2}
+        maxZoom={10}
         scrollWheelZoom={false}
         zoomControl={true}
+        maxBounds={[[-85, -180], [85, 180]]}
+        maxBoundsViscosity={1.0}
         className="h-[400px] sm:h-[500px] w-full rounded-2xl z-0"
         style={{ background: "#f1f5f9" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          noWrap={true}
         />
-        {visitedCities.map((city) => {
-          const label = getPopupLabel(city);
-          return (
-            <Marker
-              key={city.name}
-              position={[city.lat, city.lng]}
-              icon={getMarkerIcon(city)}
-            >
-              <Popup>
-                <div className="text-center">
-                  <p className="font-semibold text-sm text-gray-900">
-                    {city.name}
-                  </p>
-                  <p className="text-xs text-gray-500">{city.country}</p>
-                  {label && (
-                    <span
-                      className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                        city.home
-                          ? "bg-orange-100 text-orange-600"
-                          : "bg-blue-100 text-blue-600"
-                      }`}
-                    >
-                      {label}
-                    </span>
-                  )}
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
+        {visitedCities.map((city) => (
+          <Marker
+            key={city.name}
+            position={[city.lat, city.lng]}
+            icon={getMarkerIcon(city)}
+          >
+            <Popup>
+              <div className="text-center">
+                <p className="font-semibold text-sm text-gray-900">
+                  {city.name}
+                </p>
+                <p className="text-xs text-gray-500">{city.country}</p>
+                {city.current && (
+                  <span className="mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-600">
+                    Current
+                  </span>
+                )}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
     </>
   );

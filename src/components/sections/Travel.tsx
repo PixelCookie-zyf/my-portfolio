@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { visitedCities, type City } from "@/data/travel";
+import { visitedCities } from "@/data/travel";
 
 const TravelMap = dynamic(() => import("@/components/ui/TravelMap"), {
   ssr: false,
@@ -26,13 +26,6 @@ const continentMap: Record<string, string> = {
 };
 const continents = [...new Set(countries.map((c) => continentMap[c] ?? "Other"))];
 
-const homeCity = visitedCities.find((c) => c.home);
-const currentCity = visitedCities.find((c) => c.current);
-const domesticCities = visitedCities.filter(
-  (c) => c.country === "China" && !c.home && !c.current
-);
-const internationalCities = visitedCities.filter((c) => c.country !== "China");
-
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
@@ -49,34 +42,6 @@ function StatBadge({ value, label, delay = 0 }: { value: number; label: string; 
       <span className="text-2xl font-bold text-foreground">{value}</span>
       <span className="text-xs text-muted uppercase tracking-widest">{label}</span>
     </motion.div>
-  );
-}
-
-function CityChip({ city, badge, delay = 0 }: { city: City; badge?: "home" | "current" | "international"; delay?: number }) {
-  const badgeStyles: Record<string, string> = {
-    home: "bg-orange-50 text-orange-600 border-orange-200",
-    current: "bg-blue-50 text-blue-600 border-blue-200",
-    international: "bg-violet-50 text-violet-600 border-violet-200",
-  };
-  const base = badge
-    ? badgeStyles[badge]
-    : "bg-slate-50 text-slate-500 border-slate-200";
-
-  return (
-    <motion.span
-      className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium ${base}`}
-      initial={{ opacity: 0, scale: 0.85 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.3, delay }}
-    >
-      {city.name}
-      {badge === "home" && <span className="ml-0.5 opacity-70">Home</span>}
-      {badge === "current" && <span className="ml-0.5 opacity-70">Now</span>}
-      {badge === "international" && (
-        <span className="ml-0.5 opacity-60 font-normal">{city.country}</span>
-      )}
-    </motion.span>
   );
 }
 
@@ -108,49 +73,6 @@ export default function Travel() {
         <ScrollReveal>
           <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
             <TravelMap />
-          </div>
-        </ScrollReveal>
-
-        {/* City chips grouped by region */}
-        <ScrollReveal delay={0.15} className="mt-8 space-y-4">
-          {homeCity && (
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="w-24 shrink-0 text-xs font-semibold uppercase tracking-widest text-muted">
-                Home
-              </span>
-              <CityChip city={homeCity} badge="home" delay={0} />
-            </div>
-          )}
-
-          {currentCity && (
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="w-24 shrink-0 text-xs font-semibold uppercase tracking-widest text-muted">
-                Current
-              </span>
-              <CityChip city={currentCity} badge="current" delay={0.05} />
-            </div>
-          )}
-
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="w-24 shrink-0 text-xs font-semibold uppercase tracking-widest text-muted">
-              China
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {domesticCities.map((city, i) => (
-                <CityChip key={city.name} city={city} delay={0.05 * i} />
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="w-24 shrink-0 text-xs font-semibold uppercase tracking-widest text-muted">
-              Int&apos;l
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {internationalCities.map((city, i) => (
-                <CityChip key={city.name} city={city} badge="international" delay={0.05 * i} />
-              ))}
-            </div>
           </div>
         </ScrollReveal>
       </div>

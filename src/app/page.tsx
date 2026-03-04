@@ -5,7 +5,6 @@ import Experience from "@/components/sections/Experience";
 import Skills from "@/components/sections/Skills";
 import Benchmarks from "@/components/sections/Benchmarks";
 import Projects from "@/components/sections/Projects";
-import Favorites from "@/components/sections/Favorites";
 import Travel from "@/components/sections/Travel";
 
 export default function Home() {
@@ -18,7 +17,6 @@ export default function Home() {
         <Skills />
         <Benchmarks />
         <Projects />
-        <Favorites />
         <Travel />
       </main>
       <Footer />
