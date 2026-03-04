@@ -11,7 +11,7 @@ export const personalInfo = {
     "Open Source Builder",
   ],
   bio: "Building intelligent AI agents and exploring the frontier of large language models. Also an indie game developer crafting experiences with Godot engine.",
-  avatar: "/images/avatar.webp",
+  avatar: "/images/avatar.jpg",
   socials: [
     { name: "GitHub", url: "https://github.com/yourusername", icon: FaGithub },
     { name: "Twitter", url: "https://twitter.com/yourusername", icon: FaTwitter },
@@ -26,6 +26,5 @@ export const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "LLM Tracker", href: "#benchmarks" },
   { label: "Projects", href: "#projects" },
-  { label: "Favorites", href: "#favorites" },
   { label: "Travel", href: "#travel" },
 ] as const;
