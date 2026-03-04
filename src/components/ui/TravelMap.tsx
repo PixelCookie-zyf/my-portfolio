@@ -1,9 +1,20 @@
 "use client";
 
+import { useEffect } from "react";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import { visitedCities, type City } from "@/data/travel";
+
+function FitBounds({ cities }: { cities: readonly City[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (cities.length === 0) return;
+    const bounds = L.latLngBounds(cities.map((c) => [c.lat, c.lng]));
+    map.fitBounds(bounds, { padding: [30, 30], maxZoom: 4 });
+  }, [map, cities]);
+  return null;
+}
 
 function getMarkerIcon(city: City) {
   if (city.current) {
@@ -47,14 +58,14 @@ export default function TravelMap() {
         }
       `}</style>
       <MapContainer
-        center={[20, 120]}
+        center={[20, 80]}
         zoom={2}
         minZoom={2}
         maxZoom={10}
         scrollWheelZoom={false}
         zoomControl={true}
-        maxBounds={[[-85, -180], [85, 180]]}
-        maxBoundsViscosity={1.0}
+        maxBounds={[[-85, -200], [85, 200]]}
+        maxBoundsViscosity={0.85}
         className="h-[400px] sm:h-[500px] w-full rounded-2xl z-0"
         style={{ background: "#f1f5f9" }}
       >
@@ -63,6 +74,7 @@ export default function TravelMap() {
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           noWrap={true}
         />
+        <FitBounds cities={visitedCities} />
         {visitedCities.map((city) => (
           <Marker
             key={city.name}
