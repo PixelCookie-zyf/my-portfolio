@@ -9,6 +9,13 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    title: "HotRecForCTR",
+    description:
+      "A modular CTR prediction framework implementing ranking models like LR-GBDT and Factorization Machines. Features a registry-based architecture, custom TorchPrint for model analysis (FLOPs, MACs, memory), and trains on the Criteo dataset for ad click-through rate prediction.",
+    tags: ["Python", "PyTorch", "LightGBM", "CTR", "Recommendation"],
+    github: "https://github.com/PixelCookie-zyf/HotRecForCTR",
+  },
+  {
     title: "AI Agent Framework",
     description:
       "A modular Python framework for building multi-step AI agents with tool use, memory, and planning capabilities. Supports multiple LLM backends.",
