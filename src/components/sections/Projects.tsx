@@ -13,7 +13,7 @@ export default function Projects() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => (
-            <ScrollReveal key={project.title} delay={i * 0.1}>
+            <ScrollReveal key={project.title} delay={i * 0.1} className="h-full">
               <ProjectCard project={project} />
             </ScrollReveal>
           ))}
