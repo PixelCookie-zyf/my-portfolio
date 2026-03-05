@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
-import PixelScene from "@/components/ui/PixelScene";
 import { timelineEntries, type TimelineEntry } from "@/data/experience";
 
 // ---------------------------------------------------------------------------
@@ -83,24 +82,6 @@ export default function Experience() {
     <section id="experience" className="py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-6xl">
         <SectionTitle title="Experience" subtitle="My journey so far" />
-
-        {/* ---- Pixel Scene ---- */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="overflow-x-auto"
-        >
-          <PixelScene className="mx-auto" />
-        </motion.div>
-
-        {/* ---- Scene → Timeline connector ---- */}
-        <div className="flex flex-col items-center my-6 gap-1.5">
-          <div className="w-px h-6 bg-gradient-to-b from-yellow-200 to-blue-300" />
-          <div className="w-1.5 h-1.5 rounded-full bg-blue-300" />
-          <div className="w-px h-3 bg-gradient-to-b from-blue-300 to-violet-300" />
-        </div>
 
         {/* ---- Desktop: horizontal timeline (lg+) ---- */}
         <div className="hidden lg:block">
