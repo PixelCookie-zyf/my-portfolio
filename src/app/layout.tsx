@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,8 +14,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "My Portfolio",
-  description: "Personal portfolio website — developer, creator, explorer.",
+  title: "PixelCookie — AI Agent Engineer & LLM Researcher",
+  description:
+    "Building intelligent AI agents and exploring the frontier of large language models. Portfolio of PixelCookie — AI engineer, indie game developer, and open source builder.",
+  openGraph: {
+    title: "PixelCookie — AI Agent Engineer & LLM Researcher",
+    description:
+      "Building intelligent AI agents and exploring the frontier of large language models.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PixelCookie — AI Agent Engineer & LLM Researcher",
+    description:
+      "Building intelligent AI agents and exploring the frontier of large language models.",
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +41,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

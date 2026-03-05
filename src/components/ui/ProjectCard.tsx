@@ -18,8 +18,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         boxShadow:
           "0 0 0 1.5px rgba(59,130,246,0.65), 0 20px 40px rgba(59,130,246,0.12)",
       }}
+      whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background"
     >
       {/* Shimmer sweep effect */}
       <div
