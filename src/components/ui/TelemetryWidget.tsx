@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function TelemetryWidget() {
-  const [fps, setFps] = useState(60);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [time, setTime] = useState("");
-
+  const fpsRef = useRef<HTMLSpanElement>(null);
+  const mouseRef = useRef<HTMLSpanElement>(null);
+  const timeRef = useRef<HTMLSpanElement>(null);
   const frameCount = useRef(0);
   const lastTime = useRef(performance.now());
   const rafId = useRef<number>(0);
@@ -16,7 +15,9 @@ export default function TelemetryWidget() {
       frameCount.current++;
       const delta = now - lastTime.current;
       if (delta >= 1000) {
-        setFps(Math.round((frameCount.current * 1000) / delta));
+        if (fpsRef.current) {
+          fpsRef.current.textContent = String(Math.round((frameCount.current * 1000) / delta));
+        }
         frameCount.current = 0;
         lastTime.current = now;
       }
@@ -27,15 +28,20 @@ export default function TelemetryWidget() {
   }, []);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => setMouse({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", onMove);
+    const onMove = (e: MouseEvent) => {
+      if (mouseRef.current) {
+        mouseRef.current.textContent = `X: ${e.clientX} Y: ${e.clientY}`;
+      }
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
   useEffect(() => {
     const tick = () => {
-      const now = new Date();
-      setTime(now.toTimeString().slice(0, 8));
+      if (timeRef.current) {
+        timeRef.current.textContent = new Date().toTimeString().slice(0, 8);
+      }
     };
     tick();
     const id = setInterval(tick, 1000);
@@ -43,12 +49,10 @@ export default function TelemetryWidget() {
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 hidden md:block pointer-events-none text-right font-mono text-xs text-gray-500 dark:text-gray-500 opacity-40 hover:opacity-80 transition-opacity">
-      <div>FPS: {fps}</div>
-      <div>
-        X: {mouse.x} Y: {mouse.y}
-      </div>
-      <div>{time}</div>
+    <div className="fixed bottom-6 right-6 z-50 hidden md:block pointer-events-none text-right font-mono text-xs text-gray-500 dark:text-emerald-400/50 opacity-40 hover:opacity-80 transition-opacity">
+      <div>FPS: <span ref={fpsRef}>--</span></div>
+      <div><span ref={mouseRef}>X: 0 Y: 0</span></div>
+      <div><span ref={timeRef}>--:--:--</span></div>
     </div>
   );
 }

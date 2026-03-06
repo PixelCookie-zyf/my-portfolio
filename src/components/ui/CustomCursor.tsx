@@ -6,7 +6,7 @@ export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const outlineRef = useRef<HTMLDivElement>(null);
   const mouse = useRef({ x: -100, y: -100 });
-  const outline = useRef({ x: -100, y: -100 });
+  const outlinePos = useRef({ x: -100, y: -100 });
   const rafId = useRef<number>(0);
   const [isHovering, setIsHovering] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(true);
@@ -39,17 +39,17 @@ export default function CustomCursor() {
     };
 
     const animate = () => {
-      outline.current.x += (mouse.current.x - outline.current.x) * 0.15;
-      outline.current.y += (mouse.current.y - outline.current.y) * 0.15;
+      outlinePos.current.x += (mouse.current.x - outlinePos.current.x) * 0.15;
+      outlinePos.current.y += (mouse.current.y - outlinePos.current.y) * 0.15;
       if (outlineRef.current) {
-        outlineRef.current.style.transform = `translate(${outline.current.x - 20}px, ${outline.current.y - 20}px)`;
+        outlineRef.current.style.transform = `translate(${outlinePos.current.x - 20}px, ${outlinePos.current.y - 20}px)`;
       }
       rafId.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseover", onMouseOver);
-    document.addEventListener("mouseout", onMouseOut);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    document.addEventListener("mouseover", onMouseOver, { passive: true });
+    document.addEventListener("mouseout", onMouseOut, { passive: true });
     rafId.current = requestAnimationFrame(animate);
 
     return () => {
@@ -62,11 +62,14 @@ export default function CustomCursor() {
 
   if (isTouchDevice) return null;
 
+  const size = isHovering ? 60 : 40;
+  const offset = isHovering ? -10 : 0;
+
   return (
     <>
-      {/* Dot - follows mouse exactly */}
       <div
         ref={dotRef}
+        className="dark:bg-emerald-400 bg-black"
         style={{
           position: "fixed",
           top: 0,
@@ -74,31 +77,29 @@ export default function CustomCursor() {
           width: 6,
           height: 6,
           borderRadius: "50%",
-          backgroundColor: "white",
-          mixBlendMode: "difference",
           zIndex: 9999,
           pointerEvents: "none",
           willChange: "transform",
         }}
       />
-      {/* Outline - trails with lerp */}
       <div
         ref={outlineRef}
+        className="dark:border-emerald-400 border-black"
         style={{
           position: "fixed",
           top: 0,
           left: 0,
-          width: isHovering ? 60 : 40,
-          height: isHovering ? 60 : 40,
+          width: size,
+          height: size,
           borderRadius: "50%",
-          border: "1px solid white",
-          mixBlendMode: "difference",
+          borderWidth: 1,
+          borderStyle: "solid",
           zIndex: 9999,
           pointerEvents: "none",
           willChange: "transform",
           transition: "width 0.2s ease, height 0.2s ease",
-          marginLeft: isHovering ? -10 : 0,
-          marginTop: isHovering ? -10 : 0,
+          marginLeft: offset,
+          marginTop: offset,
         }}
       />
     </>
