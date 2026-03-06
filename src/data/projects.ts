@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { TbChartScatter, TbBrain, TbBooks, TbTestPipe } from "react-icons/tb";
+import { TbChartScatter, TbBrain, TbBooks, TbTestPipe, TbWorldWww } from "react-icons/tb";
 import { SiGodotengine } from "react-icons/si";
 
 export interface Project {
@@ -12,6 +12,15 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    title: "My Portfolio",
+    description:
+      "The site you're looking at right now! A personal portfolio built with Next.js and Tailwind CSS, featuring generative ASCII canvas art, custom cursor, text scramble effects, dark/light theme, interactive travel map, and smooth Framer Motion animations.",
+    thumbnail: { gradient: "from-emerald-400 via-cyan-400 to-blue-500", icon: TbWorldWww },
+    tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    github: "https://github.com/PixelCookie-zyf/my-portfolio",
+    demo: "https://my-portfolio-zyf.vercel.app",
+  },
   {
     title: "HotRecForCTR",
     description:
