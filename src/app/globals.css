@@ -53,6 +53,13 @@ html {
   50% { opacity: 0; }
 }
 
+/* Hide native cursor on desktop (custom cursor replaces it) */
+@media (hover: hover) {
+  * {
+    cursor: none !important;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

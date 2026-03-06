@@ -5,6 +5,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FaLocationDot } from "react-icons/fa6";
 import { personalInfo } from "@/data/personal";
+import AsciiCanvas from "@/components/ui/AsciiCanvas";
+import TextScramble from "@/components/ui/TextScramble";
 
 function useTypewriter(words: readonly string[]) {
   const [text, setText] = useState("");
@@ -47,11 +49,10 @@ export default function Hero() {
       id="home"
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-6"
     >
-      {/* Decorative circles */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-32 -top-32 h-[500px] w-[500px] rounded-full bg-gray-100/80 dark:bg-gray-800/30" />
-        <div className="absolute -left-20 top-1/3 h-[300px] w-[300px] rounded-full bg-gray-100/60 dark:bg-gray-800/20" />
-        <div className="absolute bottom-20 right-1/4 h-[200px] w-[200px] rounded-full bg-blue-50/50 dark:bg-blue-900/15" />
+      {/* ASCII Canvas — absolute, top half only */}
+      <div className="absolute top-0 left-0 right-0 z-0 h-[50vh]">
+        <AsciiCanvas variant="hero" className="h-full" />
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-3xl text-center">
@@ -112,7 +113,7 @@ export default function Hero() {
           </div>
 
           <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-7xl">
-            {personalInfo.name}
+            <TextScramble text={personalInfo.name} trigger="mount" />
           </h1>
 
           {/* Typewriter */}
