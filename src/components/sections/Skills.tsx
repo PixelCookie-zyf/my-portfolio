@@ -3,17 +3,20 @@
 import SectionTitle from "@/components/ui/SectionTitle";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import SkillWidget from "@/components/ui/SkillWidget";
-import GitHubWidget, { GitHubActivityGraph } from "@/components/ui/GitHubWidget";
+import GitHubWidget from "@/components/ui/GitHubWidget";
 import { skillCategories } from "@/data/skills";
 
 export default function Skills() {
   return (
-    <section id="skills" className="bg-card-bg/30 py-24 px-6">
-      <div className="mx-auto max-w-5xl">
+    <section
+      id="skills"
+      className="relative overflow-hidden bg-card-bg/30 px-6 py-24"
+    >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,_rgba(96,165,250,0.18),_transparent_60%)]" />
+      <div className="mx-auto max-w-6xl">
         <SectionTitle title="Skills" subtitle="Technologies I work with" />
 
-        {/* Widget grid: 4 skill squares + GitHub card */}
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:grid-rows-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-2">
           {skillCategories.map((cat, catIdx) => (
             <ScrollReveal key={cat.label} delay={catIdx * 0.1}>
               <SkillWidget cat={cat} />
@@ -22,16 +25,11 @@ export default function Skills() {
 
           <ScrollReveal
             delay={0.4}
-            className="col-span-2 lg:col-start-3 lg:row-start-1 lg:row-span-2"
+            className="md:col-span-2 xl:col-start-3 xl:row-start-1 xl:row-span-2"
           >
             <GitHubWidget username="PixelCookie-zyf" />
           </ScrollReveal>
         </div>
-
-        {/* Full-width activity graph below */}
-        <ScrollReveal delay={0.5} className="mt-4">
-          <GitHubActivityGraph username="PixelCookie-zyf" />
-        </ScrollReveal>
       </div>
     </section>
   );
