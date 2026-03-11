@@ -2,6 +2,7 @@ import { FaGithub, FaXTwitter, FaBilibili, FaInstagram } from "react-icons/fa6";
 
 export const personalInfo = {
   name: "PixelCookie",
+  email: "metazyf@gmail.com",
   city: "Shanghai, China",
   roles: [
     "AI Agent Engineer",
@@ -26,4 +27,6 @@ export const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
   { label: "Travel", href: "#travel" },
+  { label: "Blog", href: "#blog" },
+  { label: "Contact", href: "#contact" },
 ] as const;

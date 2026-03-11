@@ -13,6 +13,7 @@ export interface SkillCategory {
   label: string;
   description: string;
   bg: string;
+  categoryIcon: IconType;
   skills: Skill[];
 }
 
@@ -22,6 +23,7 @@ export const skillCategories: SkillCategory[] = [
     description:
       "Building intelligent agents and exploring the frontier of large language models, RAG pipelines, and prompt engineering.",
     bg: "bg-violet-600",
+    categoryIcon: LuBrainCircuit,
     skills: [
       { name: "LLM / Prompt Eng", icon: LuBrainCircuit },
       { name: "AI Agent Frameworks", icon: FaRobot },
@@ -32,6 +34,7 @@ export const skillCategories: SkillCategory[] = [
     description:
       "Proficient in Python for AI/backend and TypeScript for full-stack web development. Strong foundation in data structures and algorithms.",
     bg: "bg-blue-600",
+    categoryIcon: SiPython,
     skills: [
       { name: "Python", icon: SiPython },
       { name: "TypeScript / JS", icon: SiTypescript },
@@ -43,6 +46,7 @@ export const skillCategories: SkillCategory[] = [
     description:
       "Containerized deployments, CI/CD pipelines, and cloud infrastructure for scalable AI applications.",
     bg: "bg-emerald-600",
+    categoryIcon: SiDocker,
     skills: [{ name: "Docker / DevOps", icon: SiDocker }],
   },
   {
@@ -50,6 +54,7 @@ export const skillCategories: SkillCategory[] = [
     description:
       "Indie game development with Godot engine. Designing mechanics, narratives, and interactive experiences from scratch.",
     bg: "bg-orange-500",
+    categoryIcon: FaGamepad,
     skills: [
       { name: "Godot / GDScript", icon: SiGodotengine },
       { name: "Game Design", icon: FaGamepad },
