@@ -4,13 +4,18 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import SkillWidget from "@/components/ui/SkillWidget";
 import GitHubWidget from "@/components/ui/GitHubWidget";
+import ProjectCard from "@/components/ui/ProjectCard";
+import { projects } from "@/data/projects";
 import { skillCategories } from "@/data/skills";
 
 export default function Skills() {
   return (
-    <section id="skills" className="bg-card-bg/30 px-6 py-24">
+    <section id="build-log" className="bg-card-bg/30 px-6 py-24">
       <div className="mx-auto max-w-6xl">
-        <SectionTitle title="Skills" subtitle="Technologies I work with" />
+        <SectionTitle
+          title="Build Log"
+          subtitle="A running record of what I build and work with"
+        />
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-2">
           {skillCategories.map((cat, catIdx) => (
@@ -25,6 +30,18 @@ export default function Skills() {
           >
             <GitHubWidget username="PixelCookie-zyf" />
           </ScrollReveal>
+        </div>
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project, index) => (
+            <ScrollReveal
+              key={project.title}
+              delay={0.15 + index * 0.08}
+              className="h-full"
+            >
+              <ProjectCard project={project} />
+            </ScrollReveal>
+          ))}
         </div>
       </div>
     </section>
