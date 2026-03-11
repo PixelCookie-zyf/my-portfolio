@@ -44,9 +44,7 @@ export default function SkillWidget({ cat }: SkillWidgetProps) {
           </p>
         </div>
 
-        <div className="mt-4 h-px w-full bg-border/70" />
-
-        <div className="mt-auto flex flex-wrap gap-2 pt-4">
+        <div className="mt-4 flex flex-wrap gap-2">
           {cat.skills.map((skill) => {
             const SkillIcon = skill.icon;
 

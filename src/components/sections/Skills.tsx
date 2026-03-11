@@ -8,11 +8,7 @@ import { skillCategories } from "@/data/skills";
 
 export default function Skills() {
   return (
-    <section
-      id="skills"
-      className="relative overflow-hidden bg-card-bg/30 px-6 py-24"
-    >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,_rgba(96,165,250,0.18),_transparent_60%)]" />
+    <section id="skills" className="bg-card-bg/30 px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionTitle title="Skills" subtitle="Technologies I work with" />
 
