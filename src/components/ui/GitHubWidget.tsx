@@ -22,6 +22,7 @@ import {
   type GitHubContributionDay,
   type GitHubContributionResponse,
 } from "@/lib/github-calendar";
+import { selectFeaturedRepos, type GitHubRepo } from "@/lib/github";
 
 interface GitHubWidgetProps {
   username: string;
@@ -89,15 +90,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         }
 
         const user = await userRes.json();
-        const repos: Array<{
-          name: string;
-          stargazers_count: number;
-          forks_count: number;
-          language: string | null;
-          fork: boolean;
-          html_url: string;
-          updated_at: string;
-        }> = await reposRes.json();
+        const repos: GitHubRepo[] = await reposRes.json();
         const contributions: GitHubContributionResponse = await contributionsRes.json();
 
         const ownRepos = repos.filter((repo) => !repo.fork);
@@ -105,20 +98,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
           (sum, repo) => sum + repo.stargazers_count,
           0
         );
-        const topRepos = [...ownRepos]
-          .sort(
-            (left, right) =>
-              right.stargazers_count - left.stargazers_count ||
-              right.updated_at.localeCompare(left.updated_at)
-          )
-          .slice(0, 2)
-          .map((repo) => ({
-            name: repo.name,
-            stars: repo.stargazers_count,
-            forks: repo.forks_count,
-            language: repo.language,
-            url: repo.html_url,
-          }));
+        const topRepos = selectFeaturedRepos(repos, 2);
         const contributionDays = contributions.contributions ?? [];
 
         setStats({
