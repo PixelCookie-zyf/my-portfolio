@@ -1,21 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBars, FaXmark, FaSun, FaMoon } from "react-icons/fa6";
 import { useTheme } from "next-themes";
 import { personalInfo, navLinks } from "@/data/personal";
+import {
+  canRenderThemeToggle,
+  emptySubscribe,
+  getClientHydratedSnapshot,
+  getServerHydratedSnapshot,
+} from "@/lib/hydration";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const [mounted, setMounted] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    getClientHydratedSnapshot,
+    getServerHydratedSnapshot
+  );
+  const canShowThemeToggle = canRenderThemeToggle(hydrated, resolvedTheme);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -105,7 +112,7 @@ export default function Header() {
               </motion.a>
             );
           })}
-          {mounted && (
+          {canShowThemeToggle && (
             <motion.button
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
               className="ml-1 flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted hover:text-foreground hover:bg-card-bg transition-all"
@@ -176,7 +183,7 @@ export default function Header() {
                     </a>
                   );
                 })}
-                {mounted && (
+                {canShowThemeToggle && (
                   <button
                     onClick={() =>
                       setTheme(resolvedTheme === "dark" ? "light" : "dark")

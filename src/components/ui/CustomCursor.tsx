@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { emptySubscribe } from "@/lib/hydration";
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -9,13 +10,14 @@ export default function CustomCursor() {
   const outlinePos = useRef({ x: -100, y: -100 });
   const rafId = useRef<number>(0);
   const [isHovering, setIsHovering] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(true);
+  const isTouchDevice = useSyncExternalStore(
+    emptySubscribe,
+    () => "ontouchstart" in window || window.matchMedia("(hover: none)").matches,
+    () => true
+  );
 
   useEffect(() => {
-    const isTouch =
-      "ontouchstart" in window || window.matchMedia("(hover: none)").matches;
-    setIsTouchDevice(isTouch);
-    if (isTouch) return;
+    if (isTouchDevice) return;
 
     const onMouseMove = (e: MouseEvent) => {
       mouse.current = { x: e.clientX, y: e.clientY };
@@ -58,7 +60,7 @@ export default function CustomCursor() {
       document.removeEventListener("mouseout", onMouseOut);
       cancelAnimationFrame(rafId.current);
     };
-  }, []);
+  }, [isTouchDevice]);
 
   if (isTouchDevice) return null;
 

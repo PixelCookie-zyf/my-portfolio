@@ -38,7 +38,7 @@ export function useTextScramble(text: string) {
   const textRef = useRef(text);
   textRef.current = text;
 
-  const animate = useCallback(() => {
+  const animate = useCallback(function animateFrame() {
     const currentText = textRef.current;
     let complete = true;
     const next: OutputChar[] = [];
@@ -62,7 +62,7 @@ export function useTextScramble(text: string) {
     frameRef.current++;
 
     if (!complete) {
-      rafRef.current = requestAnimationFrame(animate);
+      rafRef.current = requestAnimationFrame(animateFrame);
     } else {
       resolvedTextRef.current = currentText;
       rafRef.current = null;

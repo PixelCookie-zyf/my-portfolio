@@ -7,10 +7,12 @@ export default function TelemetryWidget() {
   const mouseRef = useRef<HTMLSpanElement>(null);
   const timeRef = useRef<HTMLSpanElement>(null);
   const frameCount = useRef(0);
-  const lastTime = useRef(performance.now());
+  const lastTime = useRef(0);
   const rafId = useRef<number>(0);
 
   useEffect(() => {
+    lastTime.current = performance.now();
+
     const loop = (now: number) => {
       frameCount.current++;
       const delta = now - lastTime.current;

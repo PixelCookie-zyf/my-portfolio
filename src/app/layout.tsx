@@ -17,7 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PixelCookie — AI Agent Engineer & LLM Researcher",
+  title: {
+    default: "PixelCookie — AI Agent Engineer & LLM Researcher",
+    template: "%s | PixelCookie",
+  },
   description:
     "Building intelligent AI agents and exploring the frontier of large language models. Portfolio of PixelCookie — AI engineer, indie game developer, and open source builder.",
   openGraph: {

@@ -10,9 +10,12 @@ export default function Blog() {
   if (posts.length === 0) return null;
 
   return (
-    <section id="blog" className="bg-card-bg/30 py-24 px-6">
+    <section id="blog" className="bg-card-bg/30 px-6 py-24">
       <div className="mx-auto max-w-6xl">
-        <SectionTitle title="Blog" subtitle="Recent posts" />
+        <SectionTitle
+          title="Blog"
+          subtitle="Long-form notes on AI systems, reinforcement learning, and things I learn while building."
+        />
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post, i) => (
@@ -25,9 +28,9 @@ export default function Blog() {
         <div className="mt-8 text-center">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-sm text-muted hover:text-accent transition-colors"
+            className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/70 px-4 py-2 text-sm text-muted transition-colors hover:border-accent/30 hover:text-accent"
           >
-            View all posts &rarr;
+            Read the full archive &rarr;
           </Link>
         </div>
       </div>
