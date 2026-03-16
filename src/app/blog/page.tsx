@@ -3,6 +3,7 @@ import { IoArrowBack, IoGridOutline, IoSparklesOutline } from "react-icons/io5";
 import BlogCard from "@/components/ui/BlogCard";
 import AsciiCanvas from "@/components/ui/AsciiCanvas";
 import { getAllPosts } from "@/lib/blog";
+import BlogThemeToggle from "@/components/blog/ThemeToggle";
 
 export const metadata = {
   title: "Blog",
@@ -15,6 +16,7 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen bg-background pb-24">
+      <BlogThemeToggle />
       <div className="relative overflow-hidden">
         <AsciiCanvas variant="subtle" className="opacity-60" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.16),transparent_55%)]" />
