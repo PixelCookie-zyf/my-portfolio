@@ -280,18 +280,85 @@ $$
 J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_t R_t\right]
 $$
 
-策略梯度定理给出了它的核心优化形式：
+策略梯度定理给出了它的核心优化形式。下面来一步步推导。
+
+目标函数可以展开成对所有状态和动作的加权求和：
 
 $$
-\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta}\left[\nabla_\theta \log \pi_\theta(a|s)\cdot Q_{\pi_\theta}(s,a)\right]
+J(\theta) = \sum_s d^{\pi_\theta}(s) \sum_a \pi_\theta(a|s)\, Q_{\pi_\theta}(s,a)
+$$
+
+其中 $d^{\pi_\theta}(s)$ 是策略 $\pi_\theta$ 下的状态访问分布，表示智能体在各个状态上待的时间比例。
+
+对 $\theta$ 求梯度。策略梯度定理的一个关键结论是：虽然 $d^{\pi_\theta}(s)$ 和 $Q_{\pi_\theta}(s,a)$ 都依赖 $\theta$，但我们**只需要对 $\pi_\theta(a|s)$ 求导**就够了（证明涉及状态分布的递归展开，这里略去）：
+
+$$
+\nabla_\theta J(\theta) = \sum_s d^{\pi_\theta}(s) \sum_a \nabla_\theta \pi_\theta(a|s)\, Q_{\pi_\theta}(s,a)
+$$
+
+接下来用一个叫 **log-derivative trick** 的恒等式。对任意函数 $f(x)$，有：
+
+$$
+\nabla_\theta f(\theta) = f(\theta)\, \nabla_\theta \log f(\theta)
+$$
+
+这一点很容易验证：因为 $\nabla_\theta \log f = \frac{\nabla_\theta f}{f}$，两边乘以 $f$ 就回来了。把它用在 $\pi_\theta(a|s)$ 上：
+
+$$
+\nabla_\theta \pi_\theta(a|s) = \pi_\theta(a|s)\, \nabla_\theta \log \pi_\theta(a|s)
+$$
+
+代入上式：
+
+$$
+\nabla_\theta J(\theta) = \sum_s d^{\pi_\theta}(s) \sum_a \pi_\theta(a|s)\, \nabla_\theta \log \pi_\theta(a|s)\, Q_{\pi_\theta}(s,a)
+$$
+
+注意到 $\sum_s d^{\pi_\theta}(s) \sum_a \pi_\theta(a|s)[\cdots]$ 正好就是在策略 $\pi_\theta$ 下对状态和动作求期望，所以最终得到**策略梯度定理**：
+
+$$
+\boxed{\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta}\left[\nabla_\theta \log \pi_\theta(a|s)\cdot Q_{\pi_\theta}(s,a)\right]}
 $$
 
 这个公式背后的直觉非常清晰：
 
-- 高回报动作，增加它被选中的概率
-- 低回报动作，降低它被选中的概率
+- 如果某个动作带来的回报 $Q$ 很高，就增大 $\log \pi_\theta(a|s)$，也就是让策略更倾向选这个动作
+- 如果某个动作回报很低，梯度方向会让策略降低选它的概率
 
-最经典的入门算法是 **REINFORCE**。它直接用蒙特卡洛回报 $G_t$ 来替代 $Q_{\pi_\theta}(s,a)$，概念清楚，但方差也比较大。
+### REINFORCE：最直接的策略梯度算法
+
+策略梯度定理里需要 $Q_{\pi_\theta}(s,a)$，但在实际训练中我们并不知道它的真实值。**REINFORCE** 的做法是最朴素的：直接用蒙特卡洛采样的实际回报 $G_t$ 来替代。
+
+因为 $G_t$ 本身就是 $Q_{\pi_\theta}(s_t, a_t)$ 的一个无偏估计（$Q$ 的定义就是 $G_t$ 的期望），所以替换后梯度估计仍然是无偏的：
+
+$$
+\nabla_\theta J(\theta) \approx \sum_{t=0}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\cdot G_t
+$$
+
+对应的参数更新规则就是：
+
+$$
+\theta \leftarrow \theta + \alpha \sum_{t=0}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\cdot G_t
+$$
+
+整个算法流程非常简单：
+
+1. 用当前策略 $\pi_\theta$ 跑完一整条轨迹 $(s_0, a_0, r_1, s_1, a_1, r_2, \ldots)$
+2. 对每个时刻 $t$，计算从该时刻起的实际回报 $G_t = \sum_{k=0}^{T-t}\gamma^k r_{t+k+1}$
+3. 用上面的公式更新参数 $\theta$
+4. 重复
+
+REINFORCE 概念清楚，但有一个很大的缺点：**方差太大**。因为 $G_t$ 是整条轨迹的累计回报，受到很多随机因素影响，不同轨迹之间的 $G_t$ 波动可能非常大，导致梯度估计很不稳定。
+
+一个常见的改进是引入 **baseline**，通常取状态价值函数 $b(s) = V(s)$：
+
+$$
+\nabla_\theta J(\theta) \approx \sum_{t=0}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\cdot (G_t - b(s_t))
+$$
+
+减去 baseline 不会改变梯度的期望（因为 baseline 不依赖动作），但能显著降低方差。直觉上，$G_t - V(s_t)$ 衡量的是"这个动作比平均水平好多少"，而不是"这个动作的绝对回报有多高"，信号自然更稳定。
+
+这个思路再往前走一步——用神经网络来学习 baseline $V(s)$——就自然过渡到了下面的 Actor-Critic 方法。
 
 ## Actor-Critic：为什么很多现代算法都长这个样子
 
