@@ -111,20 +111,58 @@ $$
 G_t = R_{t+1} + \gamma G_{t+1}
 $$
 
-把这个递归代入价值函数定义，就能得到贝尔曼方程：
+把这个递归代入价值函数的定义，我们来一步步推导贝尔曼方程。
+
+从价值函数的定义出发：
 
 $$
-V_\pi(s) = \sum_a \pi(a|s)\left[R(s,a) + \gamma \sum_{s'} P(s'|s,a)V_\pi(s')\right]
+V_\pi(s) = \mathbb{E}_\pi[G_t \mid S_t = s]
+$$
+
+代入 $G_t = R_{t+1} + \gamma G_{t+1}$：
+
+$$
+= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s]
+$$
+
+接下来要把期望展开。在状态 $s$ 下，智能体先按策略 $\pi(a|s)$ 选动作 $a$，执行后环境以概率 $P(s'|s,a)$ 转移到下一状态 $s'$，并给出即时奖励 $R(s,a)$。所以期望要对动作和下一状态分别求和：
+
+$$
+= \sum_a \pi(a|s) \sum_{s'} P(s'|s,a) \Big[R(s,a) + \gamma\,\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']\Big]
+$$
+
+注意到 $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']$ 正好就是 $V_\pi(s')$ 的定义，代入后得到：
+
+$$
+= \sum_a \pi(a|s) \sum_{s'} P(s'|s,a) \Big[R(s,a) + \gamma\,V_\pi(s')\Big]
+$$
+
+由于 $R(s,a)$ 不依赖 $s'$，可以把它提出来，最终整理为**贝尔曼方程**：
+
+$$
+\boxed{V_\pi(s) = \sum_a \pi(a|s)\left[R(s,a) + \gamma \sum_{s'} P(s'|s,a)V_\pi(s')\right]}
 $$
 
 它说的是一件很朴素的事：
 
 > 当前状态的价值 = 当前一步能拿到的奖励 + 下一状态价值的折现期望。
 
-同样地，也能写出动作价值函数的递归形式：
+同样地，我们也可以推导出动作价值函数的递归形式。从 $Q_\pi$ 的定义出发：
 
 $$
-Q_\pi(s,a) = R(s,a) + \gamma \sum_{s'} P(s'|s,a)\sum_{a'} \pi(a'|s')Q_\pi(s',a')
+Q_\pi(s,a) = \mathbb{E}_\pi[G_t \mid S_t = s, A_t = a]
+$$
+
+代入 $G_t = R_{t+1} + \gamma G_{t+1}$，注意这里动作 $a$ 已经确定，所以只需对下一状态 $s'$ 求期望：
+
+$$
+= \sum_{s'} P(s'|s,a) \Big[R(s,a) + \gamma\,\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']\Big]
+$$
+
+到了下一状态 $s'$ 后，智能体重新按策略选择动作 $a'$，所以 $V_\pi(s') = \sum_{a'}\pi(a'|s')Q_\pi(s',a')$。代入得到：
+
+$$
+\boxed{Q_\pi(s,a) = R(s,a) + \gamma \sum_{s'} P(s'|s,a)\sum_{a'} \pi(a'|s')Q_\pi(s',a')}
 $$
 
 如果我们关心最优策略，那么递归里不再是期望，而是直接选最优动作：
