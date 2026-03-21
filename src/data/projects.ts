@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { TbChartScatter, TbBrain, TbBooks, TbTestPipe, TbWorldWww } from "react-icons/tb";
+import { TbChartScatter, TbPaw, TbBooks, TbTestPipe, TbWorldWww } from "react-icons/tb";
 import { SiGodotengine } from "react-icons/si";
 
 export interface Project {
@@ -30,12 +30,12 @@ export const projects: Project[] = [
     github: "https://github.com/PixelCookie-zyf/HotRecForCTR",
   },
   {
-    title: "AI Agent Framework",
+    title: "Clawd on Desk",
     description:
-      "A modular Python framework for building multi-step AI agents with tool use, memory, and planning capabilities. Supports multiple LLM backends.",
-    thumbnail: { gradient: "from-violet-600 via-purple-600 to-indigo-700", icon: TbBrain },
-    tags: ["Python", "LLM", "AI Agents", "OpenAI", "Tool Use"],
-    github: "https://github.com/yourusername/ai-agent-framework",
+      "A desktop pet that reacts to your Claude Code sessions in real-time — thinking, typing, juggling, sleeping, and more. Built with Electron and integrates via Claude Code hooks.",
+    thumbnail: { gradient: "from-violet-600 via-purple-600 to-indigo-700", icon: TbPaw },
+    tags: ["JavaScript", "Electron", "Desktop Pet", "Claude Code"],
+    github: "https://github.com/rullerzhou-afk/clawd-on-desk",
   },
   {
     title: "RAG Knowledge Assistant",
