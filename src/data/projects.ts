@@ -38,13 +38,12 @@ export const projects: Project[] = [
     github: "https://github.com/rullerzhou-afk/clawd-on-desk",
   },
   {
-    title: "RAG Knowledge Assistant",
+    title: "Paper Digest",
     description:
-      "A retrieval-augmented generation system that lets you chat with your own documents. Features hybrid search and re-ranking for high-accuracy answers.",
+      "Let AI read papers for you — an AI-powered paper reading pipeline that searches arXiv, screens papers, and generates bilingual summaries in MDX format.",
     thumbnail: { gradient: "from-teal-500 via-emerald-500 to-cyan-600", icon: TbBooks },
-    tags: ["Python", "RAG", "LangChain", "Qdrant", "FastAPI"],
-    github: "https://github.com/yourusername/rag-knowledge-assistant",
-    demo: "https://rag-demo.yourdomain.com",
+    tags: ["Python", "arXiv", "AI", "NLP", "Bilingual"],
+    github: "https://github.com/PixelCookie-zyf/paper-digest",
   },
   {
     title: "Godot Roguelite",
