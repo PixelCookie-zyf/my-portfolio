@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { IoArrowBack } from 'react-icons/io5';
-import Projects from '@/components/sections/Projects';
+import Work from '@/components/sections/Work';
 import AsciiCanvas from '@/components/ui/AsciiCanvas';
 
 export default function ProjectsPage() {
   return (
     <motion.main
+      id="main-content"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -29,7 +30,7 @@ export default function ProjectsPage() {
           <span>Back Home</span>
         </Link>
       </div>
-      <Projects />
+      <Work />
     </motion.main>
   );
 }

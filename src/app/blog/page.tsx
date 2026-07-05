@@ -15,7 +15,7 @@ export default function BlogPage() {
   const latestPost = posts[0];
 
   return (
-    <main className="min-h-screen bg-background pb-24">
+    <main id="main-content" className="min-h-screen bg-background pb-24">
       <BlogThemeToggle />
       <div className="relative overflow-hidden">
         <AsciiCanvas variant="subtle" className="opacity-60" />

@@ -17,7 +17,7 @@ export default function Contact() {
       <div className="relative z-10 mx-auto max-w-3xl text-center">
         <ScrollReveal>
           <div className="mb-6 flex items-center justify-center gap-3">
-            <span className="font-mono text-sm font-medium text-accent">05</span>
+            <span className="font-mono text-sm font-medium text-accent">06</span>
             <span className="h-px w-12 bg-accent/40" aria-hidden="true" />
             <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted">
               reach out

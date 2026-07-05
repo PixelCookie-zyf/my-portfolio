@@ -8,6 +8,7 @@ import rehypeKatex from "rehype-katex";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import type { Metadata } from "next";
 import BlogThemeToggle from "@/components/blog/ThemeToggle";
+import ReadingProgress from "@/components/ui/ReadingProgress";
 import "katex/dist/katex.min.css";
 
 interface PageProps {
@@ -57,7 +58,8 @@ export default async function BlogPostPage({ params }: PageProps) {
   const readingTime = getReadingTime(post.content);
 
   return (
-    <main className="min-h-screen bg-background">
+    <main id="main-content" className="min-h-screen bg-background">
+      <ReadingProgress />
       <BlogThemeToggle />
       <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
         <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-muted">

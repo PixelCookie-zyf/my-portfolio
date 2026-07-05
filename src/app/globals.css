@@ -84,6 +84,22 @@ body::after {
   50% { opacity: 0; }
 }
 
+/* Hero interest ticker */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 36s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
 /* Hide native cursor on desktop (custom cursor replaces it) */
 @media (hover: hover) {
   * {

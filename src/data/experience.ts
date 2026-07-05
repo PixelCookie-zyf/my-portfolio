@@ -5,6 +5,8 @@ export interface TimelineEntry {
   type: "education" | "work" | "future";
   description: string;
   tags: string[];
+  /** git-branch style label shown next to the institution, e.g. "work/meituan" */
+  branch: string;
 }
 
 export const timelineEntries: TimelineEntry[] = [
@@ -16,6 +18,7 @@ export const timelineEntries: TimelineEntry[] = [
     description:
       "Undergraduate studies in pure and applied mathematics. Built strong foundations in real analysis, linear algebra, probability theory, and numerical computation.",
     tags: ["Mathematics", "Statistics", "Probability"],
+    branch: "edu/hohai",
   },
   {
     institution: "Sun Yat-sen University",
@@ -25,6 +28,7 @@ export const timelineEntries: TimelineEntry[] = [
     description:
       "Graduate research focused on product question answering, large language model applications, and autonomous AI agent systems. Published work on LLM-driven solutions.",
     tags: ["LLM", "AI Agent", "NLP", "Research"],
+    branch: "edu/sysu",
   },
   {
     institution: "Tencent IEG",
@@ -34,22 +38,26 @@ export const timelineEntries: TimelineEntry[] = [
     description:
       "Interned at the Interactive Entertainment Group. Applied AI and ML techniques to game-related engineering challenges and user experience optimization.",
     tags: ["AI", "Gaming", "ML", "Engineering"],
+    branch: "work/tencent-ieg",
   },
   {
     institution: "Meituan",
     role: "Ad Search Algorithm Engineer",
-    period: "2025 – Present",
+    period: "2025 – 2026",
     type: "work",
     description:
-      "Designing and optimizing ad search ranking algorithms and relevance models for one of China's largest local services platforms.",
+      "Designed and optimized ad search ranking algorithms and relevance models for one of China's largest local services platforms.",
     tags: ["Search", "Ranking", "Ads", "ML"],
+    branch: "work/meituan",
   },
   {
     institution: "PhD Studies",
-    role: "Doctoral Research (Planned)",
-    period: "2027 – Future",
-    type: "future",
-    description: "Planning to pursue doctoral studies, deepening research in AI, machine learning, and intelligent agent systems.",
-    tags: ["AI Research", "ML", "PhD"],
+    role: "Doctoral Researcher",
+    period: "2026 – Present",
+    type: "education",
+    description:
+      "Doctoral research in AI, machine learning, and intelligent agent systems — going deeper on the questions I kept running into while shipping.",
+    tags: ["AI Research", "ML", "Agents"],
+    branch: "edu/phd",
   },
 ];

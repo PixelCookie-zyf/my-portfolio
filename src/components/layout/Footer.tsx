@@ -12,7 +12,7 @@ export default function Footer() {
         </p>
 
         <p className="text-xs text-muted/70">
-          Built with Next.js &amp; Tailwind CSS &middot; &copy; {year}{" "}
+          Handmade in Shanghai with Next.js &middot; &copy; {year}{" "}
           {personalInfo.name}
         </p>
 

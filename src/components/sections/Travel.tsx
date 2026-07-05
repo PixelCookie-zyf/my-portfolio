@@ -54,7 +54,7 @@ export default function Travel() {
     <section id="travel" className="py-24 px-6">
       <div className="mx-auto max-w-5xl">
         <SectionTitle
-          index="03"
+          index="04"
           kicker="places"
           title="Travel"
           subtitle="Cities and places I've explored around the world"
