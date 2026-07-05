@@ -41,11 +41,7 @@ function useTypewriter(words: readonly string[]) {
   return text;
 }
 
-const nowItems = [
-  "PhD research — AI & intelligent agents",
-  "Fresh off TAAC 2026 — #9 w/ SeRankMixer",
-  "After hours: Godot & pixel art",
-];
+const nowItems = ["PhD research", "TAAC 2026 #9", "Godot after hours"];
 
 const tickerItems = [
   ...personalInfo.roles,
@@ -99,6 +95,22 @@ export default function Hero() {
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
               {personalInfo.bio}
             </p>
+
+            {/* Status line */}
+            <p className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs text-muted">
+              <span className="relative flex h-2 w-2" aria-hidden="true">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-50" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+              </span>
+              <span className="text-accent">now</span>
+              <span className="text-muted/50">—</span>
+              {nowItems.map((item, i) => (
+                <span key={item} className="flex items-center gap-x-2.5">
+                  {i > 0 && <span className="text-muted/40">·</span>}
+                  {item}
+                </span>
+              ))}
+            </p>
           </motion.div>
 
           <motion.div
@@ -149,10 +161,9 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* ---- Avatar + now card ---- */}
-        <div className="order-1 contents lg:order-2 lg:flex lg:flex-col lg:items-center lg:gap-10">
+        {/* ---- Avatar ---- */}
+        <div className="order-1 flex justify-center lg:order-2">
           <motion.div
-            className="order-1 flex justify-center lg:order-none"
             initial={{ opacity: 0, scale: 0, rotate: -180 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 18 }}
@@ -194,31 +205,6 @@ export default function Hero() {
                 </div>
               </motion.div>
             </motion.div>
-          </motion.div>
-
-          {/* Now card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="order-3 mx-auto w-full max-w-sm rounded-2xl border border-border bg-card-bg/60 p-5 backdrop-blur-sm lg:order-none lg:mx-0"
-          >
-            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent">
-              /* now */
-            </p>
-            <ul className="mt-3 space-y-2">
-              {nowItems.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-baseline gap-2.5 text-sm leading-6 text-muted"
-                >
-                  <span className="select-none font-mono text-xs text-accent/70">
-                    ▸
-                  </span>
-                  {item}
-                </li>
-              ))}
-            </ul>
           </motion.div>
         </div>
       </div>
