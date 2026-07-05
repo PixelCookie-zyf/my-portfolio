@@ -154,7 +154,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`relative flex h-full min-h-[30rem] flex-col overflow-hidden rounded-[2rem] border p-5 md:p-6 ${
+      className={`relative flex h-full flex-col overflow-hidden rounded-[2rem] border p-5 md:p-6 ${
         isDark
           ? "border-[#2e2a26] bg-gradient-to-br from-[#191512] via-[#141110] to-[#100f0f] text-white"
           : "border-[#dad5c8] bg-gradient-to-br from-[#f7f3e6] via-[#fffcf0] to-[#f2ecdb] text-[#100f0f]"
@@ -264,7 +264,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         </a>
       </div>
 
-      <div className="relative z-10 mt-5 grid grid-cols-2 gap-3">
+      <div className="relative z-10 mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
         {statItems.map((item) => (
           <div
             key={item.label}
@@ -288,8 +288,9 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         ))}
       </div>
 
+      <div className="relative z-10 mt-5 grid items-start gap-5 lg:grid-cols-[1.6fr_1fr]">
       <div
-        className={`relative z-10 mt-5 rounded-[1.5rem] border p-4 ${
+        className={`rounded-[1.5rem] border p-4 ${
           isDark ? "border-white/8 bg-black/15" : "border-stone-200 bg-white/80"
         }`}
       >
@@ -394,7 +395,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         </div>
       </div>
 
-      <div className="relative z-10 mt-5">
+      <div className="flex h-full flex-col">
         <div className="mb-3 flex items-center justify-between">
           <p className={`text-sm font-medium ${isDark ? "text-white" : "text-stone-900"}`}>
             Pinned work
@@ -403,14 +404,14 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             top repositories
           </p>
         </div>
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid flex-1 gap-2 sm:grid-cols-2 lg:auto-rows-fr lg:grid-cols-1">
         {stats?.topRepos.map((repo) => (
           <a
             key={repo.name}
             href={repo.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group rounded-2xl border px-4 py-3 transition-all ${
+            className={`group flex flex-col justify-between rounded-2xl border px-4 py-3 transition-all ${
               isDark
                 ? "border-white/8 bg-white/[0.04] hover:border-orange-500/30 hover:bg-orange-500/[0.06]"
                 : "border-stone-200 bg-white/70 hover:border-orange-300 hover:bg-orange-100/50"
@@ -463,6 +464,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
           </a>
         ))}
         </div>
+      </div>
       </div>
     </motion.div>
   );
