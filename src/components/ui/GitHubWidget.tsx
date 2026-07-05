@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { ActivityCalendar } from "react-activity-calendar";
@@ -71,6 +71,28 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
 
   useEffect(() => setMounted(true), []);
 
+  // Fit as many weeks as the calendar host can hold (block 11px + margin 4px
+  // per column, ~32px weekday gutter), capped at a full year.
+  const calendarHostRef = useRef<HTMLDivElement>(null);
+  const [weeks, setWeeks] = useState(26);
+
+  useEffect(() => {
+    const el = calendarHostRef.current;
+    if (!el) return;
+
+    const compute = () => {
+      const width = el.clientWidth;
+      if (width > 0) {
+        setWeeks(Math.max(8, Math.min(52, Math.floor((width - 32) / 15))));
+      }
+    };
+
+    compute();
+    const observer = new ResizeObserver(compute);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     setAvatarFailed(false);
   }, [stats?.avatarUrl]);
@@ -136,7 +158,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
   }, [username]);
 
   const calendarData = stats
-    ? toCalendarActivities({ contributions: stats.contributions }, 26)
+    ? toCalendarActivities({ contributions: stats.contributions }, weeks)
     : [];
   const showCalendar = mounted && !loading && calendarData.length > 0;
   const statItems = [
@@ -221,8 +243,15 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
               >
                 @{username}
               </span>
+              <span
+                className={`text-sm ${
+                  isDark ? "text-white/62" : "text-stone-600"
+                }`}
+              >
+                · {stats?.bio ?? "Building, shipping, and learning in public."}
+              </span>
               <div
-                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] ${
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] sm:ml-auto ${
                   isDark ? "bg-white/[0.06] text-white/60" : "bg-stone-900/5 text-stone-600"
                 }`}
               >
@@ -238,13 +267,6 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                 {stats?.recentWeekContributions ?? "—"} this week
               </div>
             </div>
-            <p
-              className={`mt-2 max-w-xl text-sm leading-6 ${
-                isDark ? "text-white/62" : "text-stone-600"
-              }`}
-            >
-              {stats?.bio ?? "Building, shipping, and learning in public."}
-            </p>
           </div>
         </div>
 
@@ -288,17 +310,17 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
 
       <div className="relative z-10 mt-5 grid items-start gap-5 lg:grid-cols-[1.6fr_1fr]">
       <div
-        className={`rounded-[1.5rem] border p-4 ${
+        className={`min-w-0 rounded-[1.5rem] border p-4 ${
           isDark ? "border-white/8 bg-black/15" : "border-stone-200 bg-white/80"
         }`}
       >
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className={`text-sm font-medium ${isDark ? "text-white" : "text-stone-900"}`}>
               Contribution graph
             </p>
             <p className={`mt-1 text-xs ${isDark ? "text-white/50" : "text-stone-500"}`}>
-              Last 26 weeks of activity
+              Last {weeks} weeks of activity
             </p>
           </div>
           <div className="text-right">
@@ -321,8 +343,8 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             isDark ? "border-white/6 bg-white/[0.03]" : "border-stone-200 bg-stone-50/80"
           }`}
         >
-          <div className="overflow-x-auto pb-2">
-            <div className="min-w-[34rem]">
+          <div ref={calendarHostRef} className="overflow-x-auto pb-2">
+            <div>
               {showCalendar ? (
                 <ActivityCalendar
                   data={calendarData}
@@ -393,7 +415,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         </div>
       </div>
 
-      <div className="flex h-full flex-col">
+      <div className="flex h-full min-w-0 flex-col">
         <div className="mb-3 flex items-center justify-between">
           <p className={`text-sm font-medium ${isDark ? "text-white" : "text-stone-900"}`}>
             Pinned work
