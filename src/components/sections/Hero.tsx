@@ -169,17 +169,40 @@ export default function Hero() {
             transition={{ type: "spring", stiffness: 200, damping: 18 }}
           >
             <motion.div
-              className="relative cursor-pointer"
+              className="group relative cursor-pointer"
               animate={{ y: [0, -6, 0], scale: [1, 1.02, 1] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              whileHover={{ scale: 1.1, rotate: 3 }}
+              whileHover={{ scale: 1.06, rotate: 2 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Rotating dashed ring */}
-              <div
-                className="absolute -inset-3 rounded-full border-2 border-dashed border-accent/30 transition-all duration-500 hover:border-accent/60"
-                style={{ animation: "avatar-ring-spin 20s linear infinite" }}
-              />
+              {/* Rotating circular text badge */}
+              <svg
+                viewBox="0 0 200 200"
+                aria-hidden="true"
+                className="absolute -inset-[17%] h-[134%] w-[134%] text-muted/60 transition-colors duration-500 group-hover:text-accent/80"
+                style={{ animation: "avatar-ring-spin 32s linear infinite" }}
+              >
+                <defs>
+                  <path
+                    id="avatar-text-orbit"
+                    d="M 100,100 m -90,0 a 90,90 0 1,1 180,0 a 90,90 0 1,1 -180,0"
+                    fill="none"
+                  />
+                </defs>
+                <text
+                  fill="currentColor"
+                  fontSize="12.5"
+                  className="font-mono uppercase"
+                >
+                  <textPath
+                    href="#avatar-text-orbit"
+                    textLength="565"
+                    lengthAdjust="spacingAndGlyphs"
+                  >
+                    pixelcookie ✦ ai agents ✦ pixel art ✦ shanghai ✦
+                  </textPath>
+                </text>
+              </svg>
 
               {/* Glow wrapper with gradient border */}
               <motion.div
@@ -197,10 +220,10 @@ export default function Hero() {
                   <Image
                     src={personalInfo.avatar}
                     alt={personalInfo.name}
-                    width={192}
-                    height={192}
+                    width={240}
+                    height={240}
                     priority
-                    className="h-32 w-32 rounded-full object-cover sm:h-40 sm:w-40 lg:h-48 lg:w-48"
+                    className="h-36 w-36 rounded-full object-cover sm:h-48 sm:w-48 lg:h-60 lg:w-60"
                   />
                 </div>
               </motion.div>
