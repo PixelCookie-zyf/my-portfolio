@@ -116,6 +116,17 @@ export default function Header() {
               </motion.a>
             );
           })}
+          <motion.button
+            onClick={() =>
+              window.dispatchEvent(new CustomEvent("open-command-palette"))
+            }
+            className="ml-1 hidden items-center gap-1 rounded-full border border-border px-2.5 py-1.5 font-mono text-[11px] text-muted transition-all hover:border-accent/40 hover:text-accent lg:flex"
+            aria-label="Open command palette"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            ⌘K
+          </motion.button>
           {canShowThemeToggle && (
             <motion.button
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}

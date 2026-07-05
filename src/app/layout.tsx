@@ -5,6 +5,8 @@ import { Analytics } from "@vercel/analytics/next";
 import TelemetryWidget from "@/components/ui/TelemetryWidget";
 import CustomCursor from "@/components/ui/CustomCursor";
 import BackToTop from "@/components/ui/BackToTop";
+import CommandPalette from "@/components/ui/CommandPalette";
+import { getAllPosts } from "@/lib/blog";
 import "./globals.css";
 
 const jakartaSans = Plus_Jakarta_Sans({
@@ -52,6 +54,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const palettePosts = getAllPosts().map((post) => ({
+    slug: post.slug,
+    title: post.title,
+  }));
+
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
@@ -68,6 +75,7 @@ export default function RootLayout({
           <CustomCursor />
           <TelemetryWidget />
           <BackToTop />
+          <CommandPalette posts={palettePosts} />
           <Analytics />
         </ThemeProvider>
       </body>

@@ -1,11 +1,23 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaEnvelope } from "react-icons/fa6";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { personalInfo } from "@/data/personal";
 
 export default function Contact() {
+  const [copied, setCopied] = useState(false);
+  const resetTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  const copyEmail = () => {
+    navigator.clipboard?.writeText(personalInfo.email).then(() => {
+      setCopied(true);
+      clearTimeout(resetTimer.current);
+      resetTimer.current = setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   return (
     <section id="contact" className="relative overflow-hidden px-6 py-32">
       {/* Warm glow behind the CTA */}
@@ -46,9 +58,13 @@ export default function Contact() {
             Say hello
           </motion.a>
 
-          <p className="mt-4 font-mono text-xs tracking-wide text-muted">
-            {personalInfo.email}
-          </p>
+          <button
+            onClick={copyEmail}
+            aria-label="Copy email address"
+            className="mt-4 block w-full font-mono text-xs tracking-wide text-muted transition-colors hover:text-accent"
+          >
+            {copied ? "copied to clipboard ✦" : `${personalInfo.email} — click to copy`}
+          </button>
         </ScrollReveal>
 
         <ScrollReveal delay={0.25}>
