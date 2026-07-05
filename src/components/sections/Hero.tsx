@@ -164,7 +164,7 @@ export default function Hero() {
         {/* ---- Avatar ---- */}
         <div className="order-1 flex justify-center lg:order-2">
           <motion.div
-            initial={{ opacity: 0, scale: 0, rotate: -180 }}
+            initial={{ opacity: 0, scale: 0.85, rotate: -8 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 18 }}
           >
