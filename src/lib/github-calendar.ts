@@ -7,10 +7,22 @@ export interface GitHubContributionDay {
 }
 
 export interface GitHubContributionResponse {
-  total?: {
-    lastYear?: number;
-  };
+  total?: Record<string, number>;
   contributions?: GitHubContributionDay[];
+}
+
+/**
+ * The calendar-year API returns days out of order and includes future dates
+ * (zero-filled to Dec 31) — drop anything after `todayIso` and sort ascending
+ * so trailing-window helpers see a continuous day series ending today.
+ */
+export function normalizeContributionDays(
+  days: GitHubContributionDay[],
+  todayIso: string
+): GitHubContributionDay[] {
+  return days
+    .filter((day) => day.date <= todayIso)
+    .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export const githubCalendarTheme: ThemeInput = {

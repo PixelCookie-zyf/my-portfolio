@@ -17,6 +17,7 @@ import {
   countActiveDays,
   calculateCurrentStreak,
   githubCalendarTheme,
+  normalizeContributionDays,
   sumRecentContributions,
   toCalendarActivities,
   type GitHubContributionDay,
@@ -79,10 +80,16 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
       try {
         setLoading(true);
 
+        // Fetch by calendar year (this year + last year) instead of `y=last`:
+        // the rolling-window endpoint is aggressively cached upstream and can
+        // serve stale data for hours after the profile changes.
+        const currentYear = new Date().getFullYear();
         const [userRes, reposRes, contributionsRes] = await Promise.all([
           fetch(`https://api.github.com/users/${username}`),
           fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`),
-          fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`),
+          fetch(
+            `https://github-contributions-api.jogruber.de/v4/${username}?y=${currentYear - 1}&y=${currentYear}`
+          ),
         ]);
 
         if (!userRes.ok || !reposRes.ok || !contributionsRes.ok) {
@@ -99,7 +106,10 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
           0
         );
         const topRepos = selectFeaturedRepos(repos, 2);
-        const contributionDays = contributions.contributions ?? [];
+        const contributionDays = normalizeContributionDays(
+          contributions.contributions ?? [],
+          new Date().toISOString().slice(0, 10)
+        );
 
         setStats({
           avatarUrl: user.avatar_url ?? null,
@@ -108,7 +118,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
           publicRepos: user.public_repos ?? 0,
           followers: user.followers ?? 0,
           totalStars,
-          lastYearContributions: contributions.total?.lastYear ?? 0,
+          lastYearContributions: sumRecentContributions(contributionDays, 365),
           currentStreak: calculateCurrentStreak(contributionDays),
           recentWeekContributions: sumRecentContributions(contributionDays, 7),
           activeDays: countActiveDays(contributionDays, 42),
