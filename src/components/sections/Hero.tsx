@@ -169,40 +169,17 @@ export default function Hero() {
             transition={{ type: "spring", stiffness: 200, damping: 18 }}
           >
             <motion.div
-              className="group relative cursor-pointer"
+              className="relative cursor-pointer"
               animate={{ y: [0, -6, 0], scale: [1, 1.02, 1] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              whileHover={{ scale: 1.06, rotate: 2 }}
+              whileHover={{ scale: 1.1, rotate: 3 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Rotating circular text badge */}
-              <svg
-                viewBox="0 0 200 200"
-                aria-hidden="true"
-                className="absolute -inset-[17%] h-[134%] w-[134%] text-muted/60 transition-colors duration-500 group-hover:text-accent/80"
-                style={{ animation: "avatar-ring-spin 32s linear infinite" }}
-              >
-                <defs>
-                  <path
-                    id="avatar-text-orbit"
-                    d="M 100,100 m -90,0 a 90,90 0 1,1 180,0 a 90,90 0 1,1 -180,0"
-                    fill="none"
-                  />
-                </defs>
-                <text
-                  fill="currentColor"
-                  fontSize="12.5"
-                  className="font-mono uppercase"
-                >
-                  <textPath
-                    href="#avatar-text-orbit"
-                    textLength="565"
-                    lengthAdjust="spacingAndGlyphs"
-                  >
-                    pixelcookie ✦ ai agents ✦ pixel art ✦ shanghai ✦
-                  </textPath>
-                </text>
-              </svg>
+              {/* Rotating dashed ring */}
+              <div
+                className="absolute -inset-3 rounded-full border-2 border-dashed border-accent/30 transition-all duration-500 hover:border-accent/60"
+                style={{ animation: "avatar-ring-spin 20s linear infinite" }}
+              />
 
               {/* Glow wrapper with gradient border */}
               <motion.div
