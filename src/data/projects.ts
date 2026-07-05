@@ -24,7 +24,7 @@ export const projects: Project[] = [
   {
     title: "My Portfolio",
     description:
-      "The site you're looking at right now — generative ASCII canvas, custom cursor, text scramble, a warm paper-and-ember design system, and an interactive travel map. Built with Next.js, Tailwind CSS and Framer Motion.",
+      "The site you're looking at right now — generative ASCII canvas, text scramble, a warm paper-and-ember design system, and an interactive travel map. Built with Next.js, Tailwind CSS and Framer Motion.",
     icon: "portfolio",
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
     github: "https://github.com/PixelCookie-zyf/my-portfolio",
@@ -61,13 +61,5 @@ export const projects: Project[] = [
     icon: "torchinsight",
     tags: ["Python", "PyTorch", "Tooling"],
     github: "https://github.com/PixelCookie-zyf/TorchInsight",
-  },
-  {
-    title: "Agent Sprite Forge",
-    description:
-      "An Agent Skill that turns prompts into game-ready 2D assets — sprite sheets, tile maps, transparent PNG frames and animated GIFs — so coding agents can forge pixel art on demand.",
-    icon: "sprite-forge",
-    tags: ["Agent Skill", "GenAI", "Pixel Art"],
-    github: "https://github.com/PixelCookie-zyf/agent-sprite-forge",
   },
 ];

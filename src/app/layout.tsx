@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next";
 import TelemetryWidget from "@/components/ui/TelemetryWidget";
-import CustomCursor from "@/components/ui/CustomCursor";
 import BackToTop from "@/components/ui/BackToTop";
 import "./globals.css";
 
@@ -59,7 +58,6 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          <CustomCursor />
           <TelemetryWidget />
           <BackToTop />
           <Analytics />
