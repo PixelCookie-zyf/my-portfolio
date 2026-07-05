@@ -49,16 +49,20 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-background/80 backdrop-blur-md shadow-sm border-b border-border/50"
-          : "bg-transparent"
-      }`}
-    >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#home" className="text-lg font-bold text-foreground">
+    <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6">
+      <nav
+        className={`mx-auto flex items-center justify-between px-5 transition-all duration-500 ease-out ${
+          scrolled
+            ? "mt-3 max-w-4xl rounded-2xl border border-border/80 bg-background/80 py-2.5 shadow-[0_12px_40px_-16px_rgba(16,15,15,0.25)] backdrop-blur-xl"
+            : "mt-0 max-w-6xl border border-transparent bg-transparent py-4"
+        }`}
+      >
+        <a
+          href="#home"
+          className="text-lg font-extrabold tracking-tight text-foreground"
+        >
           {personalInfo.name}
+          <span className="text-accent">.</span>
         </a>
 
         {/* Desktop nav */}
@@ -146,7 +150,7 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-b border-border bg-background/95 backdrop-blur-md md:hidden"
+            className="mx-auto mt-2 max-w-4xl overflow-hidden rounded-2xl border border-border/80 bg-background/90 shadow-[0_12px_40px_-16px_rgba(16,15,15,0.25)] backdrop-blur-xl md:hidden"
           >
             <div className="flex flex-col gap-4 px-6 py-4">
               {navLinks.map((link) => {

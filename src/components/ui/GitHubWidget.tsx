@@ -146,18 +146,18 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className={`relative flex h-full min-h-[30rem] flex-col overflow-hidden rounded-[2rem] border p-5 md:p-6 ${
         isDark
-          ? "border-[#30363d] bg-gradient-to-br from-[#0d1117] via-[#111827] to-[#0f172a] text-white"
-          : "border-[#d0d7de] bg-gradient-to-br from-[#f6f8fa] via-white to-[#eef2ff] text-[#0f172a]"
+          ? "border-[#2e2a26] bg-gradient-to-br from-[#191512] via-[#141110] to-[#100f0f] text-white"
+          : "border-[#dad5c8] bg-gradient-to-br from-[#f7f3e6] via-[#fffcf0] to-[#f2ecdb] text-[#100f0f]"
       }`}
     >
       <div
         className={`pointer-events-none absolute -right-10 top-0 h-36 w-36 rounded-full blur-3xl ${
-          isDark ? "bg-emerald-500/12" : "bg-emerald-400/15"
+          isDark ? "bg-orange-500/12" : "bg-orange-400/15"
         }`}
       />
       <div
         className={`pointer-events-none absolute -bottom-8 left-0 h-32 w-32 rounded-full blur-3xl ${
-          isDark ? "bg-sky-500/10" : "bg-sky-300/20"
+          isDark ? "bg-amber-500/10" : "bg-amber-300/20"
         }`}
       />
 
@@ -167,7 +167,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${
               isDark
                 ? "border-white/10 bg-white/[0.06]"
-                : "border-slate-200 bg-white/80"
+                : "border-stone-200 bg-white/80"
             }`}
           >
             {stats?.avatarUrl && !avatarFailed ? (
@@ -181,14 +181,14 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                 unoptimized
               />
             ) : (
-              <FaGithub className={`text-2xl ${isDark ? "text-white" : "text-slate-900"}`} />
+              <FaGithub className={`text-2xl ${isDark ? "text-white" : "text-stone-900"}`} />
             )}
           </div>
 
           <div className="min-w-0">
             <p
               className={`text-xs uppercase tracking-[0.24em] ${
-                isDark ? "text-white/45" : "text-slate-500"
+                isDark ? "text-white/45" : "text-stone-500"
               }`}
             >
               open source
@@ -198,15 +198,15 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                 href={`https://github.com/${username}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`block text-lg font-semibold transition-colors hover:text-emerald-500 ${
-                  isDark ? "text-white" : "text-slate-900"
+                className={`block text-lg font-semibold transition-colors hover:text-accent ${
+                  isDark ? "text-white" : "text-stone-900"
                 }`}
               >
                 {stats?.displayName ?? username}
               </a>
               <span
                 className={`text-sm ${
-                  isDark ? "text-white/40" : "text-slate-500"
+                  isDark ? "text-white/40" : "text-stone-500"
                 }`}
               >
                 @{username}
@@ -214,7 +214,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             </div>
             <p
               className={`mt-2 max-w-xl text-sm leading-6 ${
-                isDark ? "text-white/62" : "text-slate-600"
+                isDark ? "text-white/62" : "text-stone-600"
               }`}
             >
               {stats?.bio ?? "Building, shipping, and learning in public."}
@@ -222,7 +222,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             <div className="mt-3 flex flex-wrap gap-2">
               <div
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] ${
-                  isDark ? "bg-white/[0.06] text-white/60" : "bg-slate-900/5 text-slate-600"
+                  isDark ? "bg-white/[0.06] text-white/60" : "bg-stone-900/5 text-stone-600"
                 }`}
               >
                 <FaUserGroup className="text-[10px]" />
@@ -230,7 +230,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
               </div>
               <div
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] ${
-                  isDark ? "bg-emerald-500/10 text-emerald-300" : "bg-emerald-50 text-emerald-700"
+                  isDark ? "bg-orange-500/10 text-orange-300" : "bg-orange-500/10 text-orange-800"
                 }`}
               >
                 <FaFireFlameCurved className="text-[10px]" />
@@ -247,7 +247,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
           className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${
             isDark
               ? "bg-white/[0.06] text-white/45 hover:bg-white/[0.12] hover:text-white"
-              : "bg-slate-900/5 text-slate-500 hover:bg-slate-900/10 hover:text-slate-900"
+              : "bg-stone-900/5 text-stone-500 hover:bg-stone-900/10 hover:text-stone-900"
           }`}
         >
           <FaArrowUpRightFromSquare className="text-xs" />
@@ -261,15 +261,15 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             className={`rounded-2xl border p-3 ${
               isDark
                 ? "border-white/8 bg-white/[0.04]"
-                : "border-slate-200 bg-white/70"
+                : "border-stone-200 bg-white/70"
             }`}
           >
-            <p className={`text-xl font-semibold ${isDark ? "text-white" : "text-slate-900"}`}>
+            <p className={`text-xl font-semibold ${isDark ? "text-white" : "text-stone-900"}`}>
               {item.value}
             </p>
             <p
               className={`mt-1 text-[11px] uppercase tracking-[0.18em] ${
-                isDark ? "text-white/45" : "text-slate-500"
+                isDark ? "text-white/45" : "text-stone-500"
               }`}
             >
               {item.label}
@@ -280,28 +280,28 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
 
       <div
         className={`relative z-10 mt-5 rounded-[1.5rem] border p-4 ${
-          isDark ? "border-white/8 bg-black/15" : "border-slate-200 bg-white/80"
+          isDark ? "border-white/8 bg-black/15" : "border-stone-200 bg-white/80"
         }`}
       >
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className={`text-sm font-medium ${isDark ? "text-white" : "text-slate-900"}`}>
+            <p className={`text-sm font-medium ${isDark ? "text-white" : "text-stone-900"}`}>
               Contribution graph
             </p>
-            <p className={`mt-1 text-xs ${isDark ? "text-white/50" : "text-slate-500"}`}>
+            <p className={`mt-1 text-xs ${isDark ? "text-white/50" : "text-stone-500"}`}>
               Last 26 weeks of activity
             </p>
           </div>
           <div className="text-right">
             <div
               className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] ${
-                isDark ? "bg-white/[0.06] text-emerald-300" : "bg-emerald-50 text-emerald-700"
+                isDark ? "bg-white/[0.06] text-orange-300" : "bg-orange-500/10 text-orange-800"
               }`}
             >
               <FaFireFlameCurved className="text-[10px]" />
               {stats?.currentStreak ?? "—"} day streak
             </div>
-            <p className={`mt-2 text-[11px] ${isDark ? "text-white/42" : "text-slate-500"}`}>
+            <p className={`mt-2 text-[11px] ${isDark ? "text-white/42" : "text-stone-500"}`}>
               {stats?.activeDays ?? "—"} active days in the last 6 weeks
             </p>
           </div>
@@ -309,7 +309,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
 
         <div
           className={`mt-4 overflow-hidden rounded-[1.25rem] border p-3 ${
-            isDark ? "border-white/6 bg-white/[0.03]" : "border-slate-200 bg-slate-50/80"
+            isDark ? "border-white/6 bg-white/[0.03]" : "border-stone-200 bg-stone-50/80"
           }`}
         >
           <div className="overflow-x-auto pb-2">
@@ -331,7 +331,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
               ) : (
                 <div
                   className={`grid min-h-[136px] grid-cols-[auto_1fr] gap-3 ${
-                    isDark ? "text-white/18" : "text-slate-300"
+                    isDark ? "text-white/18" : "text-stone-300"
                   }`}
                 >
                   <div className="grid gap-[6px] pt-7">
@@ -352,7 +352,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                         <span
                           key={index}
                           className={`h-[11px] w-[11px] rounded-[4px] ${
-                            isDark ? "bg-white/[0.05]" : "bg-slate-200/90"
+                            isDark ? "bg-white/[0.05]" : "bg-stone-200/90"
                           }`}
                         />
                       ))}
@@ -365,7 +365,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         </div>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <div className={`flex items-center gap-2 text-[11px] ${isDark ? "text-white/45" : "text-slate-500"}`}>
+          <div className={`flex items-center gap-2 text-[11px] ${isDark ? "text-white/45" : "text-stone-500"}`}>
             <span>Less</span>
             <div className="flex items-center gap-1">
               {legendSwatches.map((color) => (
@@ -378,7 +378,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             </div>
             <span>More</span>
           </div>
-          <p className={`text-[11px] ${isDark ? "text-white/45" : "text-slate-500"}`}>
+          <p className={`text-[11px] ${isDark ? "text-white/45" : "text-stone-500"}`}>
             Public contribution data mirrored from GitHub
           </p>
         </div>
@@ -386,10 +386,10 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
 
       <div className="relative z-10 mt-5">
         <div className="mb-3 flex items-center justify-between">
-          <p className={`text-sm font-medium ${isDark ? "text-white" : "text-slate-900"}`}>
+          <p className={`text-sm font-medium ${isDark ? "text-white" : "text-stone-900"}`}>
             Pinned work
           </p>
-          <p className={`text-[11px] uppercase tracking-[0.18em] ${isDark ? "text-white/40" : "text-slate-500"}`}>
+          <p className={`text-[11px] uppercase tracking-[0.18em] ${isDark ? "text-white/40" : "text-stone-500"}`}>
             top repositories
           </p>
         </div>
@@ -402,13 +402,13 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             rel="noopener noreferrer"
             className={`group rounded-2xl border px-4 py-3 transition-all ${
               isDark
-                ? "border-white/8 bg-white/[0.04] hover:border-emerald-500/30 hover:bg-emerald-500/[0.06]"
-                : "border-slate-200 bg-white/70 hover:border-emerald-300 hover:bg-emerald-50/80"
+                ? "border-white/8 bg-white/[0.04] hover:border-orange-500/30 hover:bg-orange-500/[0.06]"
+                : "border-stone-200 bg-white/70 hover:border-orange-300 hover:bg-orange-100/50"
             }`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className={`text-[11px] uppercase tracking-[0.18em] ${isDark ? "text-white/35" : "text-slate-500"}`}>
+                <p className={`text-[11px] uppercase tracking-[0.18em] ${isDark ? "text-white/35" : "text-stone-500"}`}>
                   repository
                 </p>
                 <div className="mt-2 flex items-center gap-2">
@@ -419,26 +419,26 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                     />
                   )}
                   <span
-                    className={`block truncate text-sm font-medium transition-colors group-hover:text-emerald-500 ${
-                      isDark ? "text-white/90" : "text-slate-800"
+                    className={`block truncate text-sm font-medium transition-colors group-hover:text-accent ${
+                      isDark ? "text-white/90" : "text-stone-800"
                     }`}
                   >
                     {repo.name}
                   </span>
                 </div>
-                <p className={`mt-2 text-xs leading-5 ${isDark ? "text-white/45" : "text-slate-500"}`}>
+                <p className={`mt-2 text-xs leading-5 ${isDark ? "text-white/45" : "text-stone-500"}`}>
                   {repo.language
                     ? `${repo.language} project with active iteration and public source.`
                     : "Public project with visible source and ongoing updates."}
                 </p>
               </div>
               <FaArrowUpRightFromSquare
-                className={`shrink-0 text-[10px] ${isDark ? "text-white/30" : "text-slate-400"}`}
+                className={`shrink-0 text-[10px] ${isDark ? "text-white/30" : "text-stone-400"}`}
               />
             </div>
             <div
               className={`mt-3 flex items-center gap-4 text-xs ${
-                isDark ? "text-white/45" : "text-slate-500"
+                isDark ? "text-white/45" : "text-stone-500"
               }`}
             >
               <span className="flex items-center gap-1">

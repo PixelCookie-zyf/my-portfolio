@@ -90,7 +90,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
 
         <header className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-card-bg/35 px-6 py-8 shadow-[0_30px_80px_rgba(0,0,0,0.08)] sm:px-8 sm:py-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.13),transparent_42%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(218,112,44,0.12),transparent_42%)]" />
           <div className="relative z-10">
             <div className="inline-flex items-center rounded-full border border-accent/20 bg-accent/8 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
               Article

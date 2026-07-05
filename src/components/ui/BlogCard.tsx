@@ -16,7 +16,7 @@ export default function BlogCard({ post }: BlogCardProps) {
         whileHover={{
           y: -4,
           boxShadow:
-            "0 0 0 1.5px rgba(59,130,246,0.3), 0 24px 60px rgba(15,23,42,0.14)",
+            "0 0 0 1.5px rgba(200,95,30,0.4), 0 24px 60px rgba(28,27,26,0.14)",
         }}
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -24,7 +24,7 @@ export default function BlogCard({ post }: BlogCardProps) {
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_42%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(218,112,44,0.14),transparent_42%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         />
 
         <div className="relative z-10 flex items-start justify-between gap-4">

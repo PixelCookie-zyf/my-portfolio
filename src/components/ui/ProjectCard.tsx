@@ -16,7 +16,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       whileHover={{
         y: -4,
         boxShadow:
-          "0 0 0 1.5px rgba(59,130,246,0.65), 0 20px 40px rgba(59,130,246,0.12)",
+          "0 0 0 1.5px rgba(200,95,30,0.6), 0 20px 40px rgba(188,82,21,0.14)",
       }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}

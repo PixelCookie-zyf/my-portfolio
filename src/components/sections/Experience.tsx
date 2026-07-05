@@ -8,21 +8,21 @@ import { timelineEntries, type TimelineEntry } from "@/data/experience";
 // Node dot styles by type
 // ---------------------------------------------------------------------------
 const dotStyles: Record<TimelineEntry["type"], string> = {
-  education: "border-blue-500 bg-blue-100 dark:bg-blue-900",
-  work: "border-violet-500 bg-violet-100 dark:bg-violet-900",
-  future: "border-dashed border-gray-400 bg-transparent",
+  education: "border-[#24837B] bg-[#24837B]/15 dark:border-[#3AA99F] dark:bg-[#3AA99F]/20",
+  work: "border-accent bg-accent/15 dark:bg-accent/20",
+  future: "border-dashed border-muted/60 bg-transparent",
 };
 
 const accentColors: Record<TimelineEntry["type"], string> = {
-  education: "text-blue-600 dark:text-blue-400",
-  work: "text-violet-600 dark:text-violet-400",
-  future: "text-gray-400",
+  education: "text-[#24837B] dark:text-[#3AA99F]",
+  work: "text-accent",
+  future: "text-muted/70",
 };
 
 const borderLeft: Record<TimelineEntry["type"], string> = {
-  education: "border-l-blue-500",
-  work: "border-l-violet-500",
-  future: "border-l-gray-300",
+  education: "border-l-[#24837B] dark:border-l-[#3AA99F]",
+  work: "border-l-accent",
+  future: "border-l-border",
 };
 
 // ---------------------------------------------------------------------------
@@ -81,7 +81,12 @@ export default function Experience() {
   return (
     <section id="experience" className="py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-6xl">
-        <SectionTitle title="Experience" subtitle="My journey so far" />
+        <SectionTitle
+          index="01"
+          kicker="career"
+          title="Experience"
+          subtitle="My journey so far"
+        />
 
         {/* ---- Desktop: horizontal timeline (lg+) ---- */}
         <div className="hidden lg:block">
@@ -104,7 +109,7 @@ export default function Experience() {
           {/* Timeline line + dots */}
           <div className="relative flex items-center py-3">
             <motion.div
-              className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-blue-300 via-violet-300 to-gray-200 dark:from-blue-700 dark:via-violet-700 dark:to-gray-600"
+              className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-[#24837B]/50 via-accent/50 to-border dark:from-[#3AA99F]/40 dark:via-accent/40"
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
@@ -133,14 +138,14 @@ export default function Experience() {
                   />
                   {entry.period.includes("Present") && (
                     <motion.div
-                      className="absolute inset-0 rounded-full border-2 border-violet-400"
+                      className="absolute inset-0 rounded-full border-2 border-accent"
                       animate={{ scale: [1, 1.8, 1], opacity: [0.6, 0, 0.6] }}
                       transition={{ repeat: Infinity, duration: 2 }}
                     />
                   )}
                   {entry.type === "future" && (
                     <motion.div
-                      className="absolute inset-0 rounded-full border-2 border-dashed border-gray-300"
+                      className="absolute inset-0 rounded-full border-2 border-dashed border-muted/40"
                       animate={{ opacity: [0.3, 0.8, 0.3] }}
                       transition={{ repeat: Infinity, duration: 3 }}
                     />
@@ -169,7 +174,7 @@ export default function Experience() {
 
         {/* ---- Mobile / Tablet: vertical timeline ---- */}
         <div className="lg:hidden relative">
-          <div className="absolute left-[7px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-300 via-violet-300 to-gray-200 dark:from-blue-700 dark:via-violet-700 dark:to-gray-600" />
+          <div className="absolute left-[7px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#24837B]/50 via-accent/50 to-border dark:from-[#3AA99F]/40 dark:via-accent/40" />
 
           <div className="space-y-8">
             {timelineEntries.map((entry, i) => (
@@ -189,7 +194,7 @@ export default function Experience() {
                   />
                   {entry.period.includes("Present") && (
                     <motion.div
-                      className="absolute inset-0 rounded-full border-2 border-violet-400"
+                      className="absolute inset-0 rounded-full border-2 border-accent"
                       animate={{ scale: [1, 1.8, 1], opacity: [0.6, 0, 0.6] }}
                       transition={{ repeat: Infinity, duration: 2 }}
                     />

@@ -13,6 +13,8 @@ export default function Blog() {
     <section id="blog" className="bg-card-bg/30 px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionTitle
+          index="04"
+          kicker="writing"
           title="Blog"
           subtitle="Long-form notes on AI systems, reinforcement learning, and things I learn while building."
         />

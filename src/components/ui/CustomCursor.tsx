@@ -71,7 +71,7 @@ export default function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className="dark:bg-emerald-400 bg-black"
+        className="bg-accent"
         style={{
           position: "fixed",
           top: 0,
@@ -86,7 +86,7 @@ export default function CustomCursor() {
       />
       <div
         ref={outlineRef}
-        className="dark:border-emerald-400 border-black"
+        className="border-accent/70"
         style={{
           position: "fixed",
           top: 0,

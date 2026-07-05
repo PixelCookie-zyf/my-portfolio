@@ -2,22 +2,28 @@
 
 @variant dark (&:where(.dark, .dark *));
 
+/* ---------------------------------------------------------------------------
+   Design tokens — "Paper & Ember"
+   Warm paper/ink neutrals (inspired by Flexoki) with a single ember accent.
+--------------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --muted: #6b7280;
-  --accent: #3b82f6;
-  --card-bg: #f5f5f5;
-  --border: #e5e7eb;
+  --background: #fffcf0; /* paper */
+  --foreground: #100f0f; /* ink */
+  --muted: #6f6e69;
+  --accent: #bc5215; /* ember */
+  --accent-strong: #a04309;
+  --card-bg: #f2f0e5;
+  --border: #e6e4d9;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --muted: #9ca3af;
-  --accent: #60a5fa;
-  --card-bg: #1a1a1a;
-  --border: #2e2e2e;
+  --background: #100f0f;
+  --foreground: #cecdc3;
+  --muted: #878580;
+  --accent: #da702c;
+  --accent-strong: #ec8b49;
+  --card-bg: #1c1b1a;
+  --border: #282726;
 }
 
 @theme inline {
@@ -25,20 +31,45 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
   --color-card-bg: var(--card-bg);
   --color-border: var(--border);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jakarta-sans);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-jakarta-sans), system-ui, -apple-system, sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Film grain — keeps large flat paper areas from feeling sterile */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.dark body::after {
+  opacity: 0.05;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 65%, transparent);
+  outline-offset: 2px;
 }
 
 /* Avatar ring animation */
@@ -68,18 +99,18 @@ html {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: #d8d4c6;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: #b7b5ac;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: #403e3b;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: #575350;
 }
 
 /* Blog prose typography */
@@ -94,6 +125,7 @@ html {
 .prose-custom h1 {
   font-size: 2rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
   color: var(--foreground);
@@ -106,6 +138,7 @@ html {
 .prose-custom h2 {
   font-size: 1.5rem;
   font-weight: 700;
+  letter-spacing: -0.015em;
   margin-top: 2.15rem;
   margin-bottom: 0.8rem;
   padding-top: 0.25rem;
@@ -180,7 +213,7 @@ html {
 }
 
 .prose-custom code {
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-jetbrains-mono), monospace;
   font-size: 0.85em;
   background: color-mix(in srgb, var(--card-bg) 84%, transparent);
   padding: 0.18em 0.42em;

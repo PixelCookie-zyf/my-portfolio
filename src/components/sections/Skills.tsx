@@ -13,6 +13,8 @@ export default function Skills() {
     <section id="build-log" className="bg-card-bg/30 px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionTitle
+          index="02"
+          kicker="craft"
           title="Build Log"
           subtitle="A running record of what I build and work with"
         />

@@ -11,7 +11,7 @@ function getMarkerIcon(city: City) {
       className: "",
       iconSize: [16, 16],
       iconAnchor: [8, 8],
-      html: `<div style="width:16px;height:16px;border-radius:50%;background:#f97316;box-shadow:0 0 14px #f97316,0 0 28px #f9731640;animation:mapPulse 2s ease-in-out infinite;"></div>`,
+      html: `<div style="width:16px;height:16px;border-radius:50%;background:#da702c;box-shadow:0 0 14px #da702c,0 0 28px #da702c40;animation:mapPulse 2s ease-in-out infinite;"></div>`,
     });
   }
   if (city.country !== "China" && city.country !== "Japan") {
@@ -19,14 +19,14 @@ function getMarkerIcon(city: City) {
       className: "",
       iconSize: [12, 12],
       iconAnchor: [6, 6],
-      html: `<div style="width:12px;height:12px;border-radius:50%;background:#8b5cf6;box-shadow:0 0 10px #8b5cf6,0 0 20px #8b5cf640;animation:mapPulse 2.5s ease-in-out infinite;"></div>`,
+      html: `<div style="width:12px;height:12px;border-radius:50%;background:#3aa99f;box-shadow:0 0 10px #3aa99f,0 0 20px #3aa99f40;animation:mapPulse 2.5s ease-in-out infinite;"></div>`,
     });
   }
   return L.divIcon({
     className: "",
     iconSize: [10, 10],
     iconAnchor: [5, 5],
-    html: `<div style="width:10px;height:10px;border-radius:50%;background:#64748b;box-shadow:0 0 8px #64748b80;animation:mapPulse 3s ease-in-out infinite;"></div>`,
+    html: `<div style="width:10px;height:10px;border-radius:50%;background:#a8a29e;box-shadow:0 0 8px #a8a29e80;animation:mapPulse 3s ease-in-out infinite;"></div>`,
   });
 }
 
@@ -55,7 +55,7 @@ export default function TravelMap() {
         zoomControl={true}
         worldCopyJump={true}
         className="h-[400px] sm:h-[500px] w-full rounded-2xl z-0"
-        style={{ background: "#f1f5f9" }}
+        style={{ background: "#efece0" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'

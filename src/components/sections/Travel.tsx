@@ -9,7 +9,7 @@ import { visitedCities } from "@/data/travel";
 const TravelMap = dynamic(() => import("@/components/ui/TravelMap"), {
   ssr: false,
   loading: () => (
-    <div className="h-[400px] sm:h-[500px] animate-pulse rounded-2xl bg-gray-100" />
+    <div className="h-[400px] sm:h-[500px] animate-pulse rounded-2xl bg-card-bg" />
   ),
 });
 
@@ -54,6 +54,8 @@ export default function Travel() {
     <section id="travel" className="py-24 px-6">
       <div className="mx-auto max-w-5xl">
         <SectionTitle
+          index="03"
+          kicker="places"
           title="Travel"
           subtitle="Cities and places I've explored around the world"
         />

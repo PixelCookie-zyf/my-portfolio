@@ -71,9 +71,9 @@ export default function AsciiCanvas({
             const bit = Math.random() > 0.5 ? "1" : "0";
 
             if (isDark) {
-              ctx.fillStyle = `rgba(34, 197, 94, ${lensStrength * 0.9})`;
+              ctx.fillStyle = `rgba(236, 139, 73, ${lensStrength * 0.9})`;
             } else {
-              ctx.fillStyle = `rgba(0, 0, 0, ${lensStrength * 0.85})`;
+              ctx.fillStyle = `rgba(188, 82, 21, ${lensStrength * 0.85})`;
             }
             ctx.fillText(bit, x + charSize / 2 - shiftX, y + charSize / 2 - shiftY);
           } else if (normalizedY < mountainHeight + noise * 0.1) {
@@ -84,9 +84,9 @@ export default function AsciiCanvas({
 
             if (alpha > 0.05) {
               if (isDark) {
-                ctx.fillStyle = `rgba(34, 197, 94, ${alpha})`;
+                ctx.fillStyle = `rgba(218, 112, 44, ${alpha})`;
               } else {
-                ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+                ctx.fillStyle = `rgba(124, 111, 100, ${alpha})`;
               }
               ctx.fillText(char, x + charSize / 2, y + charSize / 2);
             }

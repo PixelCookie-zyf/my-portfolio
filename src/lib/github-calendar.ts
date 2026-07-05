@@ -14,8 +14,8 @@ export interface GitHubContributionResponse {
 }
 
 export const githubCalendarTheme: ThemeInput = {
-  light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
-  dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+  light: ["#ece9dd", "#f6d7a8", "#eda659", "#d3722a", "#a04309"],
+  dark: ["#201e1b", "#3d2410", "#6e3a12", "#a55317", "#da702c"],
 };
 
 export function toCalendarActivities(

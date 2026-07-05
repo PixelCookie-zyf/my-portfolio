@@ -51,7 +51,7 @@ export default function TelemetryWidget() {
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 hidden md:block pointer-events-none text-right font-mono text-xs text-gray-500 dark:text-emerald-400/50 opacity-40 hover:opacity-80 transition-opacity">
+    <div className="fixed bottom-6 right-6 z-50 hidden md:block pointer-events-none text-right font-mono text-xs text-muted dark:text-accent/60 opacity-40 hover:opacity-80 transition-opacity">
       <div>FPS: <span ref={fpsRef}>--</span></div>
       <div><span ref={mouseRef}>X: 0 Y: 0</span></div>
       <div><span ref={timeRef}>--:--:--</span></div>

@@ -72,18 +72,18 @@ export default function Hero() {
           >
             {/* Rotating dashed ring */}
             <div
-              className="absolute -inset-3 rounded-full border-2 border-dashed border-emerald-400/30 transition-all duration-500 hover:border-emerald-400/60"
+              className="absolute -inset-3 rounded-full border-2 border-dashed border-accent/30 transition-all duration-500 hover:border-accent/60"
               style={{ animation: "avatar-ring-spin 20s linear infinite" }}
             />
 
             {/* Glow wrapper with gradient border */}
             <motion.div
-              className="relative rounded-full bg-gradient-to-br from-emerald-400 via-cyan-400 to-blue-500 p-[3px]"
+              className="relative rounded-full bg-gradient-to-br from-[#DA702C] via-[#BC5215] to-[#AD8301] p-[3px]"
               animate={{
                 boxShadow: [
-                  "0 0 20px rgba(52,211,153,0.3), 0 0 40px rgba(59,130,246,0.15)",
-                  "0 0 30px rgba(52,211,153,0.5), 0 0 60px rgba(59,130,246,0.3)",
-                  "0 0 20px rgba(52,211,153,0.3), 0 0 40px rgba(59,130,246,0.15)",
+                  "0 0 20px rgba(218,112,44,0.28), 0 0 40px rgba(173,131,1,0.14)",
+                  "0 0 30px rgba(218,112,44,0.45), 0 0 60px rgba(173,131,1,0.26)",
+                  "0 0 20px rgba(218,112,44,0.28), 0 0 40px rgba(173,131,1,0.14)",
                 ],
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -176,6 +176,27 @@ export default function Hero() {
           })}
         </motion.div>
       </div>
+
+      {/* Scroll hint */}
+      <motion.a
+        href="#experience"
+        aria-label="Scroll to experience"
+        className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-muted transition-colors hover:text-accent sm:flex"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.4, duration: 0.8 }}
+      >
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em]">
+          scroll
+        </span>
+        <motion.span
+          aria-hidden="true"
+          className="h-8 w-px bg-gradient-to-b from-accent/70 to-transparent"
+          animate={{ scaleY: [1, 0.55, 1], opacity: [0.9, 0.4, 0.9] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          style={{ transformOrigin: "top" }}
+        />
+      </motion.a>
     </section>
   );
 }

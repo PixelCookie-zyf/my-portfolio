@@ -19,7 +19,7 @@ export default function BlogPage() {
       <BlogThemeToggle />
       <div className="relative overflow-hidden">
         <AsciiCanvas variant="subtle" className="opacity-60" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.16),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(218,112,44,0.14),transparent_55%)]" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background" />
       </div>
 
