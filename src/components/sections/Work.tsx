@@ -7,7 +7,6 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import { projects, type Project } from "@/data/projects";
 
 function WorkRow({ project, index }: { project: Project; index: number }) {
-  const Icon = project.thumbnail.icon;
   const primaryLink = project.github ?? project.demo;
 
   return (
@@ -26,10 +25,23 @@ function WorkRow({ project, index }: { project: Project; index: number }) {
       {/* Title block */}
       <div className="col-start-2 row-start-1 min-w-0">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-[1.375rem] text-white ring-1 ring-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_6px_14px_-6px_rgba(16,15,15,0.4)] transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${project.thumbnail.gradient}`}
-          >
-            <Icon />
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-card-bg/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/icons/light/${project.icon}.svg`}
+              alt=""
+              width={28}
+              height={28}
+              className="h-7 w-7 dark:hidden"
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/icons/dark/${project.icon}.svg`}
+              alt=""
+              width={28}
+              height={28}
+              className="hidden h-7 w-7 dark:block"
+            />
           </span>
           <h3 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-accent md:text-2xl">
             {primaryLink ? (
