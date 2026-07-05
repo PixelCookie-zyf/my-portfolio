@@ -221,15 +221,6 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
               >
                 @{username}
               </span>
-            </div>
-            <p
-              className={`mt-2 max-w-xl text-sm leading-6 ${
-                isDark ? "text-white/62" : "text-stone-600"
-              }`}
-            >
-              {stats?.bio ?? "Building, shipping, and learning in public."}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
               <div
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] ${
                   isDark ? "bg-white/[0.06] text-white/60" : "bg-stone-900/5 text-stone-600"
@@ -247,6 +238,13 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                 {stats?.recentWeekContributions ?? "—"} this week
               </div>
             </div>
+            <p
+              className={`mt-2 max-w-xl text-sm leading-6 ${
+                isDark ? "text-white/62" : "text-stone-600"
+              }`}
+            >
+              {stats?.bio ?? "Building, shipping, and learning in public."}
+            </p>
           </div>
         </div>
 
