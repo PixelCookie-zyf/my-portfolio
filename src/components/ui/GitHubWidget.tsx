@@ -23,7 +23,11 @@ import {
   type GitHubContributionDay,
   type GitHubContributionResponse,
 } from "@/lib/github-calendar";
-import { selectFeaturedRepos, type GitHubRepo } from "@/lib/github";
+import {
+  fetchPinnedRepos,
+  selectFeaturedRepos,
+  type GitHubRepo,
+} from "@/lib/github";
 
 interface GitHubWidgetProps {
   username: string;
@@ -31,6 +35,7 @@ interface GitHubWidgetProps {
 
 interface RepoInfo {
   name: string;
+  description: string | null;
   stars: number;
   forks: number;
   language: string | null;
@@ -106,6 +111,10 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         // the rolling-window endpoint is aggressively cached upstream and can
         // serve stale data for hours after the profile changes.
         const currentYear = new Date().getFullYear();
+        // Real pinned repos (via a public scraper — GitHub's REST API can't
+        // return pins). Kicked off in parallel; never throws, resolves [] on
+        // failure so we can fall back to a heuristic selection.
+        const pinnedPromise = fetchPinnedRepos(username, 2);
         const [userRes, reposRes, contributionsRes] = await Promise.all([
           fetch(`https://api.github.com/users/${username}`),
           fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`),
@@ -127,7 +136,8 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
           (sum, repo) => sum + repo.stargazers_count,
           0
         );
-        const topRepos = selectFeaturedRepos(repos, 2);
+        const pinned = await pinnedPromise;
+        const topRepos = pinned.length > 0 ? pinned : selectFeaturedRepos(repos, 2);
         const contributionDays = normalizeContributionDays(
           contributions.contributions ?? [],
           new Date().toISOString().slice(0, 10)
@@ -457,10 +467,12 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                     {repo.name}
                   </span>
                 </div>
-                <p className={`mt-2 text-xs leading-5 ${isDark ? "text-white/45" : "text-stone-500"}`}>
-                  {repo.language
-                    ? `${repo.language} project with active iteration and public source.`
-                    : "Public project with visible source and ongoing updates."}
+                <p className={`mt-2 line-clamp-2 text-xs leading-5 ${isDark ? "text-white/45" : "text-stone-500"}`}>
+                  {repo.description
+                    ? repo.description
+                    : repo.language
+                      ? `${repo.language} project with active iteration and public source.`
+                      : "Public project with visible source and ongoing updates."}
                 </p>
               </div>
               <FaArrowUpRightFromSquare
