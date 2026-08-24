@@ -122,13 +122,33 @@ body::after {
   background: #575350;
 }
 
+.scrollbar-hidden,
+.scrollbar-hidden .react-activity-calendar__scroll-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar,
+.scrollbar-hidden .react-activity-calendar__scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
 /* Blog prose typography */
 .prose-custom {
   color: var(--foreground);
-  font-size: 1.0625rem;
-  line-height: 1.84;
+  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  font-size: 1.125rem;
+  line-height: 2;
+  letter-spacing: 0.008em;
   text-wrap: pretty;
   word-break: break-word;
+}
+
+.prose-custom h1,
+.prose-custom h2,
+.prose-custom h3,
+.prose-custom h4 {
+  font-family: var(--font-jakarta-sans), system-ui, sans-serif;
 }
 
 .prose-custom h1 {
@@ -171,12 +191,12 @@ body::after {
 }
 
 .prose-custom p {
-  margin-bottom: 1.05rem;
+  margin-bottom: 1.25rem;
 }
 
 .prose-custom > p:first-of-type {
-  font-size: 1.125rem;
-  line-height: 1.82;
+  font-size: 1.1875rem;
+  line-height: 2.05;
   color: color-mix(in srgb, var(--foreground) 88%, var(--muted) 12%);
 }
 
@@ -224,20 +244,23 @@ body::after {
 .prose-custom code {
   font-family: var(--font-jetbrains-mono), monospace;
   font-size: 0.85em;
-  background: color-mix(in srgb, var(--card-bg) 84%, transparent);
-  padding: 0.18em 0.42em;
-  border-radius: 6px;
-  border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  color: var(--accent);
+  background: transparent;
+  padding: 0.08em 0.16em;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
 }
 
 .prose-custom pre {
-  background: color-mix(in srgb, var(--card-bg) 90%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 1.1rem 1.15rem;
+  background: color-mix(in srgb, var(--card-bg) 58%, transparent);
+  border: 0;
+  border-left: 3px solid color-mix(in srgb, var(--accent) 72%, transparent);
+  border-radius: 0;
+  padding: 1.2rem 1.4rem;
   overflow-x: auto;
-  margin-bottom: 1.5rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  margin: 1.75rem 0 2rem;
+  box-shadow: none;
 }
 
 .prose-custom pre code {
@@ -249,13 +272,13 @@ body::after {
 }
 
 .prose-custom blockquote {
-  border-left: 3px solid var(--accent);
-  padding: 0.2rem 0 0.2rem 1rem;
-  color: var(--muted);
-  font-style: italic;
-  margin-bottom: 1.5rem;
-  background: color-mix(in srgb, var(--card-bg) 45%, transparent);
-  border-radius: 0 14px 14px 0;
+  border-left: 2px solid var(--accent);
+  padding: 0.15rem 0 0.15rem 1.25rem;
+  color: color-mix(in srgb, var(--foreground) 78%, var(--muted) 22%);
+  font-style: normal;
+  margin: 1.75rem 0 2rem;
+  background: transparent;
+  border-radius: 0;
 }
 
 .prose-custom blockquote p:last-child {
@@ -278,14 +301,16 @@ body::after {
 .prose-custom table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1.5rem;
+  margin: 1.75rem 0 2rem;
   font-size: 0.9375rem;
   display: block;
   overflow-x: auto;
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--border);
 }
 
 .prose-custom thead {
-  border-bottom: 2px solid var(--border);
+  border-bottom: 1px solid var(--foreground);
 }
 
 .prose-custom tbody,
@@ -296,20 +321,21 @@ body::after {
 }
 
 .prose-custom th {
-  padding: 0.75rem;
+  padding: 0.85rem 0.75rem;
   text-align: left;
   font-weight: 600;
   color: var(--foreground);
   white-space: nowrap;
+  font-family: var(--font-jakarta-sans), system-ui, sans-serif;
 }
 
 .prose-custom td {
-  padding: 0.75rem;
+  padding: 0.8rem 0.75rem;
   border-bottom: 1px solid var(--border);
 }
 
 .prose-custom tbody tr:nth-child(odd) {
-  background: color-mix(in srgb, var(--card-bg) 45%, transparent);
+  background: transparent;
 }
 
 .prose-custom tbody tr:last-child td {
@@ -318,7 +344,8 @@ body::after {
 
 /* KaTeX math */
 .prose-custom .katex-display {
-  margin: 1.5rem 0;
+  margin: 2rem 0;
+  padding: 0.35rem 0;
   overflow-x: auto;
   overflow-y: hidden;
 }

@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 export default function TelemetryWidget() {
+  const pathname = usePathname();
+  const hiddenForReading = pathname.startsWith("/blog");
   const fpsRef = useRef<HTMLSpanElement>(null);
   const mouseRef = useRef<HTMLSpanElement>(null);
   const timeRef = useRef<HTMLSpanElement>(null);
@@ -11,6 +14,8 @@ export default function TelemetryWidget() {
   const rafId = useRef<number>(0);
 
   useEffect(() => {
+    if (hiddenForReading) return;
+
     lastTime.current = performance.now();
 
     const loop = (now: number) => {
@@ -27,9 +32,11 @@ export default function TelemetryWidget() {
     };
     rafId.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafId.current);
-  }, []);
+  }, [hiddenForReading]);
 
   useEffect(() => {
+    if (hiddenForReading) return;
+
     const onMove = (e: MouseEvent) => {
       if (mouseRef.current) {
         mouseRef.current.textContent = `X: ${e.clientX} Y: ${e.clientY}`;
@@ -37,9 +44,11 @@ export default function TelemetryWidget() {
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [hiddenForReading]);
 
   useEffect(() => {
+    if (hiddenForReading) return;
+
     const tick = () => {
       if (timeRef.current) {
         timeRef.current.textContent = new Date().toTimeString().slice(0, 8);
@@ -48,7 +57,9 @@ export default function TelemetryWidget() {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [hiddenForReading]);
+
+  if (hiddenForReading) return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 hidden md:block pointer-events-none text-right font-mono text-xs text-muted dark:text-accent/60 opacity-40 hover:opacity-80 transition-opacity">

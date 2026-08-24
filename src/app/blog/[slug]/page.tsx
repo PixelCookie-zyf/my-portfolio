@@ -60,41 +60,26 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <main id="main-content" className="min-h-screen bg-background">
       <ReadingProgress />
-      <BlogThemeToggle />
-      <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
-        <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-muted">
-          <Link href="/" className="inline-flex items-center gap-2 transition-colors hover:text-foreground">
-            <IoHomeOutline className="text-base" />
-            Home
-          </Link>
-          <IoChevronForward className="text-xs opacity-60" />
-          <Link href="/blog" className="transition-colors hover:text-foreground">
-            Blog
-          </Link>
-          <IoChevronForward className="text-xs opacity-60" />
-          <span className="max-w-full truncate text-foreground/80">{post.frontmatter.title}</span>
+      <div className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
+        <nav className="mx-auto mb-10 flex max-w-4xl items-center justify-between gap-4 text-sm text-muted">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <Link href="/" className="inline-flex shrink-0 items-center gap-2 transition-colors hover:text-foreground">
+              <IoHomeOutline className="text-base" />
+              Home
+            </Link>
+            <IoChevronForward className="shrink-0 text-xs opacity-60" />
+            <Link href="/blog" className="shrink-0 transition-colors hover:text-foreground">
+              Blog
+            </Link>
+            <IoChevronForward className="shrink-0 text-xs opacity-60" />
+            <span className="truncate text-foreground/80">{post.frontmatter.title}</span>
+          </div>
+          <BlogThemeToggle />
         </nav>
 
-        <div className="mb-10 flex flex-wrap gap-3">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card-bg/70 px-4 py-2 text-sm font-medium text-foreground transition-all hover:border-accent/40 hover:text-accent"
-          >
-            <IoArrowBack className="text-base" />
-            Back Home
-          </Link>
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 rounded-full border border-border/70 px-4 py-2 text-sm text-muted transition-colors hover:border-accent/25 hover:text-foreground"
-          >
-            All posts
-          </Link>
-        </div>
-
-        <header className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-card-bg/35 px-6 py-8 shadow-[0_30px_80px_rgba(0,0,0,0.08)] sm:px-8 sm:py-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(218,112,44,0.12),transparent_42%)]" />
-          <div className="relative z-10">
-            <div className="inline-flex items-center rounded-full border border-accent/20 bg-accent/8 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+        <header className="mx-auto max-w-4xl border-y border-border/80 py-10 sm:py-12">
+          <div>
+            <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.24em] text-accent after:ml-1 after:h-px after:w-10 after:bg-accent/40">
               Article
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-3 text-sm font-mono text-muted">
@@ -117,12 +102,10 @@ export default async function BlogPostPage({ params }: PageProps) {
             <p className="mt-4 max-w-2xl text-base leading-8 text-muted sm:text-lg">
               {post.frontmatter.description}
             </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {post.frontmatter.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-border/70 bg-background/80 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-muted"
-                >
+            <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+              {post.frontmatter.tags.map((tag, index) => (
+                <span key={tag} className="inline-flex items-center gap-3">
+                  {index > 0 && <span className="text-accent/55">/</span>}
                   {tag}
                 </span>
               ))}
@@ -130,27 +113,27 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         </header>
 
-        <div className="mt-10 w-full">
-          <article className="prose-custom rounded-[2rem] border border-border/70 bg-background/92 px-7 py-8 shadow-[0_24px_60px_rgba(15,23,42,0.06)] sm:px-10 sm:py-10 lg:px-12">
+        <div className="mx-auto mt-12 max-w-4xl">
+          <article className="prose-custom">
             <MDXRemote
               source={post.content}
               options={{ mdxOptions }}
             />
           </article>
 
-          <footer className="mt-8 rounded-[1.75rem] border border-border/70 bg-card-bg/40 px-7 py-6 sm:px-10 lg:px-12">
-            <p className="text-sm uppercase tracking-[0.18em] text-muted">Continue reading</p>
-            <div className="mt-3 flex flex-wrap gap-3">
+          <footer className="mt-14 border-t border-border/80 py-8">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Continue reading</p>
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-4 py-2 text-sm text-foreground transition-colors hover:border-accent/30 hover:text-accent"
+                className="inline-flex items-center gap-2 text-sm text-foreground transition-colors hover:text-accent"
               >
                 <IoArrowBack className="text-base" />
                 Back to all posts
               </Link>
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 rounded-full border border-border/70 px-4 py-2 text-sm text-muted transition-colors hover:border-accent/25 hover:text-foreground"
+                className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
               >
                 Visit homepage
               </Link>

@@ -56,7 +56,7 @@ export default function RootLayout({
       <body
         className={`${jakartaSans.variable} ${jetbrainsMono.variable} antialiased bg-background text-foreground`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
           <TelemetryWidget />
           <BackToTop />

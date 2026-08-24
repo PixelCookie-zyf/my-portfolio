@@ -353,7 +353,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             isDark ? "border-white/6 bg-white/[0.03]" : "border-stone-200 bg-stone-50/80"
           }`}
         >
-          <div ref={calendarHostRef} className="overflow-x-auto pb-2">
+          <div ref={calendarHostRef} className="scrollbar-hidden overflow-x-auto pb-2">
             <div>
               {showCalendar ? (
                 <ActivityCalendar

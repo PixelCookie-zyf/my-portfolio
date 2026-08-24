@@ -24,13 +24,13 @@ export default function BlogThemeToggle() {
   return (
     <button
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-      className="fixed right-6 top-6 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card-bg/80 text-muted shadow-lg backdrop-blur-md transition-all hover:border-accent/40 hover:text-foreground hover:shadow-accent/10"
+      className="inline-flex h-8 w-8 shrink-0 items-center justify-center text-muted transition-colors hover:text-accent"
       aria-label="Toggle theme"
     >
       {resolvedTheme === "dark" ? (
-        <FaSun className="text-lg" />
+        <FaSun className="text-base" />
       ) : (
-        <FaMoon className="text-lg" />
+        <FaMoon className="text-base" />
       )}
     </button>
   );
