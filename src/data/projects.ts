@@ -1,13 +1,11 @@
-
 export interface Project {
   title: string;
   description: string;
-  /** basename of the themed SVG pair under public/icons/{dark,light}/ */
+  /** Basename of the themed SVG pair under public/icons/{dark,light}/. */
   icon: string;
   tags: string[];
   github?: string;
   demo?: string;
-  /** Short badge shown next to the title, e.g. a competition result */
   highlight?: string;
 }
 
@@ -15,51 +13,51 @@ export const projects: Project[] = [
   {
     title: "SeRankMixer",
     description:
-      "Single-model pCVR ranking network for the Tencent Advertising Algorithm Competition (UNI-REC track): a semantically-tokenized RankMixer backbone with DIN behavior pooling and group-wise bilinear fusion, trained with Muon, SWA and SAM. Finished #9 on the final leaderboard (weighted-AUC 0.8288) — no ensembling.",
+      "A single-model conversion ranking network for the Tencent Advertising Algorithm Competition. Placed ninth in the UNI-REC track with a weighted AUC of 0.8288, without ensembling.",
     icon: "serankmixer",
-    tags: ["Python", "PyTorch", "RankMixer", "pCVR / LTR"],
+    tags: ["PyTorch", "Recommendation", "Ranking"],
     github: "https://github.com/PixelCookie-zyf/TAAC-2026-SeRankMixer",
-    highlight: "TAAC 2026 · rank #9",
+    highlight: "TAAC 2026 · 9th place",
   },
   {
-    title: "My Portfolio",
+    title: "Paper Digest",
     description:
-      "The site you're looking at right now — generative ASCII canvas, text scramble, a warm paper-and-ember design system, and an interactive travel map. Built with Next.js, Tailwind CSS and Framer Motion.",
-    icon: "portfolio",
-    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
-    github: "https://github.com/PixelCookie-zyf/my-portfolio",
-    demo: "https://www.pixelcookie.me",
+      "A paper-reading pipeline that searches arXiv, screens results and turns individual papers into bilingual MDX summaries.",
+    icon: "paper-digest",
+    tags: ["Python", "arXiv", "NLP"],
+    github: "https://github.com/PixelCookie-zyf/paper-digest",
   },
   {
     title: "HotRecForCTR",
     description:
-      "A modular CTR prediction framework implementing ranking models like LR-GBDT and Factorization Machines. Registry-based architecture, custom TorchPrint model analysis (FLOPs, MACs, memory), trained on the Criteo dataset.",
+      "A framework for experimenting with click-through rate models on the Criteo dataset, including LR-GBDT, Factorization Machines and model profiling tools.",
     icon: "hotrec",
-    tags: ["Python", "PyTorch", "LightGBM", "CTR"],
+    tags: ["PyTorch", "LightGBM", "CTR"],
     github: "https://github.com/PixelCookie-zyf/HotRecForCTR",
   },
   {
     title: "Clawd on Desk",
     description:
-      "A desktop pet that reacts to your Claude Code sessions in real-time — thinking, typing, juggling, sleeping, and more. Built with Electron and wired up through Claude Code hooks.",
+      "An animated desktop pet that reacts to Claude Code sessions through hooks: thinking, typing, juggling and sleeping.",
     icon: "clawd",
-    tags: ["JavaScript", "Electron", "Desktop Pet", "Claude Code"],
+    tags: ["JavaScript", "Electron", "Claude Code"],
     github: "https://github.com/rullerzhou-afk/clawd-on-desk",
-  },
-  {
-    title: "Paper Digest",
-    description:
-      "Let AI read papers for you — an AI-powered reading pipeline that searches arXiv, screens papers, and generates bilingual summaries in MDX, one paper at a time, from classics to the cutting edge.",
-    icon: "paper-digest",
-    tags: ["Python", "arXiv", "NLP", "Bilingual"],
-    github: "https://github.com/PixelCookie-zyf/paper-digest",
   },
   {
     title: "TorchInsight",
     description:
-      "An enhanced PyTorch model-analysis tool in the spirit of torchinfo — layer-by-layer summaries with custom formatting and extra profiling features, built for poking at recommendation models.",
+      "A PyTorch model inspection tool with layer-by-layer summaries, custom formatting and profiling for recommendation models.",
     icon: "torchinsight",
-    tags: ["Python", "PyTorch", "Tooling"],
+    tags: ["Python", "PyTorch"],
     github: "https://github.com/PixelCookie-zyf/TorchInsight",
+  },
+  {
+    title: "My Portfolio",
+    description:
+      "My personal website: research notes, projects and a map of places I have visited.",
+    icon: "portfolio",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+    github: "https://github.com/PixelCookie-zyf/my-portfolio",
+    demo: "https://www.pixelcookie.me",
   },
 ];

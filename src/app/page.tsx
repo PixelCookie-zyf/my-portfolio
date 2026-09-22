@@ -14,11 +14,11 @@ export default function Home() {
       <Header />
       <main id="main-content">
         <Hero />
+        <Blog />
+        <Work limit={3} />
         <Experience />
         <Skills />
-        <Work />
         <Travel />
-        <Blog />
         <Contact />
       </main>
       <Footer />

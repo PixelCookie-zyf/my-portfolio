@@ -46,16 +46,14 @@ export function toCalendarActivities(
 
 export function calculateCurrentStreak(days: GitHubContributionDay[]): number {
   let streak = 0;
+  let index = days.length - 1;
 
-  for (let index = days.length - 1; index >= 0; index -= 1) {
-    if (days[index].count > 0) {
-      streak += 1;
-      continue;
-    }
+  // Normalized days are consecutive and end today. Allow today to remain
+  // empty while it is in progress, but yesterday must keep the streak alive.
+  if (index >= 0 && days[index].count === 0) index -= 1;
 
-    if (streak > 0) {
-      break;
-    }
+  for (; index >= 0 && days[index].count > 0; index -= 1) {
+    streak += 1;
   }
 
   return streak;

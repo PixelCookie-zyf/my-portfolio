@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState, useSyncExternalStore, type Dispatch, type SetStateAction } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { ActivityCalendar } from "react-activity-calendar";
 import {
@@ -21,40 +21,151 @@ import {
   sumRecentContributions,
   toCalendarActivities,
   type GitHubContributionDay,
-  type GitHubContributionResponse,
 } from "@/lib/github-calendar";
 import {
   fetchPinnedRepos,
   selectFeaturedRepos,
   type GitHubRepo,
+  type FeaturedGitHubRepo,
 } from "@/lib/github";
+import {
+  emptySubscribe,
+  getClientHydratedSnapshot,
+  getServerHydratedSnapshot,
+} from "@/lib/hydration";
 
 interface GitHubWidgetProps {
   username: string;
 }
 
-interface RepoInfo {
-  name: string;
-  description: string | null;
-  stars: number;
-  forks: number;
-  language: string | null;
-  url: string;
+interface GitHubProfile {
+  avatar_url?: string | null;
+  name?: string | null;
+  bio?: string | null;
+  public_repos: number;
+  followers: number;
 }
 
-interface Stats {
-  avatarUrl: string | null;
-  displayName: string;
-  bio: string;
-  publicRepos: number;
-  followers: number;
-  totalStars: number;
-  lastYearContributions: number;
-  currentStreak: number;
-  recentWeekContributions: number;
-  activeDays: number;
-  topRepos: RepoInfo[];
-  contributions: GitHubContributionDay[];
+type ResourceStatus = "loading" | "ready" | "error";
+interface ResourceState<T> {
+  data: T | null;
+  status: ResourceStatus;
+}
+
+interface CachedResource<T> {
+  version: number;
+  username: string;
+  savedAt: number;
+  data: T;
+}
+
+const CACHE_VERSION = 1;
+const CACHE_TTL = 5 * 60 * 1000;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isCount(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+function isOptionalText(value: unknown): value is string | null | undefined {
+  return value == null || typeof value === "string";
+}
+
+function isProfile(value: unknown): value is GitHubProfile {
+  return isRecord(value) && isCount(value.public_repos) && isCount(value.followers) &&
+    isOptionalText(value.avatar_url) && isOptionalText(value.name) && isOptionalText(value.bio);
+}
+
+function isRepositories(value: unknown): value is GitHubRepo[] {
+  return Array.isArray(value) && value.every((repo) =>
+    isRecord(repo) && typeof repo.name === "string" &&
+    typeof repo.html_url === "string" && typeof repo.updated_at === "string" &&
+    typeof repo.fork === "boolean" && isCount(repo.stargazers_count) &&
+    isCount(repo.forks_count) && isOptionalText(repo.description) && isOptionalText(repo.language)
+  );
+}
+
+function isContributionDays(value: unknown): value is GitHubContributionDay[] {
+  return Array.isArray(value) && value.length > 0 && value.every((day) =>
+    isRecord(day) && typeof day.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(day.date) &&
+    isCount(day.count) && isCount(day.level)
+  );
+}
+
+function isPinnedRepos(value: unknown): value is FeaturedGitHubRepo[] {
+  return Array.isArray(value) && value.length > 0 && value.every((repo) =>
+    isRecord(repo) && typeof repo.name === "string" && typeof repo.url === "string" &&
+    isCount(repo.stars) && isCount(repo.forks) &&
+    isOptionalText(repo.description) && isOptionalText(repo.language)
+  );
+}
+
+function cacheKey(username: string, resource: string) {
+  return `portfolio.github.v${CACHE_VERSION}.${username.toLowerCase()}.${resource}`;
+}
+
+function readCache<T>(
+  username: string,
+  resource: string,
+  validate: (value: unknown) => value is T
+): CachedResource<T> | null {
+  try {
+    const raw = sessionStorage.getItem(cacheKey(username, resource));
+    if (!raw) return null;
+    const cached: unknown = JSON.parse(raw);
+    if (
+      !isRecord(cached) || cached.version !== CACHE_VERSION || cached.username !== username ||
+      typeof cached.savedAt !== "number" || !Number.isFinite(cached.savedAt) ||
+      cached.savedAt > Date.now() || !validate(cached.data)
+    ) return null;
+    return cached as unknown as CachedResource<T>;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache<T>(username: string, resource: string, data: T) {
+  try {
+    const cached: CachedResource<T> = { version: CACHE_VERSION, username, savedAt: Date.now(), data };
+    sessionStorage.setItem(cacheKey(username, resource), JSON.stringify(cached));
+  } catch {
+    // Storage may be unavailable or full; live data still works independently.
+  }
+}
+
+async function fetchJson(url: string, signal: AbortSignal): Promise<unknown> {
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new Error("GitHub request failed");
+  return response.json();
+}
+
+// Each resource gets its own deadline. Race the full operation (including body
+// parsing) so a stalled endpoint cannot keep this section in a loading state.
+async function withDeadline<T>(
+  request: (signal: AbortSignal) => Promise<T>,
+  lifecycleSignal: AbortSignal,
+  timeoutMs = 10000
+): Promise<T> {
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  const interrupted = new Promise<never>((_, reject) => {
+    controller.signal.addEventListener("abort", () => {
+      reject(new DOMException("GitHub request timed out or was cancelled", "AbortError"));
+    }, { once: true });
+  });
+  const timeout = setTimeout(abort, timeoutMs);
+  lifecycleSignal.addEventListener("abort", abort, { once: true });
+  if (lifecycleSignal.aborted) abort();
+
+  try {
+    return await Promise.race([request(controller.signal), interrupted]);
+  } finally {
+    clearTimeout(timeout);
+    lifecycleSignal.removeEventListener("abort", abort);
+  }
 }
 
 const LANG_DOT: Record<string, string> = {
@@ -68,114 +179,136 @@ const LANG_DOT: Record<string, string> = {
 
 export default function GitHubWidget({ username }: GitHubWidgetProps) {
   const [avatarFailed, setAvatarFailed] = useState(false);
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
+  const [profile, setProfile] = useState<ResourceState<GitHubProfile>>({ data: null, status: "loading" });
+  const [repositories, setRepositories] = useState<ResourceState<GitHubRepo[]>>({ data: null, status: "loading" });
+  const [contributions, setContributions] = useState<ResourceState<GitHubContributionDay[]>>({ data: null, status: "loading" });
+  const [pins, setPins] = useState<ResourceState<FeaturedGitHubRepo[]>>({ data: null, status: "loading" });
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    getClientHydratedSnapshot,
+    getServerHydratedSnapshot
+  );
   const { resolvedTheme } = useTheme();
   const isDark = mounted ? resolvedTheme === "dark" : true;
-
-  useEffect(() => setMounted(true), []);
-
-  // Fit as many weeks as the calendar host can hold (block 11px + margin 4px
-  // per column, ~32px weekday gutter), capped at a full year.
+  const reduceMotion = useReducedMotion();
+  const profileUrl = `https://github.com/${username}`;
   const calendarHostRef = useRef<HTMLDivElement>(null);
   const [weeks, setWeeks] = useState(26);
 
   useEffect(() => {
-    const el = calendarHostRef.current;
-    if (!el) return;
+    const host = calendarHostRef.current;
+    if (!host) return;
 
-    const compute = () => {
-      const width = el.clientWidth;
-      if (width > 0) {
-        setWeeks(Math.max(8, Math.min(52, Math.floor((width - 32) / 15))));
-      }
+    const resize = () => {
+      // Reserve the weekday gutter and a possible partial calendar week.
+      const availableWidth = host.clientWidth - 40;
+      if (availableWidth <= 0) return;
+      setWeeks(Math.max(8, Math.min(52, Math.floor(availableWidth / 15) - 1)));
     };
 
-    compute();
-    const observer = new ResizeObserver(compute);
-    observer.observe(el);
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(host);
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
+    const lifecycle = new AbortController();
+    let active = true;
     setAvatarFailed(false);
-  }, [stats?.avatarUrl]);
 
-  useEffect(() => {
-    async function load() {
+    async function loadResource<T>(
+      resource: string,
+      request: (signal: AbortSignal) => Promise<unknown>,
+      validate: (value: unknown) => value is T,
+      setResource: Dispatch<SetStateAction<ResourceState<T>>>,
+      timeoutMs = 10000
+    ) {
+      const cached = readCache(username, resource, validate);
+      const fresh = cached !== null && Date.now() - cached.savedAt < CACHE_TTL;
+      setResource({ data: cached?.data ?? null, status: fresh ? "ready" : "loading" });
+      if (fresh) return;
+
       try {
-        setLoading(true);
-
-        // Fetch by calendar year (this year + last year) instead of `y=last`:
-        // the rolling-window endpoint is aggressively cached upstream and can
-        // serve stale data for hours after the profile changes.
-        const currentYear = new Date().getFullYear();
-        // Real pinned repos (via a public scraper — GitHub's REST API can't
-        // return pins). Kicked off in parallel; never throws, resolves [] on
-        // failure so we can fall back to a heuristic selection.
-        const pinnedPromise = fetchPinnedRepos(username, 2);
-        const [userRes, reposRes, contributionsRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${username}`),
-          fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`),
-          fetch(
-            `https://github-contributions-api.jogruber.de/v4/${username}?y=${currentYear - 1}&y=${currentYear}`
-          ),
-        ]);
-
-        if (!userRes.ok || !reposRes.ok || !contributionsRes.ok) {
-          return;
-        }
-
-        const user = await userRes.json();
-        const repos: GitHubRepo[] = await reposRes.json();
-        const contributions: GitHubContributionResponse = await contributionsRes.json();
-
-        const ownRepos = repos.filter((repo) => !repo.fork);
-        const totalStars = ownRepos.reduce(
-          (sum, repo) => sum + repo.stargazers_count,
-          0
-        );
-        const pinned = await pinnedPromise;
-        const topRepos = pinned.length > 0 ? pinned : selectFeaturedRepos(repos, 2);
-        const contributionDays = normalizeContributionDays(
-          contributions.contributions ?? [],
-          new Date().toISOString().slice(0, 10)
-        );
-
-        setStats({
-          avatarUrl: user.avatar_url ?? null,
-          displayName: user.name ?? username,
-          bio: user.bio ?? "Building, shipping, and learning in public.",
-          publicRepos: user.public_repos ?? 0,
-          followers: user.followers ?? 0,
-          totalStars,
-          lastYearContributions: sumRecentContributions(contributionDays, 365),
-          currentStreak: calculateCurrentStreak(contributionDays),
-          recentWeekContributions: sumRecentContributions(contributionDays, 7),
-          activeDays: countActiveDays(contributionDays, 42),
-          topRepos,
-          contributions: contributionDays,
-        });
+        const data = await withDeadline(request, lifecycle.signal, timeoutMs);
+        if (!validate(data)) throw new Error("GitHub response is incomplete");
+        if (!active) return;
+        setResource({ data, status: "ready" });
+        writeCache(username, resource, data);
       } catch {
-        // Silently fall back to placeholders.
-      } finally {
-        setLoading(false);
+        // Keep real cached data visible if its refresh fails. Other resources
+        // continue loading and rendering without depending on this request.
+        if (active) setResource((previous) => ({ ...previous, status: "error" }));
       }
     }
 
-    load();
+    const encodedUsername = encodeURIComponent(username);
+    const currentYear = new Date().getFullYear();
+    void loadResource(
+      "profile",
+      (signal) => fetchJson(`https://api.github.com/users/${encodedUsername}`, signal),
+      isProfile,
+      setProfile
+    );
+    void loadResource(
+      "repositories",
+      (signal) => fetchJson(`https://api.github.com/users/${encodedUsername}/repos?per_page=100&sort=updated`, signal),
+      isRepositories,
+      setRepositories
+    );
+    void loadResource(
+      "contributions",
+      async (signal) => {
+        const response = await fetchJson(
+          `https://github-contributions-api.jogruber.de/v4/${encodedUsername}?y=${currentYear - 1}&y=${currentYear}`,
+          signal
+        );
+        if (!isRecord(response) || !isContributionDays(response.contributions)) {
+          throw new Error("GitHub contributions are unavailable");
+        }
+        return normalizeContributionDays(response.contributions, new Date().toISOString().slice(0, 10));
+      },
+      isContributionDays,
+      setContributions
+    );
+    // Pins are optional and never delay the REST repository fallback. The
+    // helper owns its fetch abort; our outer deadline also bounds body parsing.
+    void loadResource("pins", () => fetchPinnedRepos(username, 2), isPinnedRepos, setPins, 6500);
+
+    return () => {
+      active = false;
+      lifecycle.abort();
+    };
   }, [username]);
 
-  const calendarData = stats
-    ? toCalendarActivities({ contributions: stats.contributions }, weeks)
-    : [];
-  const showCalendar = mounted && !loading && calendarData.length > 0;
+  const days = contributions.data;
+  const hasPinnedRepos = Boolean(pins.data?.length);
+  const topRepos = hasPinnedRepos ? pins.data! : repositories.data ? selectFeaturedRepos(repositories.data, 2) : [];
+  const repoStatus: ResourceStatus = repositories.data || hasPinnedRepos
+    ? "ready"
+    : repositories.status === "loading" || pins.status === "loading" ? "loading" : "error";
+  const stats = {
+    avatarUrl: profile.data?.avatar_url,
+    displayName: profile.data?.name || username,
+    bio: profile.data?.bio,
+    publicRepos: profile.data?.public_repos,
+    followers: profile.data?.followers,
+    totalStars: repositories.data?.filter((repo) => !repo.fork)
+      .reduce((total, repo) => total + repo.stargazers_count, 0),
+    lastYearContributions: days ? sumRecentContributions(days, 365) : undefined,
+    currentStreak: days ? calculateCurrentStreak(days) : undefined,
+    recentWeekContributions: days ? sumRecentContributions(days, 7) : undefined,
+    activeDays: days ? countActiveDays(days, 42) : undefined,
+    topRepos,
+    hasPinnedRepos,
+  };
+  const calendarData = days ? toCalendarActivities({ contributions: days }, weeks) : [];
+  const showCalendar = mounted && calendarData.length > 0;
   const statItems = [
-    { value: stats?.lastYearContributions ?? "—", label: "last year" },
-    { value: stats?.publicRepos ?? "—", label: "repos" },
-    { value: stats?.totalStars ?? "—", label: "stars" },
-    { value: stats?.currentStreak ?? "—", label: "day streak" },
+    { value: stats.lastYearContributions ?? "—", label: "last year" },
+    { value: stats.publicRepos ?? "—", label: "repos" },
+    { value: stats.totalStars ?? "—", label: "stars" },
+    { value: stats.currentStreak ?? "—", label: "day streak" },
   ];
   const legendSwatches =
     (isDark ? githubCalendarTheme.dark : githubCalendarTheme.light) ??
@@ -184,9 +317,9 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
 
   return (
     <motion.div
-      whileHover={{ y: -4 }}
+      whileHover={reduceMotion ? undefined : { y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`relative flex h-full flex-col overflow-hidden rounded-[2rem] border p-5 md:p-6 ${
+      className={`relative flex h-full min-w-0 flex-col overflow-hidden rounded-[2rem] border p-5 md:p-6 ${
         isDark
           ? "border-[#2e2a26] bg-gradient-to-br from-[#191512] via-[#141110] to-[#100f0f] text-white"
           : "border-[#dad5c8] bg-gradient-to-br from-[#f7f3e6] via-[#fffcf0] to-[#f2ecdb] text-[#100f0f]"
@@ -203,16 +336,16 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         }`}
       />
 
-      <div className="relative z-10 flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3">
+      <div className="relative z-10 flex items-start justify-between gap-3 sm:gap-4">
+        <div className="flex min-w-0 flex-1 items-start gap-3">
           <div
-            className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${
               isDark
                 ? "border-white/10 bg-white/[0.06]"
                 : "border-stone-200 bg-white/80"
             }`}
           >
-            {stats?.avatarUrl && !avatarFailed ? (
+            {stats.avatarUrl && !avatarFailed ? (
               <Image
                 src={stats.avatarUrl}
                 alt={`${username} avatar`}
@@ -227,7 +360,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             )}
           </div>
 
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p
               className={`text-xs uppercase tracking-[0.24em] ${
                 isDark ? "text-white/45" : "text-stone-500"
@@ -237,36 +370,43 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             </p>
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2">
               <a
-                href={`https://github.com/${username}`}
+                href={profileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`block text-lg font-semibold transition-colors hover:text-accent ${
+                className={`block min-w-0 max-w-full [overflow-wrap:anywhere] text-lg font-semibold transition-colors hover:text-accent ${
                   isDark ? "text-white" : "text-stone-900"
                 }`}
               >
-                {stats?.displayName ?? username}
+                {stats.displayName}
               </a>
               <span
-                className={`text-sm ${
+                className={`min-w-0 max-w-full text-sm [overflow-wrap:anywhere] ${
                   isDark ? "text-white/40" : "text-stone-500"
                 }`}
               >
                 @{username}
               </span>
-              <span
-                className={`text-sm ${
-                  isDark ? "text-white/62" : "text-stone-600"
-                }`}
-              >
-                · {stats?.bio ?? "Building, shipping, and learning in public."}
-              </span>
+              {profile.status === "error" && !profile.data && (
+                <span className={`text-xs ${isDark ? "text-white/45" : "text-stone-500"}`}>
+                  Profile details are temporarily unavailable.
+                </span>
+              )}
+              {stats.bio && (
+                <span
+                  className={`break-words text-sm ${
+                    isDark ? "text-white/62" : "text-stone-600"
+                  }`}
+                >
+                  · {stats.bio}
+                </span>
+              )}
               <div
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] sm:ml-auto ${
                   isDark ? "bg-white/[0.06] text-white/60" : "bg-stone-900/5 text-stone-600"
                 }`}
               >
                 <FaUserGroup className="text-[10px]" />
-                {stats?.followers ?? "—"} followers
+                {stats.followers ?? "—"} followers
               </div>
               <div
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] ${
@@ -274,17 +414,18 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                 }`}
               >
                 <FaFireFlameCurved className="text-[10px]" />
-                {stats?.recentWeekContributions ?? "—"} this week
+                {stats.recentWeekContributions ?? "—"} this week
               </div>
             </div>
           </div>
         </div>
 
         <a
-          href={`https://github.com/${username}`}
+          href={profileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${
+          aria-label={`View ${username} on GitHub`}
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors ${
             isDark
               ? "bg-white/[0.06] text-white/45 hover:bg-white/[0.12] hover:text-white"
               : "bg-stone-900/5 text-stone-500 hover:bg-stone-900/10 hover:text-stone-900"
@@ -305,7 +446,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
             }`}
           >
             <p className={`text-xl font-semibold ${isDark ? "text-white" : "text-stone-900"}`}>
-              {item.value}
+              {typeof item.value === "number" ? item.value.toLocaleString() : item.value}
             </p>
             <p
               className={`mt-1 text-[11px] uppercase tracking-[0.18em] ${
@@ -318,7 +459,7 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
         ))}
       </div>
 
-      <div className="relative z-10 mt-5 grid items-start gap-5 lg:grid-cols-[1.6fr_1fr]">
+      <div className="relative z-10 mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
       <div
         className={`min-w-0 rounded-[1.5rem] border p-4 ${
           isDark ? "border-white/8 bg-black/15" : "border-stone-200 bg-white/80"
@@ -340,10 +481,10 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
               }`}
             >
               <FaFireFlameCurved className="text-[10px]" />
-              {stats?.currentStreak ?? "—"} day streak
+              {stats.currentStreak ?? "—"} day streak
             </div>
             <p className={`mt-2 text-[11px] ${isDark ? "text-white/42" : "text-stone-500"}`}>
-              {stats?.activeDays ?? "—"} active days in the last 6 weeks
+              {stats.activeDays ?? "—"} active days in the last 6 weeks
             </p>
           </div>
         </div>
@@ -371,34 +512,26 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                 />
               ) : (
                 <div
-                  className={`grid min-h-[136px] grid-cols-[auto_1fr] gap-3 ${
-                    isDark ? "text-white/18" : "text-stone-300"
+                  className={`flex min-h-[136px] flex-col items-start justify-center gap-2 text-sm ${
+                    isDark ? "text-white/50" : "text-stone-500"
                   }`}
+                  role="status"
                 >
-                  <div className="grid gap-[6px] pt-7">
-                    {Array.from({ length: 3 }).map((_, index) => (
-                      <span key={index} className="text-[10px] uppercase tracking-[0.18em]">
-                        {["Mon", "Wed", "Fri"][index]}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="grid gap-[4px]">
-                    <div className="mb-[6px] grid grid-cols-6 gap-[12px] text-[10px] uppercase tracking-[0.18em]">
-                      {["Oct", "Nov", "Dec", "Jan", "Feb", "Mar"].map((month) => (
-                        <span key={month}>{month}</span>
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-[repeat(26,minmax(0,11px))] gap-[4px]">
-                      {Array.from({ length: 26 * 7 }).map((_, index) => (
-                        <span
-                          key={index}
-                          className={`h-[11px] w-[11px] rounded-[4px] ${
-                            isDark ? "bg-white/[0.05]" : "bg-stone-200/90"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  {contributions.status === "error" ? (
+                    <>
+                      <p>Activity is temporarily unavailable.</p>
+                      <a
+                        href={profileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs underline decoration-current/40 underline-offset-4 transition-colors hover:text-accent"
+                      >
+                        View activity on GitHub
+                      </a>
+                    </>
+                  ) : (
+                    <p>Loading GitHub activity…</p>
+                  )}
                 </div>
               )}
             </div>
@@ -428,20 +561,27 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
       <div className="flex h-full min-w-0 flex-col">
         <div className="mb-3 flex items-center justify-between">
           <p className={`text-sm font-medium ${isDark ? "text-white" : "text-stone-900"}`}>
-            Pinned work
+            {stats.hasPinnedRepos ? "Pinned work" : "Selected work"}
           </p>
           <p className={`text-[11px] uppercase tracking-[0.18em] ${isDark ? "text-white/40" : "text-stone-500"}`}>
             top repositories
           </p>
         </div>
         <div className="grid flex-1 gap-2 sm:grid-cols-2 lg:auto-rows-fr lg:grid-cols-1">
-        {stats?.topRepos.map((repo) => (
+        {!stats.topRepos.length && (
+          <div className={`flex min-h-32 items-center rounded-2xl border px-4 py-3 text-xs ${
+            isDark ? "border-white/8 bg-white/[0.04] text-white/45" : "border-stone-200 bg-white/70 text-stone-500"
+          }`}>
+            {repoStatus === "loading" ? "Loading repositories…" : repoStatus === "error" ? "Repositories are temporarily unavailable." : "No public repositories yet."}
+          </div>
+        )}
+        {stats.topRepos.map((repo) => (
           <a
             key={repo.name}
             href={repo.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group flex flex-col justify-between rounded-2xl border px-4 py-3 transition-all ${
+            className={`group flex min-w-0 flex-col justify-between rounded-2xl border px-4 py-3 transition-all ${
               isDark
                 ? "border-white/8 bg-white/[0.04] hover:border-orange-500/30 hover:bg-orange-500/[0.06]"
                 : "border-stone-200 bg-white/70 hover:border-orange-300 hover:bg-orange-100/50"
@@ -467,13 +607,11 @@ export default function GitHubWidget({ username }: GitHubWidgetProps) {
                     {repo.name}
                   </span>
                 </div>
-                <p className={`mt-2 line-clamp-2 text-xs leading-5 ${isDark ? "text-white/45" : "text-stone-500"}`}>
-                  {repo.description
-                    ? repo.description
-                    : repo.language
-                      ? `${repo.language} project with active iteration and public source.`
-                      : "Public project with visible source and ongoing updates."}
-                </p>
+                {repo.description && (
+                  <p className={`mt-2 line-clamp-2 break-words text-xs leading-5 ${isDark ? "text-white/45" : "text-stone-500"}`}>
+                    {repo.description}
+                  </p>
+                )}
               </div>
               <FaArrowUpRightFromSquare
                 className={`shrink-0 text-[10px] ${isDark ? "text-white/30" : "text-stone-400"}`}

@@ -1,63 +1,23 @@
-import { IconType } from "react-icons";
-import { SiPython, SiGodotengine, SiDocker, SiTypescript } from "react-icons/si";
-import { FaRobot, FaGamepad } from "react-icons/fa6";
-import { LuBrainCircuit } from "react-icons/lu";
-import { TbBinaryTree } from "react-icons/tb";
-
-export interface Skill {
-  name: string;
-  icon: IconType;
-}
-
 export interface SkillCategory {
   label: string;
-  description: string;
-  bg: string;
-  categoryIcon: IconType;
-  skills: Skill[];
+  skills: string[];
 }
 
 export const skillCategories: SkillCategory[] = [
   {
-    label: "AI & ML",
-    description:
-      "Building intelligent agents and exploring the frontier of large language models, RAG pipelines, and prompt engineering.",
-    bg: "bg-[#BC5215]",
-    categoryIcon: LuBrainCircuit,
-    skills: [
-      { name: "LLM / Prompt Eng", icon: LuBrainCircuit },
-      { name: "AI Agent Frameworks", icon: FaRobot },
-    ],
+    label: "Research",
+    skills: ["Language models", "Agents", "Retrieval"],
   },
   {
-    label: "Languages",
-    description:
-      "Proficient in Python for AI/backend and TypeScript for full-stack web development. Strong foundation in data structures and algorithms.",
-    bg: "bg-[#205EA6]",
-    categoryIcon: SiPython,
-    skills: [
-      { name: "Python", icon: SiPython },
-      { name: "TypeScript / JS", icon: SiTypescript },
-      { name: "DSA", icon: TbBinaryTree },
-    ],
+    label: "Programming",
+    skills: ["Python", "TypeScript", "JavaScript"],
   },
   {
-    label: "Tools & Infra",
-    description:
-      "Containerized deployments, CI/CD pipelines, and cloud infrastructure for scalable AI applications.",
-    bg: "bg-[#24837B]",
-    categoryIcon: SiDocker,
-    skills: [{ name: "Docker / DevOps", icon: SiDocker }],
+    label: "Infrastructure",
+    skills: ["Docker", "CI/CD"],
   },
   {
-    label: "Creative",
-    description:
-      "Indie game development with Godot engine. Designing mechanics, narratives, and interactive experiences from scratch.",
-    bg: "bg-[#A02F6F]",
-    categoryIcon: FaGamepad,
-    skills: [
-      { name: "Godot / GDScript", icon: SiGodotengine },
-      { name: "Game Design", icon: FaGamepad },
-    ],
+    label: "Games",
+    skills: ["Godot", "GDScript", "Game design"],
   },
 ];

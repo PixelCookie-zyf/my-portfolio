@@ -1,32 +1,19 @@
-import { FaGithub, FaXTwitter, FaBilibili, FaInstagram } from "react-icons/fa6";
-
 export const personalInfo = {
   name: "PixelCookie",
   email: "metazyf@gmail.com",
-  city: "Shanghai, China",
-  roles: [
-    "AI Agent Engineer",
-    "LLM Researcher",
-    "Indie Game Developer",
-    "Python Developer",
-    "Open Source Builder",
-  ],
-  bio: "Building intelligent AI agents and exploring the frontier of large language models. Also an indie game developer crafting experiences with Godot engine.",
+  bio: "I’m a doctoral researcher working on AI agents and recommendation systems. Here I share research notes, open-source projects, and the occasional detour into game development.",
   avatar: "/images/avatar.jpg",
   socials: [
-    { name: "GitHub", url: "https://github.com/PixelCookie-zyf", icon: FaGithub },
-    { name: "X", url: "https://x.com/zhang_yf79186", icon: FaXTwitter },
-    { name: "Bilibili", url: "https://space.bilibili.com/666446434", icon: FaBilibili },
-    { name: "Instagram", url: "https://www.instagram.com/pixelcookie_zyf/", icon: FaInstagram },
+    { name: "GitHub", url: "https://github.com/PixelCookie-zyf" },
+    { name: "X", url: "https://x.com/zhang_yf79186" },
+    { name: "Bilibili", url: "https://space.bilibili.com/666446434" },
+    { name: "Instagram", url: "https://www.instagram.com/pixelcookie_zyf/" },
   ],
 } as const;
 
 export const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "Experience", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-  { label: "Work", href: "#work" },
-  { label: "Travel", href: "#travel" },
-  { label: "Blog", href: "#blog" },
-  { label: "Contact", href: "#contact" },
+  { label: "Writing", href: "/blog" },
+  { label: "Projects", href: "/projects" },
+  { label: "About", href: "/#experience" },
+  { label: "Travel", href: "/#travel" },
 ] as const;

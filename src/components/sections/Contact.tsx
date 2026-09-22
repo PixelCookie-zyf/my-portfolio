@@ -1,93 +1,65 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { FaEnvelope } from "react-icons/fa6";
-import ScrollReveal from "@/components/ui/ScrollReveal";
+import { useEffect, useRef, useState } from "react";
+import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import { personalInfo } from "@/data/personal";
 
 export default function Contact() {
-  const [copied, setCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
   const resetTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const copyEmail = () => {
-    navigator.clipboard?.writeText(personalInfo.email).then(() => {
-      setCopied(true);
-      clearTimeout(resetTimer.current);
-      resetTimer.current = setTimeout(() => setCopied(false), 2000);
-    });
+  useEffect(() => () => clearTimeout(resetTimer.current), []);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(personalInfo.email);
+      setCopyStatus("copied");
+    } catch {
+      setCopyStatus("error");
+    }
+    clearTimeout(resetTimer.current);
+    resetTimer.current = setTimeout(() => setCopyStatus("idle"), 2500);
   };
 
   return (
-    <section id="contact" className="relative overflow-hidden px-6 py-32">
-      {/* Warm glow behind the CTA */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[720px] max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/[0.07] blur-3xl"
-      />
-
-      <div className="relative z-10 mx-auto max-w-3xl text-center">
-        <ScrollReveal>
-          <div className="mb-6 flex items-center justify-center gap-3">
-            <span className="font-mono text-sm font-medium text-accent">06</span>
-            <span className="h-px w-12 bg-accent/40" aria-hidden="true" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted">
-              reach out
-            </span>
+    <section id="contact" className="site-section">
+      <div className="site-container">
+        <div className="grid gap-8 border-t border-border pt-10 sm:grid-cols-[1fr_auto] sm:items-end">
+          <div>
+            <p className="eyebrow">Keep in touch</p>
+            <h2 className="section-heading">Say hello.</h2>
+            <p className="mt-3 max-w-lg text-sm leading-7 text-muted">
+              For research, projects, or a note about something you read here.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <a
+                href={`mailto:${personalInfo.email}`}
+                className="text-lg text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-accent sm:text-xl"
+              >
+                {personalInfo.email}
+              </a>
+              <button
+                type="button"
+                onClick={copyEmail}
+                aria-label="Copy email address"
+                className="inline-flex min-h-10 items-center gap-1.5 text-xs text-muted transition-colors hover:text-accent"
+              >
+                {copyStatus === "copied" ? (
+                  <IoCheckmarkOutline aria-hidden="true" />
+                ) : (
+                  <IoCopyOutline aria-hidden="true" />
+                )}
+                <span aria-live="polite">
+                  {copyStatus === "copied"
+                    ? "Copied"
+                    : copyStatus === "error"
+                      ? "Could not copy"
+                      : "Copy email"}
+                </span>
+              </button>
+            </div>
           </div>
-
-          <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-6xl">
-            Let&apos;s build something{" "}
-            <span className="italic text-accent">together</span>.
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Open to collaborations, research conversations, and interesting
-            ideas — my inbox is always happy to hear about them.
-          </p>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.15}>
-          <motion.a
-            href={`mailto:${personalInfo.email}`}
-            className="mt-10 inline-flex items-center gap-3 rounded-full bg-accent px-7 py-3.5 text-base font-semibold text-[#fffcf0] shadow-[0_16px_40px_-12px_rgba(188,82,21,0.55)] transition-colors hover:bg-accent-strong"
-            whileHover={{ scale: 1.04, y: -2 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <FaEnvelope className="text-lg" />
-            Say hello
-          </motion.a>
-
-          <button
-            onClick={copyEmail}
-            aria-label="Copy email address"
-            className="mt-4 block w-full font-mono text-xs tracking-wide text-muted transition-colors hover:text-accent"
-          >
-            {copied ? "copied to clipboard ✦" : `${personalInfo.email} — click to copy`}
-          </button>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.25}>
-          <div className="mt-12 flex justify-center gap-4">
-            {personalInfo.socials.map((social) => {
-              const Icon = social.icon;
-              return (
-                <motion.a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.name}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card-bg/60 text-muted transition-all hover:border-accent/40 hover:text-accent"
-                  whileHover={{ scale: 1.15, rotate: 5 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Icon className="text-lg" />
-                </motion.a>
-              );
-            })}
-          </div>
-        </ScrollReveal>
+        </div>
       </div>
     </section>
   );
