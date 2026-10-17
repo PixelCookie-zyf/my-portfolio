@@ -26,8 +26,8 @@ export function normalizeContributionDays(
 }
 
 export const githubCalendarTheme: ThemeInput = {
-  light: ["#ece9dd", "#f6d7a8", "#eda659", "#d3722a", "#a04309"],
-  dark: ["#201e1b", "#3d2410", "#6e3a12", "#a55317", "#da702c"],
+  light: ["#ebe9e3", "#c8d2f1", "#93a6e4", "#5470cf", "#2c4bb4"],
+  dark: ["#242422", "#28325a", "#364c94", "#5370d2", "#8fa7ff"],
 };
 
 export function toCalendarActivities(
@@ -66,11 +66,4 @@ export function sumRecentContributions(
   return days
     .slice(-windowSize)
     .reduce((total, day) => total + day.count, 0);
-}
-
-export function countActiveDays(
-  days: GitHubContributionDay[],
-  windowSize: number
-): number {
-  return days.slice(-windowSize).filter((day) => day.count > 0).length;
 }

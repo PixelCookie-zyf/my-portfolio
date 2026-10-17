@@ -34,11 +34,11 @@ export default function ReadingProgress() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-[3px]"
+      className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-[2px]"
     >
       <div
         ref={barRef}
-        className="h-full origin-left bg-gradient-to-r from-accent to-accent-strong"
+        className="h-full origin-left bg-accent"
         style={{ transform: "scaleX(0)" }}
       />
     </div>

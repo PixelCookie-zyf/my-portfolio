@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
+import Row, { SectionHeading } from "@/components/layout/Row";
 import { personalInfo } from "@/data/personal";
 
+const copyLabels = { idle: "copy", copied: "copied", error: "could not copy" } as const;
+
 export default function Contact() {
-  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [copyStatus, setCopyStatus] = useState<keyof typeof copyLabels>("idle");
   const resetTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => () => clearTimeout(resetTimer.current), []);
@@ -22,45 +24,38 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="site-section">
-      <div className="site-container">
-        <div className="grid gap-8 border-t border-border pt-10 sm:grid-cols-[1fr_auto] sm:items-end">
-          <div>
-            <p className="eyebrow">Keep in touch</p>
-            <h2 className="section-heading">Say hello.</h2>
-            <p className="mt-3 max-w-lg text-sm leading-7 text-muted">
-              For research, projects, or a note about something you read here.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
-              <a
-                href={`mailto:${personalInfo.email}`}
-                className="text-lg text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-accent sm:text-xl"
-              >
-                {personalInfo.email}
+    <section id="contact">
+      <SectionHeading index="06" title="Say hello" />
+      <Row>
+        <p className="max-w-[36rem] text-[17px] leading-[1.75] text-muted">
+          For research, projects, or a note about something you read here — my inbox is open.
+        </p>
+        <p className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <a
+            href={`mailto:${personalInfo.email}`}
+            className="serif link break-all text-[clamp(1.6rem,3.6vw,2.4rem)] italic"
+          >
+            {personalInfo.email}
+          </a>
+          <button
+            type="button"
+            onClick={copyEmail}
+            aria-label="Copy email address"
+            className="text-sm text-muted transition-colors hover:text-accent"
+          >
+            <span aria-live="polite">({copyLabels[copyStatus]})</span>
+          </button>
+        </p>
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[15px]">
+          {personalInfo.socials.map((social) => (
+            <li key={social.name}>
+              <a href={social.url} target="_blank" rel="noopener noreferrer" className="link">
+                {social.name}
               </a>
-              <button
-                type="button"
-                onClick={copyEmail}
-                aria-label="Copy email address"
-                className="inline-flex min-h-10 items-center gap-1.5 text-xs text-muted transition-colors hover:text-accent"
-              >
-                {copyStatus === "copied" ? (
-                  <IoCheckmarkOutline aria-hidden="true" />
-                ) : (
-                  <IoCopyOutline aria-hidden="true" />
-                )}
-                <span aria-live="polite">
-                  {copyStatus === "copied"
-                    ? "Copied"
-                    : copyStatus === "error"
-                      ? "Could not copy"
-                      : "Copy email"}
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+            </li>
+          ))}
+        </ul>
+      </Row>
     </section>
   );
 }

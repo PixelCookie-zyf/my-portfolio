@@ -1,6 +1,12 @@
 import type { BlogHeading } from "@/lib/blog-headings";
 
-export default function TableOfContents({ headings }: { headings: BlogHeading[] }) {
+interface TableOfContentsProps {
+  headings: BlogHeading[];
+  /** "margin" sits sticky in the notebook margin on large screens; "inline" is a fold-out above the article elsewhere. */
+  placement: "margin" | "inline";
+}
+
+export default function TableOfContents({ headings, placement }: TableOfContentsProps) {
   if (headings.length < 2) return null;
 
   const chapters = headings.some((heading) => heading.depth === 2)
@@ -8,10 +14,10 @@ export default function TableOfContents({ headings }: { headings: BlogHeading[] 
     : headings;
 
   const links = (
-    <ol className="space-y-3">
+    <ol className="sans space-y-2 text-[13px] leading-5">
       {chapters.map((heading) => (
         <li key={heading.id}>
-          <a href={`#${heading.id}`} className="block text-[13px] leading-6 text-muted transition-colors hover:text-accent">
+          <a href={`#${heading.id}`} className="text-muted transition-colors hover:text-accent">
             {heading.title}
           </a>
         </li>
@@ -19,18 +25,22 @@ export default function TableOfContents({ headings }: { headings: BlogHeading[] 
     </ol>
   );
 
+  if (placement === "margin") {
+    return (
+      <nav
+        aria-label="文章目录"
+        className="sticky top-8 hidden max-h-[calc(100dvh-4rem)] overflow-y-auto text-left lg:block"
+      >
+        <p className="mb-3">目录</p>
+        {links}
+      </nav>
+    );
+  }
+
   return (
-    <>
-      <details className="mb-9 border-y border-border py-4 lg:hidden">
-        <summary className="cursor-pointer text-sm text-foreground">文章目录</summary>
-        <nav aria-label="文章目录" className="pt-5">{links}</nav>
-      </details>
-      <aside className="hidden lg:sticky lg:top-28 lg:order-2 lg:block">
-        <nav aria-label="文章目录" className="max-h-[calc(100dvh-9rem)] overflow-y-auto border-l border-border pl-6 pr-2">
-          <p className="mb-5 text-xs text-foreground">文章目录</p>
-          {links}
-        </nav>
-      </aside>
-    </>
+    <details className="mb-10 max-w-[42rem] rounded-lg bg-surface px-4 py-3 lg:hidden">
+      <summary className="cursor-pointer text-sm">目录</summary>
+      <nav aria-label="文章目录" className="pt-4">{links}</nav>
+    </details>
   );
 }

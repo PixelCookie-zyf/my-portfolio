@@ -7,10 +7,11 @@ import rehypeKatex from "rehype-katex";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { createHeadingCollector, type BlogHeading } from "@/lib/blog-headings";
 import type { Metadata } from "next";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import PageShell from "@/components/layout/PageShell";
+import Row from "@/components/layout/Row";
 import TableOfContents from "@/components/blog/TableOfContents";
 import ReadingProgress from "@/components/ui/ReadingProgress";
+import { formatDate } from "@/lib/format";
 import "katex/dist/katex.min.css";
 
 interface PageProps {
@@ -65,55 +66,40 @@ export default async function BlogPostPage({ params }: PageProps) {
   });
 
   return (
-    <>
-      <Header />
-      <main id="main-content" lang="zh-CN" className="min-h-screen bg-background pb-16 pt-28 sm:pb-24 sm:pt-36">
-        <ReadingProgress />
-        <div className="site-container max-lg:max-w-[768px]">
-          <header className="max-w-[720px]">
-            <Link href="/blog" className="text-link inline-flex items-center gap-2 text-sm">
-              <span aria-hidden="true">←</span> 全部文章
-            </Link>
-            <div className="mt-10 flex flex-wrap items-center gap-3 text-xs text-muted sm:mt-12 sm:text-sm">
-              <time dateTime={post.frontmatter.date}>
-                {new Date(post.frontmatter.date).toLocaleDateString("zh-CN", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  timeZone: "UTC",
-                })}
-              </time>
-              <span aria-hidden="true">·</span>
-              <span>约 {readingTime} 分钟</span>
-            </div>
-            <h1 className="font-editorial mt-5 text-[1.875rem] font-medium leading-[1.5] tracking-tight text-foreground sm:text-[2.75rem] sm:leading-[1.45]">
-              {post.frontmatter.title}
-            </h1>
-            <p className="mt-5 text-base leading-8 text-muted sm:text-lg">
-              {post.frontmatter.description}
-            </p>
-            <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted">
-              {post.frontmatter.tags.map((tag) => <span key={tag}>{tag}</span>)}
-            </div>
-            <div className="mb-9 mt-9 border-t border-border sm:mb-12 sm:mt-10" />
-          </header>
+    <PageShell lang="zh-CN">
+      <ReadingProgress />
+      <Row
+        className="mb-14 md:mb-20"
+        note={
+          <>
+            <time dateTime={post.frontmatter.date} className="block">
+              {formatDate(post.frontmatter.date, "zh-CN")}
+            </time>
+            <span className="block">约 {readingTime} 分钟</span>
+          </>
+        }
+      >
+        <Link href="/blog" className="link text-sm text-muted">
+          ← 全部文章
+        </Link>
+        <h1 className="serif mt-6 max-w-[44rem] text-[clamp(2.1rem,4.4vw,3.25rem)] font-medium leading-[1.2] tracking-[-0.015em]">
+          {post.frontmatter.title}
+        </h1>
+        <p className="mt-5 max-w-[40rem] text-[17px] leading-[1.75] text-muted">
+          {post.frontmatter.description}
+        </p>
+        <p className="mt-4 text-[13px] text-faint">{post.frontmatter.tags.join(" · ")}</p>
+      </Row>
 
-          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(0,720px)_minmax(0,1fr)] lg:items-start lg:gap-14">
-            <TableOfContents headings={headings} />
-            <div className="min-w-0 lg:order-1">
-              <article className="prose-custom [&_h2]:scroll-mt-28 [&_h3]:scroll-mt-28">
-                {content}
-              </article>
-              <div className="mt-14 border-t border-border pt-8">
-                <Link href="/blog" className="text-link inline-flex items-center gap-2 text-sm">
-                  <span aria-hidden="true">←</span> 返回全部文章
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
+      <Row note={<TableOfContents headings={headings} placement="margin" />}>
+        <TableOfContents headings={headings} placement="inline" />
+        <article className="prose-custom max-w-[42rem]">{content}</article>
+        <p className="mt-16 text-sm">
+          <Link href="/blog" className="link text-muted">
+            ← 返回全部文章
+          </Link>
+        </p>
+      </Row>
+    </PageShell>
   );
 }

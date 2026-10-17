@@ -1,30 +1,24 @@
+import Row, { SectionHeading } from "@/components/layout/Row";
 import GitHubWidget from "@/components/ui/GitHubWidget";
 import { skillCategories } from "@/data/skills";
 
 export default function Skills() {
   return (
-    <section id="skills" className="site-section">
-      <div className="site-container">
-        <div className="mb-8">
-          <p className="eyebrow">Day to day</p>
-          <h2 className="section-heading">Code & tools</h2>
-        </div>
-
+    <section id="skills" className="pb-24">
+      <SectionHeading index="04" title="Code & tools" />
+      <Row note="on GitHub">
         <GitHubWidget username="PixelCookie-zyf" />
-
-        <dl className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+      </Row>
+      <Row note="usually with" className="mt-12">
+        <dl className="max-w-[36rem] space-y-2.5 text-[15px]">
           {skillCategories.map((category) => (
-            <div key={category.label} className="border-t border-border pt-4">
-              <dt className="text-sm font-medium text-foreground">
-                {category.label}
-              </dt>
-              <dd className="mt-2 text-sm leading-6 text-muted">
-                {category.skills.join(" · ")}
-              </dd>
+            <div key={category.label} className="flex gap-4">
+              <dt className="w-24 shrink-0 text-muted">{category.label}</dt>
+              <dd>{category.skills.join(", ")}</dd>
             </div>
           ))}
         </dl>
-      </div>
+      </Row>
     </section>
   );
 }

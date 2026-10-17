@@ -7,12 +7,10 @@ Live site: [www.pixelcookie.me](https://www.pixelcookie.me)
 
 ## Features
 
-- Warm paper and ink colors, serif headings, and light/dark themes.
-- Writing-first homepage with selected projects, experience and a travel map.
-- MDX articles with GFM, KaTeX formulas, unique heading anchors and a responsive table of contents.
-- GitHub profile, contribution calendar and pinned repositories, with independent loading and a short-lived cache.
-- Horizontal experience timeline with keyboard and mobile scrolling.
-- Interactive pencil-sketch fox from [page-mascot](https://github.com/nilbuild/page-mascot), with local spritesheets, keyboard/touch input and reduced-motion support.
+- A notebook-style layout: a rose margin line runs down every page, with dates, numbers and the table of contents written in the margin. Newsreader headings, Inter text, ink-blue links, light/dark themes.
+- Writing-first homepage with projects, an experience timeline drawn on the margin line, GitHub activity and a travel map.
+- MDX articles with GFM, KaTeX formulas, unique heading anchors and a sticky table of contents.
+- An interactive pencil-sketch fox from [page-mascot](https://github.com/nilbuild/page-mascot), served from local spritesheets.
 
 ## Development
 
@@ -32,22 +30,20 @@ npm run start
 
 ## Content
 
-- `src/data/personal.ts`: introduction, navigation and social links.
+- `src/data/personal.ts`: introduction, “Now” facts, navigation and social links.
 - `src/data/projects.ts`: project descriptions and links; the homepage shows the first three.
 - `src/data/experience.ts`: career and education.
 - `src/data/skills.ts`: tools and interests.
 - `src/data/travel.ts`: visited cities.
 - `src/content/blog/*.mdx`: articles with title, date, description and tags in frontmatter.
-- `src/app/globals.css`: colors, shared layout and article typography.
-- `src/components/ui/PageMascot.tsx`: mascot appearance and accessibility.
+- `src/app/globals.css`: color tokens, the notebook grid and article typography.
+- `src/components/layout/Row.tsx`: the margin-note + content row every section is built from.
 
-Mascot assets are served from `public/mascots`. Attribution, the upstream revision,
-and the MIT license are recorded in that directory. No third-party script or
-remote image service is required for the mascot.
+Mascot assets live in `public/mascots` with their attribution and MIT license.
 
 ## Travel map
 
-The map uses high-density OpenStreetMap tiles by default, without color filters.
+The map uses high-density OpenStreetMap tiles by default, shown in grayscale (inverted in dark mode).
 To use the original CARTO Voyager basemap, request a free project key at
 https://carto.com/basemaps/apikey/ and add this to `.env.local`:
 
@@ -67,4 +63,3 @@ The repository is configured for Vercel, with production served at
 ## License
 
 Personal project. Please do not republish the personal content or imagery as your own.
-Third-party mascot assets retain their MIT license in `public/mascots/LICENSE`.

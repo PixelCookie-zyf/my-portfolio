@@ -2,7 +2,7 @@ export interface TimelineEntry {
   institution: string;
   role: string;
   period: string;
-  type: "education" | "work" | "future";
+  type: "education" | "work";
   description: string;
 }
 

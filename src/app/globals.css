@@ -3,23 +3,25 @@
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #faf8f3;
-  --foreground: #292923;
-  --muted: #737269;
-  --accent: #ad542e;
-  --accent-strong: #8d3f20;
-  --card-bg: #f0ede5;
-  --border: #dfddd4;
+  --background: #f8f7f4;
+  --foreground: #1d1d1b;
+  --muted: #74726c;
+  --faint: #a5a29a;
+  --accent: #2c4bb4;
+  --border: #e4e2dc;
+  --surface: #efede8;
+  --rule: #e9b4ab;
 }
 
 .dark {
-  --background: #191917;
-  --foreground: #e6e2d8;
-  --muted: #a6a399;
-  --accent: #d99a71;
-  --accent-strong: #edb792;
-  --card-bg: #22221e;
-  --border: #363630;
+  --background: #171716;
+  --foreground: #e9e7e2;
+  --muted: #9d9a92;
+  --faint: #6b6963;
+  --accent: #8fa7ff;
+  --border: #2d2c2a;
+  --surface: #20201e;
+  --rule: #6e3b35;
   color-scheme: dark;
 }
 
@@ -27,325 +29,220 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
+  --color-faint: var(--faint);
   --color-accent: var(--accent);
-  --color-accent-strong: var(--accent-strong);
-  --color-card-bg: var(--card-bg);
   --color-border: var(--border);
-  --font-sans: var(--font-jakarta-sans);
-  --font-mono: var(--font-jetbrains-mono);
+  --color-surface: var(--surface);
+  --color-rule: var(--rule);
 }
 
+/* next/font variables are not re-emitted by @theme, so plain CSS uses them directly. */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-jakarta-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
+.sans {
+  font-family: var(--font-inter), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+  font-style: normal;
+}
+
+.serif {
+  font-family: var(--font-newsreader), "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+  font-optical-sizing: auto;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 24%, transparent);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 :focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 65%, transparent);
-  outline-offset: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
-/* Shared page rhythm */
-.site-container {
-  width: min(1080px, calc(100% - 96px));
+/* ---------- Notebook grid ----------
+   A narrow margin column for dates and numbers, a rose margin line,
+   and the main text to its right. */
+
+.notebook {
+  --margin: 176px;
+  --gutter: 56px;
+  --dot-offset: calc(var(--gutter) / -2);
+  position: relative;
+  width: min(1100px, calc(100% - 64px));
   margin-inline: auto;
 }
 
-.site-header {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 50;
-  background: color-mix(in srgb, var(--background) 94%, transparent);
-  backdrop-filter: blur(12px);
+.notebook::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--margin) + var(--gutter) / 2);
+  width: 1px;
+  background: var(--rule);
+  pointer-events: none;
 }
 
-.site-header > nav:first-of-type {
-  border-bottom: 1px solid var(--border);
+.row {
+  display: grid;
+  grid-template-columns: var(--margin) minmax(0, 1fr);
+  column-gap: var(--gutter);
 }
 
-.nav-link {
-  padding-block: 12px;
-  font-size: 13px;
-  transition: color 150ms;
+/* Margin notes hug the line. */
+.note {
+  text-align: right;
+  font-family: var(--font-newsreader), "Songti SC", Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+  font-variant-numeric: oldstyle-nums;
 }
 
-.nav-link:hover { color: var(--accent); }
-.nav-link[aria-current="page"] { text-decoration: underline; text-underline-offset: 7px; text-decoration-color: var(--accent); }
+/* A dot sitting on the margin line, used by the timeline. */
+.line-dot {
+  position: absolute;
+  left: var(--dot-offset);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--background);
+  transform: translateX(-50%);
+}
+
+@media (max-width: 767px) {
+  .notebook { --gutter: 0px; --dot-offset: -20px; width: calc(100% - 40px); }
+  .notebook::before { left: 0; }
+  .row { grid-template-columns: minmax(0, 1fr); padding-left: 20px; }
+  .note { text-align: left; margin-bottom: 4px; }
+}
+
+section[id],
+.prose-custom h2,
+.prose-custom h3 {
+  scroll-margin-top: 2rem;
+}
 
 .skip-link {
   position: absolute;
   top: -80px;
-  left: 24px;
-  padding: 12px 20px;
+  left: 20px;
+  z-index: 60;
+  padding: 10px 16px;
   background: var(--foreground);
   color: var(--background);
 }
-.skip-link:focus { top: 12px; }
+.skip-link:focus { top: 10px; }
 
-.font-editorial {
-  font-family: Georgia, "Songti SC", "STSong", "Noto Serif CJK SC", serif;
-  font-weight: 400;
+.link {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 150ms, text-decoration-color 150ms;
 }
-
-.eyebrow {
-  font-family: var(--font-jetbrains-mono), monospace;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  line-height: 1.7;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.section-heading {
-  font-family: Georgia, "Songti SC", "STSong", serif;
-  font-size: clamp(1.75rem, 3vw, 2.1rem);
-  font-weight: 400;
-  line-height: 1.3;
-  letter-spacing: -0.03em;
-}
-
-.site-section { padding-block: 48px; }
-section[id], .prose-custom h2, .prose-custom h3 { scroll-margin-top: 7rem; }
-
-.text-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  width: fit-content;
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--muted);
-  transition: color 150ms;
-}
-.text-link:hover { color: var(--accent); }
-
-.hero-section {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 254px;
-  gap: 80px;
-  align-items: center;
-  padding-top: 164px;
-  padding-bottom: 72px;
-}
-
-.hero-aside {
-  border-left: 1px solid var(--border);
-  padding-left: 32px;
-  margin-top: 38px;
-}
-
-@media (max-width: 767px) {
-  .site-container { width: calc(100% - 48px); }
-  .hero-section { grid-template-columns: minmax(0, 1fr); gap: 40px; padding-top: 126px; padding-bottom: 28px; }
-  .hero-aside { margin-top: 0; padding-top: 24px; padding-left: 0; border-left: 0; border-top: 1px solid var(--border); display: grid; grid-template-columns: minmax(0, 1fr) 124px; column-gap: 16px; }
-  .hero-aside > .eyebrow { grid-column: 1 / -1; margin-bottom: 14px; }
-  .hero-aside > div:last-child { margin-top: 0; align-self: end; flex-direction: column-reverse; align-items: center; gap: 0; }
-  .hero-aside > div:last-child > span { padding-bottom: 0; font-size: 12px; }
-  .hero-aside .space-y-5 { font-size: 12px; line-height: 1.7; }
-  .site-section { padding-block: 36px; }
-}
+.link:hover { color: var(--accent); text-decoration-color: currentColor; }
 
 @media (prefers-reduced-motion: reduce) {
-  html, html.scroll-smooth { scroll-behavior: auto; }
+  html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
-@media (max-width: 380px) {
-  .hero-intro h1 { font-size: 3rem; }
-}
+/* ---------- Blog prose ---------- */
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #d8d4c6;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #b7b5ac;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #403e3b;
-}
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #575350;
-}
-
-.scrollbar-hidden,
-.scrollbar-hidden .react-activity-calendar__scroll-container {
-  scrollbar-width: none;
-}
-
-.scrollbar-hidden::-webkit-scrollbar,
-.scrollbar-hidden .react-activity-calendar__scroll-container::-webkit-scrollbar {
-  display: none;
-}
-
-/* Blog prose typography */
 .prose-custom {
   color: var(--foreground);
-  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   line-height: 1.84;
-  letter-spacing: 0.008em;
+  letter-spacing: 0.01em;
   text-wrap: pretty;
   word-break: break-word;
 }
+
+.prose-custom > h1:first-child { display: none; }
 
 .prose-custom h1,
 .prose-custom h2,
 .prose-custom h3,
 .prose-custom h4 {
-  font-family: var(--font-jakarta-sans), system-ui, sans-serif;
-}
-
-.prose-custom h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
+  font-family: var(--font-newsreader), "Songti SC", "STSong", Georgia, serif;
+  font-weight: 600;
+  line-height: 1.35;
   color: var(--foreground);
 }
 
-.prose-custom > h1:first-child {
-  display: none;
-}
+.prose-custom h1 { font-size: 2rem; margin: 2.5rem 0 1rem; }
 
 .prose-custom h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  margin-top: 2.15rem;
-  margin-bottom: 0.8rem;
-  padding-top: 0.25rem;
-  color: var(--foreground);
+  font-size: 1.6rem;
+  margin: 3rem 0 1rem;
 }
 
-.prose-custom h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-top: 1.65rem;
-  margin-bottom: 0.6rem;
-  color: var(--foreground);
-}
+.prose-custom h3 { font-size: 1.2rem; margin: 2rem 0 0.6rem; }
+.prose-custom h4 { font-size: 1.05rem; margin: 1.4rem 0 0.4rem; }
 
-.prose-custom h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 1.3rem;
-  margin-bottom: 0.4rem;
-  color: var(--foreground);
-}
-
-.prose-custom p {
-  margin-bottom: 1.25rem;
-}
+.prose-custom p { margin-bottom: 1.25rem; }
 
 .prose-custom > p:first-of-type {
   font-size: 1.1875rem;
   line-height: 1.82;
-  color: color-mix(in srgb, var(--foreground) 88%, var(--muted) 12%);
 }
 
 .prose-custom ul,
-.prose-custom ol {
-  margin-bottom: 1.05rem;
-  padding-left: 1.5rem;
-}
-
-.prose-custom ul {
-  list-style-type: disc;
-}
-
-.prose-custom ol {
-  list-style-type: decimal;
-}
-
-.prose-custom li {
-  margin-bottom: 0.5rem;
-  padding-left: 0.2rem;
-}
-
+.prose-custom ol { margin-bottom: 1.1rem; padding-left: 1.4rem; }
+.prose-custom ul { list-style-type: disc; }
+.prose-custom ol { list-style-type: decimal; }
+.prose-custom li { margin-bottom: 0.45rem; padding-left: 0.2rem; }
+.prose-custom li::marker { color: var(--muted); }
 .prose-custom li > ul,
-.prose-custom li > ol {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
+.prose-custom li > ol { margin: 0.45rem 0; }
 
 .prose-custom a {
   color: var(--accent);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
 
-.prose-custom a:hover {
-  opacity: 0.82;
-}
-
-.prose-custom strong {
-  font-weight: 600;
-  color: var(--foreground);
-}
+.prose-custom strong { font-weight: 600; }
 
 .prose-custom code {
-  font-family: var(--font-jetbrains-mono), monospace;
-  font-size: 0.85em;
-  color: var(--accent);
-  background: transparent;
-  padding: 0.08em 0.16em;
-  border-radius: 0;
-  border: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  background: var(--surface);
 }
 
 .prose-custom pre {
-  background: color-mix(in srgb, var(--card-bg) 58%, transparent);
-  border: 0;
-  border-left: 3px solid color-mix(in srgb, var(--accent) 72%, transparent);
-  border-radius: 0;
+  border-radius: 8px;
+  background: var(--surface);
   padding: 1.2rem 1.4rem;
   overflow-x: auto;
   margin: 1.75rem 0 2rem;
-  box-shadow: none;
 }
 
 .prose-custom pre code {
   background: none;
-  border: 0;
   padding: 0;
   font-size: 0.875rem;
   line-height: 1.7;
 }
 
 .prose-custom blockquote {
-  border-left: 2px solid var(--accent);
-  padding: 0.15rem 0 0.15rem 1.25rem;
-  color: color-mix(in srgb, var(--foreground) 78%, var(--muted) 22%);
-  font-style: normal;
+  border-left: 2px solid var(--rule);
+  padding: 0.1rem 0 0.1rem 1.25rem;
   margin: 1.75rem 0 2rem;
-  background: transparent;
-  border-radius: 0;
+  font-family: var(--font-newsreader), "Songti SC", Georgia, serif;
+  font-size: 1.15em;
+  font-style: italic;
 }
-
-.prose-custom blockquote p:last-child {
-  margin-bottom: 0;
-}
+.prose-custom blockquote p:last-child { margin-bottom: 0; }
 
 .prose-custom hr {
   border: none;
@@ -353,13 +250,8 @@ section[id], .prose-custom h2, .prose-custom h3 { scroll-margin-top: 7rem; }
   margin: 2.5rem 0;
 }
 
-.prose-custom img {
-  border-radius: 18px;
-  margin: 1.75rem 0;
-  border: 1px solid var(--border);
-}
+.prose-custom img { margin: 1.75rem 0; border-radius: 8px; }
 
-/* Tables */
 .prose-custom table {
   width: 100%;
   border-collapse: collapse;
@@ -368,32 +260,21 @@ section[id], .prose-custom h2, .prose-custom h3 { scroll-margin-top: 7rem; }
   display: block;
   overflow-x: auto;
   border-top: 1px solid var(--foreground);
-  border-bottom: 1px solid var(--border);
-}
-
-.prose-custom thead {
-  border-bottom: 1px solid var(--foreground);
 }
 
 .prose-custom th {
-  padding: 0.85rem 0.75rem;
+  padding: 0.7rem 0.75rem 0.7rem 0;
   text-align: left;
   font-weight: 600;
-  color: var(--foreground);
   white-space: nowrap;
-  font-family: var(--font-jakarta-sans), system-ui, sans-serif;
+  border-bottom: 1px solid var(--foreground);
 }
 
 .prose-custom td {
-  padding: 0.8rem 0.75rem;
+  padding: 0.7rem 0.75rem 0.7rem 0;
   border-bottom: 1px solid var(--border);
 }
 
-.prose-custom tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* KaTeX math */
 .prose-custom .katex-display {
   margin: 2rem 0;
   padding: 0.35rem 0;
@@ -401,12 +282,16 @@ section[id], .prose-custom h2, .prose-custom h3 { scroll-margin-top: 7rem; }
   overflow-y: hidden;
 }
 
-.prose-custom .katex {
-  font-size: 1.1em;
-}
+.prose-custom .katex { font-size: 1.08em; }
 
+/* ---------- Travel map ---------- */
+
+.travel-map .leaflet-tile-pane { filter: grayscale(0.85) sepia(0.12) contrast(0.92) brightness(1.04); }
+.dark .travel-map .leaflet-tile-pane { filter: grayscale(1) invert(1) contrast(0.82) brightness(0.88); }
 .travel-map .leaflet-popup-content-wrapper,
-.travel-map .leaflet-popup-tip { background: var(--background); color: var(--foreground); box-shadow: 0 4px 20px #00000018; border-radius: 12px; }
-.travel-map .leaflet-control-zoom a { background: var(--background); color: var(--foreground); }
-.travel-map .leaflet-control-attribution { background: var(--background); color: var(--muted); }
-.travel-map .leaflet-control-attribution a { color: var(--accent); }
+.travel-map .leaflet-popup-tip { background: var(--background); color: var(--foreground); border-radius: 8px; box-shadow: 0 6px 24px #0000001f; }
+.travel-map .leaflet-popup-content { margin: 10px 14px; font-family: inherit; }
+.travel-map .leaflet-control-zoom { border: 1px solid var(--border) !important; border-radius: 6px; overflow: hidden; }
+.travel-map .leaflet-control-zoom a { background: var(--background); color: var(--foreground); border-color: var(--border); }
+.travel-map .leaflet-control-attribution { background: color-mix(in srgb, var(--background) 85%, transparent); color: var(--muted); }
+.travel-map .leaflet-control-attribution a { color: var(--foreground); }

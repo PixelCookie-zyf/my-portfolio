@@ -1,59 +1,30 @@
 import Link from "next/link";
-import { IoArrowForward } from "react-icons/io5";
-import { FiArrowUpRight } from "react-icons/fi";
+import Row, { SectionHeading } from "@/components/layout/Row";
 import { getAllPosts } from "@/lib/blog";
+import { formatDate } from "@/lib/format";
 
 export default function Blog() {
   const posts = getAllPosts().slice(0, 4);
   if (!posts.length) return null;
+
   return (
-    <section id="blog" className="site-section">
-      <div className="site-container">
-        <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
-          <h2 className="section-heading">Recent writing</h2>
-          <Link href="/blog" className="text-link">
-            All notes <IoArrowForward aria-hidden="true" />
-          </Link>
-        </div>
-        <div className="border-b border-border">
-          {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="group grid gap-4 border-t border-border py-8 sm:grid-cols-[140px_minmax(0,1fr)_24px] sm:gap-8 sm:py-10"
-            >
-              <time
-                dateTime={post.date}
-                className="pt-1 font-mono text-xs text-muted"
-              >
-                {new Date(post.date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                  timeZone: "UTC",
-                })}
-              </time>
-              <div className="min-w-0">
-                <h3 className="font-editorial text-[24px] leading-[1.6] tracking-tight transition-colors group-hover:text-accent sm:text-[27px]">
+    <section id="blog" className="pb-24">
+      <SectionHeading index="01" title="Writing" link={{ href: "/blog", label: "All notes" }} />
+      <ul className="space-y-8">
+        {posts.map((post) => (
+          <li key={post.slug}>
+            <Row note={<time dateTime={post.date}>{formatDate(post.date)}</time>}>
+              <Link href={`/blog/${post.slug}`} className="group block max-w-[42rem]">
+                <h3 className="serif text-2xl font-medium leading-snug transition-colors group-hover:text-accent">
                   {post.title}
                 </h3>
-                <p className="mt-3 max-w-[41rem] text-sm leading-[1.9] text-muted">
-                  {post.description}
-                </p>
-                <p className="mt-5 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] text-muted">
-                  {post.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </p>
-              </div>
-              <FiArrowUpRight
-                aria-hidden="true"
-                className="hidden text-xl text-muted transition-colors group-hover:text-accent sm:block"
-              />
-            </Link>
-          ))}
-        </div>
-      </div>
+                <p className="mt-2 text-[15px] leading-relaxed text-muted">{post.description}</p>
+                <p className="mt-2 text-[13px] text-faint">{post.tags.join(" · ")}</p>
+              </Link>
+            </Row>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
