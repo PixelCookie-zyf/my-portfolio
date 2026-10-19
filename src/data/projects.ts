@@ -5,6 +5,8 @@ export interface Project {
   github?: string;
   demo?: string;
   highlight?: string;
+  /** Headline numbers for the featured project card. */
+  stats?: { value: string; label: string }[];
 }
 
 export const projects: Project[] = [
@@ -15,6 +17,11 @@ export const projects: Project[] = [
     tags: ["PyTorch", "Recommendation", "Ranking"],
     github: "https://github.com/PixelCookie-zyf/TAAC-2026-SeRankMixer",
     highlight: "TAAC 2026 · 9th place",
+    stats: [
+      { value: "9th", label: "UNI-REC track" },
+      { value: "0.8288", label: "weighted AUC" },
+      { value: "1", label: "model, no ensemble" },
+    ],
   },
   {
     title: "Paper Digest",

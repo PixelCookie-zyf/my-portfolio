@@ -1,23 +1,24 @@
-import Row from "@/components/layout/Row";
+import { Squiggle } from "@/components/ui/Doodles";
 
 /** Opening title of a secondary page. */
 export default function PageTitle({
+  kicker,
   title,
-  note,
   children,
 }: {
+  kicker: string;
   title: string;
-  note?: React.ReactNode;
   children?: React.ReactNode;
 }) {
   return (
-    <Row note={note} className="mb-16 md:mb-20">
-      <h1 className="serif text-[clamp(2.75rem,6vw,4.25rem)] font-medium leading-[1.05] tracking-[-0.025em]">
-        {title}
+    <header className="wrap pb-14 pt-10 md:pb-20 md:pt-16">
+      <p className="font-hand text-[1.7rem] leading-none text-tomato">{kicker}</p>
+      <h1 className="font-display mt-3 text-[clamp(3rem,8vw,6rem)] font-medium leading-[0.98] tracking-[-0.03em]">
+        <Squiggle delay={0.4}>{title}</Squiggle>
       </h1>
       {children && (
-        <div className="mt-5 max-w-[36rem] text-[17px] leading-[1.75] text-muted">{children}</div>
+        <div className="mt-8 max-w-[38rem] text-lg leading-relaxed text-soft">{children}</div>
       )}
-    </Row>
+    </header>
   );
 }

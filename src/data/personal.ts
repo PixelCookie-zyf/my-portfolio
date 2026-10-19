@@ -13,15 +13,15 @@ export const personalInfo = {
   ],
 } as const;
 
-/** Short facts shown beside the intro on the homepage. */
+/** Short facts pinned as sticky notes under the homepage intro. */
 export const nowItems = [
-  { label: "Research", text: "PhD studies in AI & learning" },
+  { label: "researching", text: "PhD studies in AI agents & learning" },
   {
-    label: "Competition",
-    text: "SeRankMixer — 9th, Tencent TAAC 2026",
+    label: "just placed",
+    text: "9th at Tencent TAAC 2026 with SeRankMixer",
     href: "https://github.com/PixelCookie-zyf/TAAC-2026-SeRankMixer",
   },
-  { label: "After hours", text: "Making small games with Godot" },
+  { label: "after hours", text: "Building a small game in Godot" },
 ] as const;
 
 export const navLinks = [

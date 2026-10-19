@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import PageShell from "@/components/layout/PageShell";
 import PageTitle from "@/components/layout/PageTitle";
 import { ProjectList } from "@/components/sections/Work";
-import { projects } from "@/data/projects";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -12,10 +11,13 @@ export const metadata: Metadata = {
 export default function ProjectsPage() {
   return (
     <PageShell>
-      <PageTitle title="Projects" note={`${projects.length} so far`}>
-        Open-source work on recommendation systems, research tooling, and a few things made for fun.
+      <PageTitle kicker="things I’ve built" title="Projects">
+        Open-source work on recommendation systems, research tooling, and a few things made purely
+        for fun.
       </PageTitle>
-      <ProjectList />
+      <div className="wrap">
+        <ProjectList />
+      </div>
     </PageShell>
   );
 }

@@ -1,24 +1,32 @@
-import Row, { SectionHeading } from "@/components/layout/Row";
+import SectionHeading from "@/components/layout/SectionHeading";
 import GitHubWidget from "@/components/ui/GitHubWidget";
 import { skillCategories } from "@/data/skills";
 
+const tones = ["text-tomato", "text-forest", "text-blue", "text-ochre"];
+
 export default function Skills() {
   return (
-    <section id="skills" className="pb-24">
-      <SectionHeading index="04" title="Code & tools" />
-      <Row note="on GitHub">
+    <section id="skills" className="wrap pb-28">
+      <SectionHeading kicker="what’s on my desk" title="Code & tools" tone="text-ochre" />
+      <div>
         <GitHubWidget username="PixelCookie-zyf" />
-      </Row>
-      <Row note="usually with" className="mt-12">
-        <dl className="max-w-[36rem] space-y-2.5 text-[15px]">
-          {skillCategories.map((category) => (
-            <div key={category.label} className="flex gap-4">
-              <dt className="w-24 shrink-0 text-muted">{category.label}</dt>
-              <dd>{category.skills.join(", ")}</dd>
+        <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 px-2 md:grid-cols-4">
+          {skillCategories.map((category, index) => (
+            <div key={category.label}>
+              <dt className={`font-hand text-2xl leading-none ${tones[index % tones.length]}`}>
+                {category.label.toLowerCase()}
+              </dt>
+              <dd className="mt-3 flex flex-wrap gap-2">
+                {category.skills.map((skill) => (
+                  <span key={skill} className="rounded-full border border-line bg-card px-3 py-1 text-sm text-soft">
+                    {skill}
+                  </span>
+                ))}
+              </dd>
             </div>
           ))}
         </dl>
-      </Row>
+      </div>
     </section>
   );
 }

@@ -1,19 +1,18 @@
-import Row from "@/components/layout/Row";
 import { personalInfo } from "@/data/personal";
+import { Sparkle } from "@/components/ui/Doodles";
 
 export default function Footer() {
   return (
-    <footer className="mt-24 pb-10 pt-6 text-sm text-muted">
-      <Row note={`© ${new Date().getFullYear()}`}>
-        <div className="flex flex-wrap justify-between gap-x-8 gap-y-2">
-          <p>
-            {personalInfo.name} · {personalInfo.location}
-          </p>
-          <a href="#" className="link">
-            Back to top ↑
-          </a>
-        </div>
-      </Row>
+    <footer className="wrap mt-28 border-t border-dashed border-line py-8 text-sm text-muted">
+      <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
+        <p className="flex items-center gap-2">
+          <Sparkle className="h-3 w-3 text-ochre" />© {new Date().getFullYear()} {personalInfo.name} · made slowly in{" "}
+          {personalInfo.location}
+        </p>
+        <a href="#" className="transition-colors hover:text-ink">
+          Back to top ↑
+        </a>
+      </div>
     </footer>
   );
 }

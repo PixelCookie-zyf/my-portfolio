@@ -8,12 +8,13 @@ import { visitedCities, type City } from "@/data/travel";
 const cartoApiKey = process.env.NEXT_PUBLIC_CARTO_BASEMAP_KEY?.trim();
 
 function getMarkerIcon(city: City) {
-  const size = city.current ? 13 : 8;
+  const size = city.current ? 14 : 9;
+  const color = city.current ? "var(--tomato)" : "var(--blue)";
   return L.divIcon({
     className: "",
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
-    html: `<span style="display:block;width:${size}px;height:${size}px;border-radius:50%;background:var(--accent);outline:2px solid var(--background);box-shadow:0 0 0 ${city.current ? 6 : 0}px color-mix(in srgb, var(--accent) 22%, transparent)"></span>`,
+    html: `<span style="display:block;width:${size}px;height:${size}px;border-radius:50%;background:${color};outline:2px solid var(--card);box-shadow:0 0 0 ${city.current ? 7 : 0}px color-mix(in srgb, var(--tomato) 25%, transparent)"></span>`,
   });
 }
 
@@ -26,8 +27,8 @@ export default function TravelMap() {
       maxZoom={10}
       scrollWheelZoom={false}
       worldCopyJump
-      className="travel-map z-0 h-[340px] w-full md:h-[420px]"
-      style={{ background: "var(--surface)" }}
+      className="travel-map z-0 h-[340px] w-full md:h-full md:min-h-[440px]"
+      style={{ background: "var(--inset)" }}
     >
       <TileLayer
         attribution={cartoApiKey

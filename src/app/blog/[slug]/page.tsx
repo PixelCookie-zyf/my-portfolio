@@ -8,7 +8,7 @@ import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { createHeadingCollector, type BlogHeading } from "@/lib/blog-headings";
 import type { Metadata } from "next";
 import PageShell from "@/components/layout/PageShell";
-import Row from "@/components/layout/Row";
+import PostCover from "@/components/ui/PostCover";
 import TableOfContents from "@/components/blog/TableOfContents";
 import ReadingProgress from "@/components/ui/ReadingProgress";
 import { formatDate } from "@/lib/format";
@@ -68,38 +68,44 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <PageShell lang="zh-CN">
       <ReadingProgress />
-      <Row
-        className="mb-14 md:mb-20"
-        note={
-          <>
-            <time dateTime={post.frontmatter.date} className="block">
-              {formatDate(post.frontmatter.date, "zh-CN")}
-            </time>
-            <span className="block">约 {readingTime} 分钟</span>
-          </>
-        }
-      >
-        <Link href="/blog" className="link text-sm text-muted">
+      <header className="wrap pb-12 pt-6 md:pt-10">
+        <Link href="/blog" className="text-sm text-muted transition-colors hover:text-ink">
           ← 全部文章
         </Link>
-        <h1 className="serif mt-6 max-w-[44rem] text-[clamp(2.1rem,4.4vw,3.25rem)] font-medium leading-[1.2] tracking-[-0.015em]">
-          {post.frontmatter.title}
-        </h1>
-        <p className="mt-5 max-w-[40rem] text-[17px] leading-[1.75] text-muted">
-          {post.frontmatter.description}
-        </p>
-        <p className="mt-4 text-[13px] text-faint">{post.frontmatter.tags.join(" · ")}</p>
-      </Row>
+        <PostCover seed={slug} cols={12} rows={3} className="mt-6 h-28 w-full rounded-[22px] md:h-40" />
+        <div className="mx-auto mt-10 max-w-[46rem] text-center">
+          <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-muted">
+            <time dateTime={post.frontmatter.date}>{formatDate(post.frontmatter.date, "zh-CN")}</time>
+            <span aria-hidden="true">·</span>
+            <span>约 {readingTime} 分钟</span>
+          </p>
+          <h1 className="font-display mt-5 text-[clamp(2.1rem,4.6vw,3.4rem)] font-medium leading-[1.2] tracking-[-0.015em]">
+            {post.frontmatter.title}
+          </h1>
+          <p className="mt-5 text-lg leading-relaxed text-soft">{post.frontmatter.description}</p>
+          <ul className="mt-6 flex flex-wrap justify-center gap-2">
+            {post.frontmatter.tags.map((tag) => (
+              <li key={tag} className="rounded-full bg-inset px-3 py-1 text-xs text-soft">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </header>
 
-      <Row note={<TableOfContents headings={headings} placement="margin" />}>
-        <TableOfContents headings={headings} placement="inline" />
-        <article className="prose-custom max-w-[42rem]">{content}</article>
-        <p className="mt-16 text-sm">
-          <Link href="/blog" className="link text-muted">
-            ← 返回全部文章
-          </Link>
-        </p>
-      </Row>
+      <div className="wrap lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,42rem)_minmax(0,1fr)] lg:gap-10">
+        <div className="hidden lg:block" />
+        <div className="min-w-0">
+          <TableOfContents headings={headings} placement="inline" />
+          <article className="prose-custom">{content}</article>
+          <p className="mt-16 border-t border-dashed border-line pt-6 text-sm">
+            <Link href="/blog" className="text-muted transition-colors hover:text-ink">
+              ← 返回全部文章
+            </Link>
+          </p>
+        </div>
+        <TableOfContents headings={headings} placement="aside" />
+      </div>
     </PageShell>
   );
 }

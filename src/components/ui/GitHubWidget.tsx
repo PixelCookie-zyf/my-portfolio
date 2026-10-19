@@ -132,37 +132,52 @@ export default function GitHubWidget({ username }: { username: string }) {
   const days = data?.days ?? [];
   const calendarData = toCalendarActivities({ contributions: days }, grid.weeks);
   const number = (value?: number) => (
-    <span className="serif text-[1.35em] font-medium text-foreground tabular-nums">
+    <span className="font-display text-[1.45em] font-medium text-ink tabular-nums">
       {typeof value === "number" ? value.toLocaleString("en-US") : "—"}
     </span>
   );
 
   return (
-    <div>
-      <p className="max-w-[40rem] text-[17px] leading-[1.8] text-muted">
+    <div className="paper-shadow rounded-[28px] border border-line bg-card p-6 md:p-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <a
+          href={profileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-sm text-soft transition-colors hover:text-ink"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+          </svg>
+          @{username}
+        </a>
+        <span className="font-hand text-xl text-muted">last {grid.weeks} weeks</span>
+      </div>
+
+      <p className="mt-5 max-w-[42rem] text-[17px] leading-[1.8] text-soft">
         {failed ? (
           <>
             GitHub numbers are unavailable right now —{" "}
-            <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="link text-foreground">
+            <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="link text-ink">
               see the profile instead
             </a>
             .
           </>
         ) : (
           <>
-            {number(data ? sumRecentContributions(days, 365) : undefined)} contributions in the last
-            year, across {number(data?.publicRepos)} public repositories with {number(data?.stars)}{" "}
-            stars. Current streak: {number(data ? calculateCurrentStreak(days) : undefined)} days.
+            {number(data ? sumRecentContributions(days, 365) : undefined)} contributions this past
+            year, across {number(data?.publicRepos)} public repos and {number(data?.stars)} stars.
+            Current streak: {number(data ? calculateCurrentStreak(days) : undefined)} days.
           </>
         )}
       </p>
 
-      <div ref={hostRef} className="mt-7 min-h-[120px] overflow-hidden">
+      <div ref={hostRef} className="mt-6 min-h-[120px] overflow-hidden">
         {mounted && calendarData.length > 0 && (
           <ActivityCalendar
             data={calendarData}
             blockMargin={MARGIN}
-            blockRadius={2}
+            blockRadius={3}
             blockSize={grid.block}
             colorScheme={resolvedTheme === "dark" ? "dark" : "light"}
             fontSize={12}
@@ -174,13 +189,6 @@ export default function GitHubWidget({ username }: { username: string }) {
           />
         )}
       </div>
-
-      <p className="mt-3 flex flex-wrap justify-between gap-2 text-[13px] text-faint">
-        <span>Last {grid.weeks} weeks</span>
-        <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="link">
-          @{username}
-        </a>
-      </p>
     </div>
   );
 }

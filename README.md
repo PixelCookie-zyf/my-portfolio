@@ -7,8 +7,9 @@ Live site: [www.pixelcookie.me](https://www.pixelcookie.me)
 
 ## Features
 
-- A notebook-style layout: a rose margin line runs down every page, with dates, numbers and the table of contents written in the margin. Newsreader headings, Inter text, ink-blue links, light/dark themes.
-- Writing-first homepage with projects, an experience timeline drawn on the margin line, GitHub activity and a travel map.
+- A hand-made sketchbook look: paper grain, Fraunces headings, Inter text, marker colours, and hand-drawn highlights, circles and squiggles that draw themselves on load.
+- Homepage with sticky-note "now" facts, a featured post and project, a polaroid + timeline about section, GitHub activity, a postcard travel map and an airmail contact card.
+- Generated geometric covers for posts and projects (`PostCover`), so no images are needed.
 - MDX articles with GFM, KaTeX formulas, unique heading anchors and a sticky table of contents.
 - An interactive pencil-sketch fox from [page-mascot](https://github.com/nilbuild/page-mascot), served from local spritesheets.
 
@@ -36,8 +37,8 @@ npm run start
 - `src/data/skills.ts`: tools and interests.
 - `src/data/travel.ts`: visited cities.
 - `src/content/blog/*.mdx`: articles with title, date, description and tags in frontmatter.
-- `src/app/globals.css`: color tokens, the notebook grid and article typography.
-- `src/components/layout/Row.tsx`: the margin-note + content row every section is built from.
+- `src/app/globals.css`: colour tokens, paper texture, doodle animations and article typography.
+- `src/components/ui/Doodles.tsx`: the hand-drawn marks (Highlight, Circled, Squiggle, Arrow, Sparkle).
 
 Mascot assets live in `public/mascots` with their attribution and MIT license.
 

@@ -3,123 +3,98 @@
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f8f7f4;
-  --foreground: #1d1d1b;
-  --muted: #74726c;
-  --faint: #a5a29a;
-  --accent: #2c4bb4;
-  --border: #e4e2dc;
-  --surface: #efede8;
-  --rule: #e9b4ab;
+  --paper: #f5f1e8;
+  --card: #fbf9f4;
+  --inset: #ece6d9;
+  --ink: #1d1b18;
+  --soft: #4b4740;
+  --muted: #847e72;
+  --line: #ddd5c4;
+  --tomato: #d9532f;
+  --forest: #2e6a4f;
+  --ochre: #e3a63a;
+  --blue: #3253b3;
+  --note-yellow: #f6e3a6;
+  --note-green: #d3e6d6;
+  --note-pink: #f5d3c5;
+  --grain-opacity: 0.32;
 }
 
 .dark {
-  --background: #171716;
-  --foreground: #e9e7e2;
-  --muted: #9d9a92;
-  --faint: #6b6963;
-  --accent: #8fa7ff;
-  --border: #2d2c2a;
-  --surface: #20201e;
-  --rule: #6e3b35;
+  --paper: #191815;
+  --card: #22201c;
+  --inset: #2a2723;
+  --ink: #efe9dd;
+  --soft: #cbc4b6;
+  --muted: #9a9283;
+  --line: #37332c;
+  --tomato: #f0745b;
+  --forest: #63b38d;
+  --ochre: #f0c062;
+  --blue: #8aa2f2;
+  --note-yellow: #3f3720;
+  --note-green: #223a2e;
+  --note-pink: #43291f;
+  --grain-opacity: 0.18;
   color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-inset: var(--inset);
+  --color-ink: var(--ink);
+  --color-soft: var(--soft);
   --color-muted: var(--muted);
-  --color-faint: var(--faint);
-  --color-accent: var(--accent);
-  --color-border: var(--border);
-  --color-surface: var(--surface);
-  --color-rule: var(--rule);
+  --color-line: var(--line);
+  --color-tomato: var(--tomato);
+  --color-forest: var(--forest);
+  --color-ochre: var(--ochre);
+  --color-blue: var(--blue);
+  --color-note-yellow: var(--note-yellow);
+  --color-note-green: var(--note-green);
+  --color-note-pink: var(--note-pink);
+  --font-display: var(--font-fraunces), "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+  --font-hand: var(--font-caveat), "Kaiti SC", cursive;
 }
 
 /* next/font variables are not re-emitted by @theme, so plain CSS uses them directly. */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-inter), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
 }
 
-.sans {
-  font-family: var(--font-inter), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
-  font-style: normal;
+/* Paper grain over everything; purely decorative. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-
-.serif {
-  font-family: var(--font-newsreader), "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
-  font-optical-sizing: auto;
-}
+.dark body::after { mix-blend-mode: screen; }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  background: color-mix(in srgb, var(--ochre) 45%, transparent);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--blue);
   outline-offset: 3px;
+  border-radius: 4px;
 }
 
-/* ---------- Notebook grid ----------
-   A narrow margin column for dates and numbers, a rose margin line,
-   and the main text to its right. */
-
-.notebook {
-  --margin: 176px;
-  --gutter: 56px;
-  --dot-offset: calc(var(--gutter) / -2);
-  position: relative;
-  width: min(1100px, calc(100% - 64px));
+.wrap {
+  width: min(1160px, calc(100% - 64px));
   margin-inline: auto;
 }
 
-.notebook::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--margin) + var(--gutter) / 2);
-  width: 1px;
-  background: var(--rule);
-  pointer-events: none;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: var(--margin) minmax(0, 1fr);
-  column-gap: var(--gutter);
-}
-
-/* Margin notes hug the line. */
-.note {
-  text-align: right;
-  font-family: var(--font-newsreader), "Songti SC", Georgia, serif;
-  font-style: italic;
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--muted);
-  font-variant-numeric: oldstyle-nums;
-}
-
-/* A dot sitting on the margin line, used by the timeline. */
-.line-dot {
-  position: absolute;
-  left: var(--dot-offset);
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  border: 1px solid var(--rule);
-  background: var(--background);
-  transform: translateX(-50%);
-}
-
 @media (max-width: 767px) {
-  .notebook { --gutter: 0px; --dot-offset: -20px; width: calc(100% - 40px); }
-  .notebook::before { left: 0; }
-  .row { grid-template-columns: minmax(0, 1fr); padding-left: 20px; }
-  .note { text-align: left; margin-bottom: 4px; }
+  .wrap { width: calc(100% - 40px); }
 }
 
 section[id],
@@ -132,31 +107,89 @@ section[id],
   position: absolute;
   top: -80px;
   left: 20px;
-  z-index: 60;
+  z-index: 110;
   padding: 10px 16px;
-  background: var(--foreground);
-  color: var(--background);
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--paper);
 }
 .skip-link:focus { top: 10px; }
 
+/* Inline link with a soft marker underline. */
 .link {
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  transition: color 150ms, text-decoration-color 150ms;
+  background-image: linear-gradient(color-mix(in srgb, var(--ochre) 55%, transparent), color-mix(in srgb, var(--ochre) 55%, transparent));
+  background-position: 0 92%;
+  background-repeat: no-repeat;
+  background-size: 100% 0.32em;
+  transition: background-size 200ms ease, color 150ms;
 }
-.link:hover { color: var(--accent); text-decoration-color: currentColor; }
+.link:hover { background-size: 100% 0.9em; }
+
+/* Hand-drawn underline that appears under nav items. */
+.scribble-hover { position: relative; }
+.scribble-hover::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: -7px;
+  height: 7px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 C 25 2, 50 7, 98 3' fill='none' stroke='%23d9532f' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms ease;
+}
+.scribble-hover:hover::after,
+.scribble-hover[aria-current="page"]::after { transform: scaleX(1); }
+
+/* Doodles draw themselves once. Paths use pathLength="1". */
+.draw path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 0.9s ease-out forwards;
+  animation-delay: var(--delay, 0.3s);
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.sweep {
+  clip-path: inset(0 100% 0 0);
+  animation: sweep 0.7s cubic-bezier(0.6, 0.1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0.3s);
+}
+@keyframes sweep { to { clip-path: inset(0 0 0 0); } }
+
+/* Soft paper shadow for cards and notes. */
+.paper-shadow {
+  box-shadow: 0 1px 0 rgb(0 0 0 / 0.03), 0 14px 30px -18px rgb(60 40 10 / 0.35);
+}
+.dark .paper-shadow {
+  box-shadow: 0 1px 0 rgb(0 0 0 / 0.2), 0 14px 30px -18px rgb(0 0 0 / 0.8);
+}
+
+/* A strip of masking tape. */
+.tape {
+  position: absolute;
+  width: 84px;
+  height: 22px;
+  background: color-mix(in srgb, var(--ochre) 38%, transparent);
+  backdrop-filter: blur(1px);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+/* Postage stamp with perforated edges. */
+.stamp {
+  background: radial-gradient(circle, transparent 3px, var(--tomato) 3.5px) -5px -5px / 10px 10px;
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
 /* ---------- Blog prose ---------- */
 
 .prose-custom {
-  color: var(--foreground);
+  color: var(--ink);
   font-size: 1.0625rem;
   line-height: 1.84;
   letter-spacing: 0.01em;
@@ -170,10 +203,10 @@ section[id],
 .prose-custom h2,
 .prose-custom h3,
 .prose-custom h4 {
-  font-family: var(--font-newsreader), "Songti SC", "STSong", Georgia, serif;
+  font-family: var(--font-fraunces), "Songti SC", "STSong", Georgia, serif;
   font-weight: 600;
   line-height: 1.35;
-  color: var(--foreground);
+  color: var(--ink);
 }
 
 .prose-custom h1 { font-size: 2rem; margin: 2.5rem 0 1rem; }
@@ -198,12 +231,12 @@ section[id],
 .prose-custom ul { list-style-type: disc; }
 .prose-custom ol { list-style-type: decimal; }
 .prose-custom li { margin-bottom: 0.45rem; padding-left: 0.2rem; }
-.prose-custom li::marker { color: var(--muted); }
+.prose-custom li::marker { color: var(--tomato); }
 .prose-custom li > ul,
 .prose-custom li > ol { margin: 0.45rem 0; }
 
 .prose-custom a {
-  color: var(--accent);
+  color: var(--tomato);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
@@ -216,12 +249,12 @@ section[id],
   font-size: 0.86em;
   padding: 0.1em 0.3em;
   border-radius: 4px;
-  background: var(--surface);
+  background: var(--inset);
 }
 
 .prose-custom pre {
   border-radius: 8px;
-  background: var(--surface);
+  background: var(--inset);
   padding: 1.2rem 1.4rem;
   overflow-x: auto;
   margin: 1.75rem 0 2rem;
@@ -235,10 +268,10 @@ section[id],
 }
 
 .prose-custom blockquote {
-  border-left: 2px solid var(--rule);
+  border-left: 3px solid var(--ochre);
   padding: 0.1rem 0 0.1rem 1.25rem;
   margin: 1.75rem 0 2rem;
-  font-family: var(--font-newsreader), "Songti SC", Georgia, serif;
+  font-family: var(--font-fraunces), "Songti SC", Georgia, serif;
   font-size: 1.15em;
   font-style: italic;
 }
@@ -246,7 +279,7 @@ section[id],
 
 .prose-custom hr {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
   margin: 2.5rem 0;
 }
 
@@ -259,7 +292,7 @@ section[id],
   font-size: 0.9375rem;
   display: block;
   overflow-x: auto;
-  border-top: 1px solid var(--foreground);
+  border-top: 1px solid var(--ink);
 }
 
 .prose-custom th {
@@ -267,12 +300,12 @@ section[id],
   text-align: left;
   font-weight: 600;
   white-space: nowrap;
-  border-bottom: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--ink);
 }
 
 .prose-custom td {
   padding: 0.7rem 0.75rem 0.7rem 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
 }
 
 .prose-custom .katex-display {
@@ -286,12 +319,12 @@ section[id],
 
 /* ---------- Travel map ---------- */
 
-.travel-map .leaflet-tile-pane { filter: grayscale(0.85) sepia(0.12) contrast(0.92) brightness(1.04); }
-.dark .travel-map .leaflet-tile-pane { filter: grayscale(1) invert(1) contrast(0.82) brightness(0.88); }
+.travel-map .leaflet-tile-pane { filter: grayscale(0.75) sepia(0.3) contrast(0.92) brightness(1.03); }
+.dark .travel-map .leaflet-tile-pane { filter: grayscale(1) invert(1) sepia(0.2) contrast(0.8) brightness(0.85); }
 .travel-map .leaflet-popup-content-wrapper,
-.travel-map .leaflet-popup-tip { background: var(--background); color: var(--foreground); border-radius: 8px; box-shadow: 0 6px 24px #0000001f; }
+.travel-map .leaflet-popup-tip { background: var(--card); color: var(--ink); border-radius: 10px; box-shadow: 0 8px 24px #0000002a; }
 .travel-map .leaflet-popup-content { margin: 10px 14px; font-family: inherit; }
-.travel-map .leaflet-control-zoom { border: 1px solid var(--border) !important; border-radius: 6px; overflow: hidden; }
-.travel-map .leaflet-control-zoom a { background: var(--background); color: var(--foreground); border-color: var(--border); }
-.travel-map .leaflet-control-attribution { background: color-mix(in srgb, var(--background) 85%, transparent); color: var(--muted); }
-.travel-map .leaflet-control-attribution a { color: var(--foreground); }
+.travel-map .leaflet-control-zoom { border: 1px solid var(--line) !important; border-radius: 8px; overflow: hidden; }
+.travel-map .leaflet-control-zoom a { background: var(--card); color: var(--ink); border-color: var(--line); }
+.travel-map .leaflet-control-attribution { background: color-mix(in srgb, var(--card) 85%, transparent); color: var(--muted); }
+.travel-map .leaflet-control-attribution a { color: var(--ink); }

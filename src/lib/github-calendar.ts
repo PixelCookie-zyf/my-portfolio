@@ -26,8 +26,8 @@ export function normalizeContributionDays(
 }
 
 export const githubCalendarTheme: ThemeInput = {
-  light: ["#ebe9e3", "#c8d2f1", "#93a6e4", "#5470cf", "#2c4bb4"],
-  dark: ["#242422", "#28325a", "#364c94", "#5370d2", "#8fa7ff"],
+  light: ["#e9e3d5", "#c6dccb", "#8ec0a1", "#4f9573", "#2e6a4f"],
+  dark: ["#2a2723", "#24392e", "#305b45", "#448760", "#63b38d"],
 };
 
 export function toCalendarActivities(
