@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -70,11 +71,13 @@ export default function Header() {
       </a>
       <nav className="flex items-center justify-between gap-6" aria-label="Main navigation">
         <Link href="/" onClick={() => setMobileOpen(false)} className="group flex items-center gap-3">
-          {/* Fox's front-facing frame from the mascot sprite sheet. */}
-          <span
-            aria-hidden="true"
-            className="h-10 w-10 rounded-full bg-note-yellow bg-[length:300%_300%] bg-center ring-1 ring-line transition-transform group-hover:-rotate-6"
-            style={{ backgroundImage: "url(/mascots/fox-sketch-directions.webp)" }}
+          <Image
+            src={personalInfo.avatar}
+            alt=""
+            width={40}
+            height={40}
+            priority
+            className="h-10 w-10 rounded-full object-cover ring-1 ring-line transition-transform group-hover:-rotate-6"
           />
           <span className="font-display text-xl font-semibold tracking-[-0.01em]">{personalInfo.name}</span>
         </Link>
