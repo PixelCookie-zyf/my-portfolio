@@ -10,6 +10,7 @@ import type { Metadata } from "next";
 import PageShell from "@/components/layout/PageShell";
 import PostCover from "@/components/ui/PostCover";
 import TableOfContents from "@/components/blog/TableOfContents";
+import Comments from "@/components/blog/Comments";
 import ReadingProgress from "@/components/ui/ReadingProgress";
 import { formatDate } from "@/lib/format";
 import "katex/dist/katex.min.css";
@@ -97,6 +98,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="min-w-0">
           <TableOfContents headings={headings} placement="inline" />
           <article className="prose-custom">{content}</article>
+          <Comments slug={slug} />
           <p className="mt-16 border-t border-dashed border-line pt-6 text-sm">
             <Link href="/blog" className="text-muted transition-colors hover:text-ink">
               ← 返回全部文章
