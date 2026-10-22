@@ -1,6 +1,6 @@
 # PixelCookie — Personal notebook
 
-A personal site for research notes, open-source projects and game-development experiments.
+A personal site for research notes on LLMs and AI agents, and open-source projects.
 Built with Next.js 16, React 19, TypeScript and Tailwind CSS v4.
 
 Live site: [www.pixelcookie.me](https://www.pixelcookie.me)

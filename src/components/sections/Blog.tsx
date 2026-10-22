@@ -8,7 +8,7 @@ export function FeaturedPost({ post, label = "Latest" }: { post: PostMeta; label
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="paper-shadow group grid overflow-hidden rounded-[28px] border border-line bg-card transition-transform duration-300 hover:-translate-y-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]"
+      className="paper-shadow group grid overflow-hidden rounded-[28px] border border-line bg-card transition-transform duration-300 hover:-translate-y-1 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]"
     >
       <PostCover seed={post.slug} className="h-56 w-full md:h-full md:min-h-[320px]" />
       <div className="flex flex-col p-7 md:p-10">
@@ -16,7 +16,7 @@ export function FeaturedPost({ post, label = "Latest" }: { post: PostMeta; label
           <span className="rounded-full bg-tomato px-2.5 py-0.5 text-xs font-medium text-paper">{label}</span>
           <time dateTime={post.date}>{formatDate(post.date)}</time>
         </p>
-        <h3 lang="zh-CN" className="font-display mt-5 text-[1.85rem] font-medium leading-[1.25] tracking-[-0.01em] md:text-[2.1rem]">
+        <h3 lang="zh-CN" className="font-display mt-5 text-balance text-[1.7rem] font-medium leading-[1.3] tracking-[-0.01em] lg:text-[1.9rem]">
           {post.title}
         </h3>
         <p lang="zh-CN" className="mt-4 text-[15px] leading-relaxed text-soft">

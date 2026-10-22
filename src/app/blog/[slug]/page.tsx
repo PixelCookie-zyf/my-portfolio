@@ -73,16 +73,16 @@ export default async function BlogPostPage({ params }: PageProps) {
           ← 全部文章
         </Link>
         <PostCover seed={slug} cols={12} rows={3} className="mt-6 h-28 w-full rounded-[22px] md:h-40" />
-        <div className="mx-auto mt-10 max-w-[46rem] text-center">
+        <div className="mt-10 text-center">
           <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-muted">
             <time dateTime={post.frontmatter.date}>{formatDate(post.frontmatter.date, "zh-CN")}</time>
             <span aria-hidden="true">·</span>
             <span>约 {readingTime} 分钟</span>
           </p>
-          <h1 className="font-display mt-5 text-[clamp(2.1rem,4.6vw,3.4rem)] font-medium leading-[1.2] tracking-[-0.015em]">
+          <h1 className="font-display mt-5 text-balance text-[clamp(2rem,3.6vw,3rem)] font-medium leading-[1.2] tracking-[-0.015em]">
             {post.frontmatter.title}
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-soft">{post.frontmatter.description}</p>
+          <p className="mx-auto mt-5 max-w-[52rem] text-lg leading-relaxed text-soft">{post.frontmatter.description}</p>
           <ul className="mt-6 flex flex-wrap justify-center gap-2">
             {post.frontmatter.tags.map((tag) => (
               <li key={tag} className="rounded-full bg-inset px-3 py-1 text-xs text-soft">
@@ -93,8 +93,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
       </header>
 
-      <div className="wrap lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,42rem)_minmax(0,1fr)] lg:gap-10">
-        <div className="hidden lg:block" />
+      <div className="wrap lg:grid lg:grid-cols-[minmax(0,1fr)_250px] lg:gap-14">
         <div className="min-w-0">
           <TableOfContents headings={headings} placement="inline" />
           <article className="prose-custom">{content}</article>

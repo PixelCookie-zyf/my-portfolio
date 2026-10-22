@@ -34,7 +34,7 @@ export const viewport: Viewport = {
 
 const title = "PixelCookie — Notes, research & small projects";
 const description =
-  "Research notes on AI and recommendation systems, open-source projects, and experiments in game development by PixelCookie.";
+  "Research notes on large language models, AI agents and recommendation, plus open-source projects by PixelCookie.";
 
 export const metadata: Metadata = {
   title: { default: title, template: "%s | PixelCookie" },

@@ -5,15 +5,15 @@ import { ProjectList } from "@/components/sections/Work";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Open-source projects in recommendation systems, research tools, and game development.",
+  description: "Open-source projects in recommendation systems, LLM research tooling and more.",
 };
 
 export default function ProjectsPage() {
   return (
     <PageShell>
       <PageTitle kicker="things I’ve built" title="Projects">
-        Open-source work on recommendation systems, research tooling, and a few things made purely
-        for fun.
+        Open-source work on recommendation systems, research tooling for LLMs, and a few things
+        made purely for fun.
       </PageTitle>
       <div className="wrap">
         <ProjectList />

@@ -1,9 +1,8 @@
 export const personalInfo = {
   name: "PixelCookie",
-  role: "Doctoral researcher, AI agents & recommendation",
   location: "Fuzhou, China",
   email: "metazyf@gmail.com",
-  bio: "I’m a doctoral researcher working on AI agents and recommendation systems. Here I share research notes, open-source projects, and the occasional detour into game development.",
+  bio: "I’m a doctoral researcher working on large language models and AI agents, with a background in search and recommendation. Here I share research notes, open-source projects, and whatever I’m digging into lately.",
   avatar: "/images/avatar.jpg",
   socials: [
     { name: "GitHub", url: "https://github.com/PixelCookie-zyf" },
@@ -15,13 +14,13 @@ export const personalInfo = {
 
 /** Short facts pinned as sticky notes under the homepage intro. */
 export const nowItems = [
-  { label: "researching", text: "PhD studies in AI agents & learning" },
+  { label: "researching", text: "PhD work on LLMs & AI agents" },
   {
     label: "just placed",
     text: "9th at Tencent TAAC 2026 with SeRankMixer",
     href: "https://github.com/PixelCookie-zyf/TAAC-2026-SeRankMixer",
   },
-  { label: "after hours", text: "Building a small game in Godot" },
+  { label: "writing", text: "Notes on reinforcement learning & LLMs", href: "/blog" },
 ] as const;
 
 export const navLinks = [

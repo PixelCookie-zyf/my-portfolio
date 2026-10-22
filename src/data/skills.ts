@@ -6,7 +6,7 @@ export interface SkillCategory {
 export const skillCategories: SkillCategory[] = [
   {
     label: "Research",
-    skills: ["Language models", "Agents", "Retrieval"],
+    skills: ["LLMs", "AI agents", "Retrieval"],
   },
   {
     label: "Programming",
@@ -17,7 +17,7 @@ export const skillCategories: SkillCategory[] = [
     skills: ["Docker", "CI/CD"],
   },
   {
-    label: "Games",
-    skills: ["Godot", "GDScript", "Game design"],
+    label: "Machine learning",
+    skills: ["PyTorch", "Reinforcement learning", "Recommender systems"],
   },
 ];

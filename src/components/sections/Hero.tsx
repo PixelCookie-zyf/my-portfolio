@@ -23,15 +23,15 @@ export default function Hero() {
           </p>
           <p className="font-hand mt-7 text-[2rem] leading-none text-tomato">hi, I’m {personalInfo.name} —</p>
           <h1 className="font-display mt-3 text-[clamp(2.5rem,5.4vw,4.5rem)] font-medium leading-[1.08] tracking-[-0.025em]">
-            I research <Highlight>AI agents</Highlight> &amp; <Circled>recommenders</Circled>, and make{" "}
-            <Squiggle>
-              <em className="font-normal">small games</em>
-            </Squiggle>{" "}
-            after dark.
+            I study <Circled delay={0.3}>LLMs</Circled>, build <Highlight delay={0.9}>AI agents</Highlight>, and{" "}
+            <Squiggle delay={1.4}>
+              <em className="font-normal">write it all down</em>
+            </Squiggle>
+            .
           </h1>
           <p className="mt-8 max-w-[34rem] text-lg leading-relaxed text-soft">
-            This is my notebook on the web: research notes, open-source projects, a few places I’ve
-            been, and whatever I’m tinkering with this month.
+            This is my notebook on the web: research notes on language models, agents and
+            recommendation, open-source projects, and a few places I’ve been.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Link
@@ -78,7 +78,11 @@ export default function Hero() {
             <p className="font-hand text-2xl leading-none text-soft">{item.label}</p>
             <p className="mt-2 text-[15px] leading-snug text-ink">
               {"href" in item ? (
-                <a href={item.href} target="_blank" rel="noopener noreferrer" className="link">
+                <a
+                  href={item.href}
+                  className="link"
+                  {...(item.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                >
                   {item.text}
                 </a>
               ) : (
