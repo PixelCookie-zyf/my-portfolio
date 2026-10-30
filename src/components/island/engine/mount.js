@@ -75,7 +75,9 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
 
   const frame = () => {
     const { w, h } = size();
-    const dist = 104 * Math.max(1, 1.35 / (w / h));
+    // Narrow screens need the camera further back, but fitting the whole island across a phone makes
+    // it tiny; backing off less crops the coast a little and the map-style drag reaches the rest.
+    const dist = 104 * Math.max(1, Math.pow(1.35 / (w / h), 0.55));
     const el = THREE.MathUtils.degToRad(52), az = THREE.MathUtils.degToRad(45);
     controls.target.set(-1, 1, 1);
     camera.position.set(-1 + dist * Math.cos(el) * Math.cos(az), 1 + dist * Math.sin(el), 1 + dist * Math.cos(el) * Math.sin(az));
@@ -103,7 +105,9 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
   };
   setNight(night);
 
+  let labelHalf = new WeakMap();
   const ro = new ResizeObserver(() => {
+    labelHalf = new WeakMap();
     const { w, h } = size();
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
@@ -175,10 +179,16 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
   beep.textContent = 'beep beep!';
   labelLayer.appendChild(beep);
 
+  // Labels near the side of the screen slide along it instead of being cut off (phones crop the coast).
+  // Half-widths are measured once per label and again after a resize.
   const placeAt = (el, p, transform) => {
     const s = toStage(p);
     el.style.visibility = s.behind ? 'hidden' : 'visible';
-    if (!s.behind) el.style.transform = `translate(${s.x}px, ${s.y}px) ${transform}`;
+    if (s.behind) return;
+    let half = labelHalf.get(el);
+    if (half === undefined) labelHalf.set(el, (half = el.offsetWidth / 2));
+    const x = Math.min(Math.max(s.x, half + 8), size().w - half - 8);
+    el.style.transform = `translate(${x}px, ${s.y}px) ${transform}`;
   };
 
   // --- the fishing jetty: the camera settles behind the rod while the game runs ----------
