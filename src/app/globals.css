@@ -166,21 +166,6 @@ section[id],
   box-shadow: 0 1px 0 rgb(0 0 0 / 0.2), 0 14px 30px -18px rgb(0 0 0 / 0.8);
 }
 
-/* A strip of masking tape. */
-.tape {
-  position: absolute;
-  width: 84px;
-  height: 22px;
-  background: color-mix(in srgb, var(--ochre) 38%, transparent);
-  backdrop-filter: blur(1px);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
-}
-
-/* Postage stamp with perforated edges. */
-.stamp {
-  background: radial-gradient(circle, transparent 3px, var(--tomato) 3.5px) -5px -5px / 10px 10px;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
@@ -316,15 +301,3 @@ section[id],
 }
 
 .prose-custom .katex { font-size: 1.08em; }
-
-/* ---------- Travel map ---------- */
-
-.travel-map .leaflet-tile-pane { filter: grayscale(0.75) sepia(0.3) contrast(0.92) brightness(1.03); }
-.dark .travel-map .leaflet-tile-pane { filter: grayscale(1) invert(1) sepia(0.2) contrast(0.8) brightness(0.85); }
-.travel-map .leaflet-popup-content-wrapper,
-.travel-map .leaflet-popup-tip { background: var(--card); color: var(--ink); border-radius: 10px; box-shadow: 0 8px 24px #0000002a; }
-.travel-map .leaflet-popup-content { margin: 10px 14px; font-family: inherit; }
-.travel-map .leaflet-control-zoom { border: 1px solid var(--line) !important; border-radius: 8px; overflow: hidden; }
-.travel-map .leaflet-control-zoom a { background: var(--card); color: var(--ink); border-color: var(--line); }
-.travel-map .leaflet-control-attribution { background: color-mix(in srgb, var(--card) 85%, transparent); color: var(--muted); }
-.travel-map .leaflet-control-attribution a { color: var(--ink); }

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat, Fraunces, Inter } from "next/font/google";
+import { Caveat, Fraunces, Fredoka, Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -22,6 +22,14 @@ const fraunces = Fraunces({
 const caveat = Caveat({
   variable: "--font-caveat",
   subsets: ["latin"],
+  display: "swap",
+});
+
+// Rounded face for the island's cartoon buttons and pop-ups.
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -50,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body className={`${inter.variable} ${fraunces.variable} ${caveat.variable} antialiased`}>
+      <body className={`${inter.variable} ${fraunces.variable} ${caveat.variable} ${fredoka.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
           <Analytics />

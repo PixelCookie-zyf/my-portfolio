@@ -13,19 +13,9 @@ export const personalInfo = {
 } as const;
 
 /** Short facts pinned as sticky notes under the homepage intro. */
-export const nowItems = [
-  { label: "researching", text: "PhD work on LLMs & AI agents" },
-  {
-    label: "just placed",
-    text: "9th at Tencent TAAC 2026 with SeRankMixer",
-    href: "https://github.com/PixelCookie-zyf/TAAC-2026-SeRankMixer",
-  },
-  { label: "writing", text: "Notes on reinforcement learning & LLMs", href: "/blog" },
-] as const;
-
 export const navLinks = [
   { label: "Writing", href: "/blog" },
   { label: "Projects", href: "/projects" },
-  { label: "About", href: "/#experience" },
+  { label: "About", href: "/#about" },
   { label: "Travel", href: "/#travel" },
 ] as const;
