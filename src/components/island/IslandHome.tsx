@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { personalInfo } from "@/data/personal";
@@ -9,6 +9,7 @@ import { skillCategories } from "@/data/skills";
 import { timelineEntries } from "@/data/experience";
 import { visitedCities } from "@/data/travel";
 import type { PostMeta } from "@/lib/blog";
+import { emptySubscribe, getClientHydratedSnapshot, getServerHydratedSnapshot } from "@/lib/hydration";
 import type { IslandHandle, IslandSpot } from "@/components/island/engine/mount";
 import "@/components/island/island.css";
 
@@ -37,7 +38,9 @@ export default function IslandHome({ posts }: { posts: PostMeta[] }) {
   const [spin, setSpin] = useState(false);
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  // The server can't know the theme, so the first client render must match it (light) too.
+  const hydrated = useSyncExternalStore(emptySubscribe, getClientHydratedSnapshot, getServerHydratedSnapshot);
+  const isDark = hydrated && resolvedTheme === "dark";
 
   useEffect(() => {
     night.current = isDark;

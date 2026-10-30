@@ -3,10 +3,17 @@ import { getGlobe } from './globe.js';
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const chips = (tags) => tags.map((t) => `<span class="chip">${esc(t)}</span>`).join('');
 // External links open in a new tab; site links (data-nav) are routed by the page.
+// Neutral backgrounds flip in dark mode, so their text takes the page ink; jelly colours keep dark text.
+const tone = (color) => `--c:${color}${/surface|cream/.test(color) ? ';--on-c:var(--ink)' : ''}`;
 const ext = (href, label, color = 'var(--jelly-cream)', cls = '') =>
-  `<a class="jelly ${cls}" style="--c:${color}" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+  `<a class="jelly ${cls}" style="${tone(color)}" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
 const nav = (href, label, color = 'var(--jelly-cream)', cls = '') =>
-  `<a class="jelly ${cls}" style="--c:${color}" href="${esc(href)}" data-nav>${label}</a>`;
+  `<a class="jelly ${cls}" style="${tone(color)}" href="${esc(href)}" data-nav>${label}</a>`;
+const TROPHY = `<svg class="icon" viewBox="0 0 20 20" aria-hidden="true" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+  <path d="M6 3h8v4.5a4 4 0 0 1-8 0z" fill="#f2c84b"/><path d="M6 5H3.5a2.5 2.5 0 0 0 2.8 3M14 5h2.5a2.5 2.5 0 0 1-2.8 3" fill="none"/>
+  <path d="M10 11.5v3M6.5 17h7l-1-2.5h-5z" fill="#e0a25a"/></svg>`;
+const PIN = `<svg class="icon" viewBox="0 0 20 20" aria-hidden="true" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+  <path d="M10 18.5s-5.5-5.3-5.5-9.5a5.5 5.5 0 0 1 11 0c0 4.2-5.5 9.5-5.5 9.5z" fill="#d9532f"/><circle cx="10" cy="9" r="2" fill="#fff"/></svg>`;
 
 // --- panels --------------------------------------------------------------------------
 
@@ -36,10 +43,10 @@ function projectsPanel(body, foot, { projects }) {
   body.innerHTML = `
     <section class="featured pop">
       <div>
-        ${top.highlight ? `<span class="chip badge" style="--c:#fff">🏆 ${esc(top.highlight)}</span>` : ''}
+        ${top.highlight ? `<span class="chip badge">${TROPHY}${esc(top.highlight)}</span>` : ''}
         <h3>${esc(top.title)}</h3>
         <p>${esc(top.description)}</p>
-        <div class="row">${chips(top.tags)}${link(top, '#fff')}</div>
+        <div class="row">${chips(top.tags)}${link(top, 'var(--surface)')}</div>
       </div>
       ${top.stats ? `<div class="stats">${top.stats.map((s) => `<div class="stat"><div><b>${esc(s.value)}</b><span>${esc(s.label)}</span></div></div>`).join('')}</div>` : ''}
     </section>
@@ -100,7 +107,7 @@ function aboutPanel(body, _foot, { personal, skills, timeline }) {
     <div class="profile pop">
       <div class="avatar" style="background-image:url('${esc(personal.avatar)}')"></div>
       <h3>${esc(personal.name)}</h3>
-      <div class="where"><span class="chip" style="--c:var(--jelly-yellow)">📍 ${esc(personal.location)}</span></div>
+      <div class="where"><span class="chip" style="--c:var(--jelly-yellow)">${PIN}${esc(personal.location)}</span></div>
       <p>${esc(personal.bio)}</p>
       <div class="socials">${personal.socials.map((s, i) => ext(s.url, `${esc(s.name)} ↗`, `var(${socialColors[i % 4]})`, 'small')).join('')}</div>
       <div class="skills">${skills.map((g) => `<div><b>${esc(g.label)}</b>${chips(g.skills)}</div>`).join('')}</div>
