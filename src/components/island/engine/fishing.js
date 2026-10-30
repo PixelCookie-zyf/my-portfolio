@@ -516,6 +516,9 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
     if (e.key === 'ArrowLeft') aim = clamp(aim + 0.08, -0.55, 0.55);
     if (e.key === 'ArrowRight') aim = clamp(aim - 0.08, -0.55, 0.55);
   };
+  // a long press is how you cast and reel, so it must not open the browser's context menu
+  const onContextMenu = (e) => active && e.preventDefault();
+  stage.addEventListener('contextmenu', onContextMenu);
   canvas.addEventListener('pointerdown', onPointerDown);
   canvas.addEventListener('pointermove', onPointerMove);
   window.addEventListener('pointerup', up);
@@ -964,6 +967,7 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
       if (state === 'ready') say(readyText());
     },
     dispose() {
+      stage.removeEventListener('contextmenu', onContextMenu);
       canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', up);
