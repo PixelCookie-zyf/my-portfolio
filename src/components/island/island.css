@@ -175,6 +175,9 @@
   transition: transform 0.25s var(--spring), box-shadow 0.15s;
 }
 .dark .isl .jelly:not([style*="--c"]) { color: var(--ink); }
+/* pressed buttons turn yellow, so they keep dark text in dark mode too */
+.dark .isl .jelly[aria-pressed="true"] { color: #1d1b18; }
+.isl .jelly .icon { width: 17px; height: 17px; flex: none; }
 .isl .jelly::after {
   content: "";
   position: absolute;

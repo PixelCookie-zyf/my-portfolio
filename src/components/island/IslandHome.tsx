@@ -15,6 +15,19 @@ import "@/components/island/island.css";
 const SPOTS: IslandSpot[] = ["writing", "projects", "about", "travel", "contact"];
 const spotFromHash = () => SPOTS.find((s) => window.location.hash === `#${s}`);
 
+// Day/night icons, drawn to match each other (text glyphs like ☀ render as colour emoji on some systems).
+const SunIcon = () => (
+  <svg className="icon" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+    <circle cx="10" cy="10" r="3.6" fill="currentColor" />
+    <path d="M10 1.8v2.1M10 16.1v2.1M1.8 10h2.1M16.1 10h2.1M4.2 4.2l1.5 1.5M14.3 14.3l1.5 1.5M4.2 15.8l1.5-1.5M14.3 5.7l1.5-1.5" />
+  </svg>
+);
+const MoonIcon = () => (
+  <svg className="icon" viewBox="0 0 20 20" aria-hidden="true" fill="currentColor">
+    <path d="M15.6 12.9A6.8 6.8 0 0 1 7.1 4.4a6.8 6.8 0 1 0 8.5 8.5z" />
+  </svg>
+);
+
 /** The homepage: a full-screen low-poly island; each landmark opens one section of the site. */
 export default function IslandHome({ posts }: { posts: PostMeta[] }) {
   const stage = useRef<HTMLDivElement>(null);
@@ -103,7 +116,8 @@ export default function IslandHome({ posts }: { posts: PostMeta[] }) {
           aria-pressed={isDark}
           onClick={() => setTheme(isDark ? "light" : "dark")}
         >
-          {isDark ? "☀ day" : "☾ night"}
+          {isDark ? <SunIcon /> : <MoonIcon />}
+          {isDark ? "day" : "night"}
         </button>
         <button type="button" className="jelly" aria-pressed={outline} onClick={() => setOutline((v) => !v)}>
           outline
