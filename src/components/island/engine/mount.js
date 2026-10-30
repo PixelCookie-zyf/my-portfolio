@@ -68,6 +68,10 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
   controls.enablePan = fullscreen;
   controls.enabled = interactive;
   canvas.style.touchAction = interactive ? 'none' : 'pan-y';
+  // On touch screens the island handles like a map: one finger moves it, two fingers pinch to zoom
+  // and turn it. (With a mouse: left-drag turns, right-drag or shift-drag moves, the wheel zooms.)
+  if (coarse) controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+  const PAN_LIMIT = 26;
 
   const frame = () => {
     const { w, h } = size();
@@ -258,6 +262,17 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
       if (glide.k >= 1) glide = null;
     }
     controls.update();
+    // keep the island in reach: panning can't drag the view centre out past the coast
+    if (!glide && !modal.isOpen && !fishing.active) {
+      const t = controls.target, r = Math.hypot(t.x, t.z);
+      if (r > PAN_LIMIT) {
+        const k = PAN_LIMIT / r - 1;
+        camera.position.x += t.x * k;
+        camera.position.z += t.z * k;
+        t.x += t.x * k;
+        t.z += t.z * k;
+      }
+    }
     const hovered = noteHover ?? canvasHover;
     for (const h of world.hotspots) {
       const active = hovered === h && !modal.isOpen;

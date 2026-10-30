@@ -109,7 +109,10 @@ export default function IslandHome({ posts }: { posts: PostMeta[] }) {
         <h1>
           welcome to my <em>little island</em>
         </h1>
-        <p>Each sticky note is a page of my notebook. Click one to open it.</p>
+        <p>
+          Each sticky note is a page of my notebook. <span className="for-mouse">Click</span>
+          <span className="for-touch">Tap</span> one to open it.
+        </p>
       </div>
 
       <div className="isl-controls">
@@ -130,7 +133,12 @@ export default function IslandHome({ posts }: { posts: PostMeta[] }) {
         </button>
       </div>
 
-      <p className="isl-hint">drag to look around · scroll to zoom · honk the bus · go fishing off the jetty</p>
+      <p className="isl-hint">
+        <span className="for-mouse">
+          drag to turn · right-drag to move · scroll to zoom · honk the bus · go fishing off the jetty
+        </span>
+        <span className="for-touch">drag to move · pinch to zoom · two fingers to turn</span>
+      </p>
     </div>
   );
 }

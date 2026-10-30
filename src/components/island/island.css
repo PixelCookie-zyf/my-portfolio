@@ -82,6 +82,12 @@
 }
 .isl-full .isl-canvas { -webkit-mask-image: none; mask-image: none; }
 .isl-full .isl-hint { bottom: 18px; }
+/* the hint describes whichever input the visitor has */
+.isl-full .for-touch { display: none; }
+@media (pointer: coarse) {
+  .isl-full .for-mouse { display: none; }
+  .isl-full .for-touch { display: inline; }
+}
 /* the engine appends its canvas after these, so lift them above it */
 .isl-intro, .isl-controls, .isl-hint { z-index: 3; }
 .isl-intro {
@@ -654,6 +660,7 @@
 @media (max-width: 720px) {
   .isl-stage:not(.isl-full) { height: clamp(460px, 70svh, 640px); }
   .isl-intro { left: 16px; top: 14px; }
+  .isl-hint { font-size: 17px; }
   .isl-controls { right: 12px; top: auto; bottom: 52px; }
   .isl-fish .fish-bar { left: 12px; top: 12px; right: 12px; }
   .isl-fish .fish-say { font-size: 21px; }
