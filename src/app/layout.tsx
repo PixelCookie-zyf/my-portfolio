@@ -1,35 +1,46 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat, Fraunces, Fredoka, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const inter = Inter({
+// Self-hosted copies of the Google Fonts latin subsets (variable files), so builds don't
+// depend on what fonts.googleapis.com serves the build machine.
+const inter = localFont({
   variable: "--font-inter",
-  subsets: ["latin"],
+  src: "./fonts/inter-latin.woff2",
+  weight: "100 900",
   display: "swap",
 });
 
-const fraunces = Fraunces({
+// Variable axes: opsz, wght, SOFT, WONK.
+const fraunces = localFont({
   variable: "--font-fraunces",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["opsz", "SOFT", "WONK"],
+  src: [
+    { path: "./fonts/fraunces-latin.woff2", weight: "100 900", style: "normal" },
+    { path: "./fonts/fraunces-italic-latin.woff2", weight: "100 900", style: "italic" },
+  ],
+  adjustFontFallback: "Times New Roman",
   display: "swap",
 });
 
 // Only used for a few handwritten annotations.
-const caveat = Caveat({
+const caveat = localFont({
   variable: "--font-caveat",
-  subsets: ["latin"],
+  src: "./fonts/caveat-latin.woff2",
+  weight: "400 700",
   display: "swap",
 });
 
-// Rounded face for the island's cartoon buttons and pop-ups.
-const fredoka = Fredoka({
+// Rounded face for the island's cartoon buttons and pop-ups. One variable file, declared at the
+// three weights the site uses (as Google's stylesheet did).
+const fredoka = localFont({
   variable: "--font-fredoka",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  src: [
+    { path: "./fonts/fredoka-latin.woff2", weight: "500" },
+    { path: "./fonts/fredoka-latin.woff2", weight: "600" },
+    { path: "./fonts/fredoka-latin.woff2", weight: "700" },
+  ],
   display: "swap",
 });
 
