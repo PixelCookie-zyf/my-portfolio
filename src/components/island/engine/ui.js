@@ -1,14 +1,16 @@
 import { getGlobe } from './globe.js';
+import { esc } from './util.js';
 
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const chips = (tags) => tags.map((t) => `<span class="chip">${esc(t)}</span>`).join('');
 // External links open in a new tab; site links (data-nav) are routed by the page.
 // Neutral backgrounds flip in dark mode, so their text takes the page ink; jelly colours keep dark text.
 const tone = (color) => `--c:${color}${/surface|cream/.test(color) ? ';--on-c:var(--ink)' : ''}`;
-const ext = (href, label, color = 'var(--jelly-cream)', cls = '') =>
-  `<a class="jelly ${cls}" style="${tone(color)}" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
-const nav = (href, label, color = 'var(--jelly-cream)', cls = '') =>
-  `<a class="jelly ${cls}" style="${tone(color)}" href="${esc(href)}" data-nav>${label}</a>`;
+const jellyLink = (attrs) => (href, label, color = 'var(--jelly-cream)', cls = '') =>
+  `<a class="jelly ${cls}" style="${tone(color)}" href="${esc(href)}" ${attrs}>${label}</a>`;
+const ext = jellyLink('target="_blank" rel="noopener noreferrer"');
+const nav = jellyLink('data-nav');
+const socials = ({ socials }, colors, cls) =>
+  socials.map((s, i) => ext(s.url, `${esc(s.name)} ↗`, `var(${colors[i % colors.length]})`, cls)).join('');
 const TROPHY = `<svg class="icon" viewBox="0 0 20 20" aria-hidden="true" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
   <path d="M6 3h8v4.5a4 4 0 0 1-8 0z" fill="#f2c84b"/><path d="M6 5H3.5a2.5 2.5 0 0 0 2.8 3M14 5h2.5a2.5 2.5 0 0 1-2.8 3" fill="none"/>
   <path d="M10 11.5v3M6.5 17h7l-1-2.5h-5z" fill="#e0a25a"/></svg>`;
@@ -102,14 +104,13 @@ function aboutPanel(body, _foot, { personal, skills, timeline }) {
     if (/math/i.test(text)) return ['maths', '--jelly-green'];
     return ['graduate', '--jelly-blue'];
   };
-  const socialColors = ['--jelly-yellow', '--jelly-blue', '--jelly-pink', '--jelly-green'];
   body.innerHTML = `<div class="about">
     <div class="profile pop">
       <div class="avatar" style="background-image:url('${esc(personal.avatar)}')"></div>
       <h3>${esc(personal.name)}</h3>
       <div class="where"><span class="chip" style="--c:var(--jelly-yellow)">${PIN}${esc(personal.location)}</span></div>
       <p>${esc(personal.bio)}</p>
-      <div class="socials">${personal.socials.map((s, i) => ext(s.url, `${esc(s.name)} ↗`, `var(${socialColors[i % 4]})`, 'small')).join('')}</div>
+      <div class="socials">${socials(personal, ['--jelly-yellow', '--jelly-blue', '--jelly-pink', '--jelly-green'], 'small')}</div>
       <div class="skills">${skills.map((g) => `<div><b>${esc(g.label)}</b>${chips(g.skills)}</div>`).join('')}</div>
     </div>
     <div class="timeline">${[...timeline]
@@ -165,7 +166,7 @@ function contactPanel(body, _foot, { personal }) {
     <a class="mail" href="mailto:${esc(personal.email)}">${esc(personal.email)}</a>
     <div class="socials">
       <button type="button" class="jelly" style="--c:var(--jelly-yellow)" data-copy>copy email</button>
-      ${personal.socials.map((s, i) => ext(s.url, `${esc(s.name)} ↗`, `var(${['--jelly-blue', '--jelly-pink', '--jelly-green', '--jelly-orange'][i % 4]})`)).join('')}
+      ${socials(personal, ['--jelly-blue', '--jelly-pink', '--jelly-green', '--jelly-orange'])}
     </div>
   </div></div>`;
   const copy = body.querySelector('[data-copy]');

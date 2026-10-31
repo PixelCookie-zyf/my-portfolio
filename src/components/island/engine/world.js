@@ -4,8 +4,8 @@ import { C, add, mat, plate, extrudeXZ } from './models.js';
 import { rng, css, grassTexture, sandTexture, stripeTexture, paperTexture } from './textures.js';
 import { mergeStatic } from './merge.js';
 
-export const SAND_TOP = 0.4;
-export const GRASS_TOP = 0.85;
+const SAND_TOP = 0.4;
+const GRASS_TOP = 0.85;
 const WATER_SIZE = 124;
 
 const WATER = {
@@ -14,12 +14,12 @@ const WATER = {
 };
 
 // Island coastline in polar form. The beach widens toward +x+z, which faces the default camera.
-export const rSand = (a) => 26 + 2.0 * Math.sin(3 * a + 1.0) + 1.4 * Math.sin(5 * a + 2.3) + 0.7 * Math.sin(9 * a + 0.4);
+const rSand = (a) => 26 + 2.0 * Math.sin(3 * a + 1.0) + 1.4 * Math.sin(5 * a + 2.3) + 0.7 * Math.sin(9 * a + 0.4);
 const beachWidth = (a) => {
   const c = Math.cos(a - Math.PI / 4);
   return c > 0 ? 9 * c * c : 0;
 };
-export const rGrass = (a) => rSand(a) - 1.4 - beachWidth(a);
+const rGrass = (a) => rSand(a) - 1.4 - beachWidth(a);
 
 const smooth = (e0, e1, x) => {
   const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
@@ -302,15 +302,14 @@ export function buildWorld(scene) {
   const [hx, hz] = polar(0.74, 19.6);
   place(M.hut(), hx, S, hz, Math.PI / 4, 4.2);
 
-  const fabrics = [[C.red, C.cream], [C.roofTeal, C.cream], [C.roofYellow, C.cream], [C.roofBlue, C.cream]]
-    .map((cols) => stripeTexture(cols.map(css), 8));
+  const beachColors = [[C.red, C.cream], [C.roofTeal, C.cream], [C.roofYellow, C.cream], [C.roofBlue, C.cream]];
+  const fabrics = beachColors.map((cols) => stripeTexture(cols.map(css), 8));
   [0.08, 0.36, 1.08, 1.36].forEach((a, i) => {
     const [x, z] = polar(a, rSand(a) - 3.4);
     const out = new THREE.Vector2(Math.cos(a), Math.sin(a));
     const lat = new THREE.Vector2(-out.y, out.x);
     const ry = Math.atan2(out.x, out.y);
-    M.umbrella(stat, x - out.x * 0.4, S, z - out.y * 0.4,
-      [[C.red, C.cream], [C.roofTeal, C.cream], [C.roofYellow, C.cream], [C.roofBlue, C.cream]][i], ry);
+    M.umbrella(stat, x - out.x * 0.4, S, z - out.y * 0.4, beachColors[i], ry);
     for (const side of [-1, 1]) {
       const cx = x + lat.x * side * 1.0 + out.x * 0.4, cz = z + lat.y * side * 1.0 + out.y * 0.4;
       if (side < 0 || i % 2 === 0) M.deckChair(stat, cx, S, cz, ry, fabrics[(i + (side > 0 ? 1 : 0)) % 4]);

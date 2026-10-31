@@ -67,10 +67,10 @@ export default function IslandHome({ posts }: { posts: PostMeta[] }) {
       cities: visitedCities,
     };
     // Open pop-ups are mirrored in the hash, so /#travel or /#about can be linked to directly.
-    const onModal = (key: IslandSpot | null) =>
-      history.replaceState(null, "", key ? `#${key}` : window.location.pathname);
-    const onFishing = (on: boolean) =>
-      history.replaceState(null, "", on ? "#fishing" : window.location.pathname);
+    const setHash = (hash: string | null) =>
+      history.replaceState(null, "", hash ? `#${hash}` : window.location.pathname);
+    const onModal = (key: IslandSpot | null) => setHash(key);
+    const onFishing = (on: boolean) => setHash(on ? "fishing" : null);
     const onHash = () => {
       if (window.location.hash === "#fishing") {
         island.current?.fish();

@@ -5,6 +5,7 @@ import { OutlinePipeline } from './outline.js';
 import { createModal } from './ui.js';
 import { createFishing } from './fishing.js';
 import { fonts } from './textures.js';
+import { pointerNdc } from './util.js';
 
 const THEMES = {
   day: { paper: 0xf5f1e8, sky: 0xfff6e6, ground: 0xb8c9a0, hemi: 1.6, sun: 0xfff0d8, sunI: 2.1, grain: 0.1 },
@@ -121,14 +122,25 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
   const glideTo = (pos, target, dur = 0.9) => {
     glide = { p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: target, k: 0, dur };
   };
+  // Takes the camera away from the user (remembering where it was headed), and hands it back.
+  const lockCamera = () => {
+    const view = glide ? { p: glide.p1.clone(), t: glide.t1.clone() } : { p: camera.position.clone(), t: controls.target.clone() };
+    controls.enabled = false;
+    spinWas = controls.autoRotate;
+    controls.autoRotate = false;
+    return view;
+  };
+  const unlockCamera = (view, dur) => {
+    if (view) glideTo(view.p, view.t, dur);
+    controls.enabled = interactive;
+    controls.autoRotate = spinWas;
+  };
   const modal = createModal({
     data,
     navigate,
     onClose: () => {
-      if (home) glideTo(home.p, home.t);
+      unlockCamera(home);
       home = null;
-      controls.enabled = interactive;
-      controls.autoRotate = spinWas;
       onModal?.(null);
     },
   });
@@ -143,10 +155,7 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
   const openSpot = (h) => {
     if (modal.isOpen || fishing?.active) return;
     const s = toStage(h.anchor), r = stage.getBoundingClientRect();
-    home = glide ? { p: glide.p1.clone(), t: glide.t1.clone() } : { p: camera.position.clone(), t: controls.target.clone() };
-    controls.enabled = false;
-    spinWas = controls.autoRotate;
-    controls.autoRotate = false;
+    home = lockCamera();
     const target = new THREE.Vector3(h.anchor.x, 2, h.anchor.z);
     const dir = camera.position.clone().sub(controls.target).normalize();
     glideTo(target.clone().addScaledVector(dir, 46), target);
@@ -195,10 +204,7 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
   let fishHome = null;
   const startFishing = () => {
     if (modal.isOpen || fishing.active) return;
-    fishHome = glide ? { p: glide.p1.clone(), t: glide.t1.clone() } : { p: camera.position.clone(), t: controls.target.clone() };
-    spinWas = controls.autoRotate;
-    controls.autoRotate = false;
-    controls.enabled = false;
+    fishHome = lockCamera();
     canvasHover = noteHover = null;
     const { w, h } = size(), v = fishing.view(w / h);
     glideTo(v.pos, v.target, 1.3);
@@ -209,10 +215,8 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
     scene, camera, canvas, stage, labels: labelLayer, spot: world.fishing, data, placeAt, navigate,
     onEnter: startFishing,
     onExit: () => {
-      if (fishHome) glideTo(fishHome.p, fishHome.t, 1.1);
+      unlockCamera(fishHome, 1.1);
       fishHome = null;
-      controls.enabled = interactive;
-      controls.autoRotate = spinWas;
       onFishing?.(false);
     },
   });
@@ -222,9 +226,7 @@ export async function mountIsland(stage, { data, navigate, night = false, fullsc
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
   const pick = (e) => {
-    const r = canvas.getBoundingClientRect();
-    pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
-    raycaster.setFromCamera(pointer, camera);
+    raycaster.setFromCamera(pointerNdc(e, canvas, pointer), camera);
     const hit = raycaster.intersectObjects([world.bus, ...fishing.pickables, ...world.hotspots.map((h) => h.object)], true)[0];
     let o = hit?.object;
     while (o && !o.userData.hotspot && o !== world.bus && !fishing.pickables.includes(o)) o = o.parent;

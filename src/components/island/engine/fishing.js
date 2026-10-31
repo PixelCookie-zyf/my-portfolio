@@ -1,14 +1,16 @@
 import * as THREE from 'three';
 import { C, add, box, cyl, ball, mat } from './models.js';
 import { waveAt } from './world.js';
+import { esc, clamp, pointerNdc } from './util.js';
 
 // A little fishing game played from the jetty: hold to cast, wait for the float to dip, strike,
 // then reel in while keeping the line tension out of the red. Catches fill a journal.
 
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const rand = (a, b) => a + Math.random() * (b - a);
-const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const hex = (c) => parseInt(c.slice(1), 16);
+// a full-power cast lands CAST_MIN + CAST_RANGE out from the jetty; aim swings ±AIM_MAX radians
+const CAST_MIN = 3.5, CAST_RANGE = 9.5, AIM_MAX = 0.55;
+const castReach = (power) => CAST_MIN + power * CAST_RANGE;
 
 const RARITY = [
   { label: 'common', stars: 1, color: 'var(--jelly-cream)', weight: 60 },
@@ -100,7 +102,7 @@ function junkSVG(s) {
       <path d="M22 30h10" stroke="#fff" stroke-width="2"/></g></svg>`;
 }
 
-export function fishSVG(s) {
+function fishSVG(s) {
   if (s.junk) return junkSVG(s);
   const id = `fsh${uid++}`;
   const [rx, ry] = SHAPES[s.shape] ?? SHAPES.oval;
@@ -378,6 +380,11 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
     return { m, pos: local(rand(4, 12), rand(-4, 4)), heading: rand(0, Math.PI * 2), speed: rand(0.6, 1.1), turn: 0, seed: i * 7.3, mode: 'roam', until: 0 };
   });
   const zoneCentre = local(8, 0);
+  // turn a shadow's heading part of the way (k) toward p, the short way round
+  const turnToward = (f, p, k) => {
+    const want = Math.atan2(p.x - f.pos.x, p.z - f.pos.z);
+    f.heading += Math.atan2(Math.sin(want - f.heading), Math.cos(want - f.heading)) * k;
+  };
   const inZone = (p) => {
     const v = p.clone().sub(O), a = v.dot(D), l = v.dot(side);
     return a > 3 && a < 14 && Math.abs(l) < 0.55 * a + 1;
@@ -407,6 +414,10 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
   const alert = document.createElement('div');
   alert.className = 'bubble fish-alert';
   labels.appendChild(alert);
+  const calm = () => {
+    alert.classList.remove('show');
+    hud.classList.remove('warn');
+  };
 
   // the little sign that invites people in, hovering over the jetty
   const tag = document.createElement('a');
@@ -452,7 +463,7 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
   const surface = (p, t) => waveAt(p.x, p.z, t);
 
   function choose(dist) {
-    const far = clamp((dist - 3.5) / 9.5, 0, 1);
+    const far = clamp((dist - CAST_MIN) / CAST_RANGE, 0, 1);
     const pool = SPECIES.filter((s) => (s.id !== 'bottle' || data.posts.length) && (!s.night || night));
     const weights = pool.map((s) => {
       if (s.junk) return s.weight * (1 - far * 0.5);
@@ -466,12 +477,10 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
   // --- input ----------------------------------------------------------------------------------------
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), water = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), hit = new THREE.Vector3();
   const aimFrom = (e) => {
-    const r = canvas.getBoundingClientRect();
-    ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
-    ray.setFromCamera(ndc, camera);
+    ray.setFromCamera(pointerNdc(e, canvas, ndc), camera);
     if (!ray.ray.intersectPlane(water, hit)) return;
     const v = hit.sub(O);
-    aim = clamp(Math.atan2(v.dot(side), v.dot(D)), -0.55, 0.55);
+    aim = clamp(Math.atan2(v.dot(side), v.dot(D)), -AIM_MAX, AIM_MAX);
   };
 
   function down() {
@@ -513,8 +522,8 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
   };
   const onKeyArrow = (e) => {
     if (!active || (state !== 'ready' && state !== 'charging')) return;
-    if (e.key === 'ArrowLeft') aim = clamp(aim + 0.08, -0.55, 0.55);
-    if (e.key === 'ArrowRight') aim = clamp(aim - 0.08, -0.55, 0.55);
+    if (e.key === 'ArrowLeft') aim = clamp(aim + 0.08, -AIM_MAX, AIM_MAX);
+    if (e.key === 'ArrowRight') aim = clamp(aim - 0.08, -AIM_MAX, AIM_MAX);
   };
   // a long press is how you cast and reel, so it must not open the browser's context menu
   const onContextMenu = (e) => active && e.preventDefault();
@@ -549,7 +558,7 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
 
   // --- the phases of a cast ----------------------------------------------------------------------------
   function cast() {
-    castDist = 3.5 + power * 9.5;
+    castDist = castReach(power);
     const to = O.clone().addScaledVector(dirAt(aim), castDist);
     flight = { from: tipW.clone(), to, dur: 0.5 + castDist * 0.03, h: 1.6 + castDist * 0.22 };
     rodTiltTo = 1.15;
@@ -592,8 +601,7 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
   }
 
   function lost(text, sound = 'miss') {
-    alert.classList.remove('show');
-    hud.classList.remove('warn');
+    calm();
     flee();
     sfx.play(sound);
     say(text, { shake: true, hold: 2 });
@@ -703,8 +711,7 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
     if (leap) root.remove(leap.model);
     leap = reel = flight = null;
     if (biter) flee();
-    alert.classList.remove('show');
-    hud.classList.remove('warn');
+    calm();
     aimRing.visible = false;
     stage.classList.remove('is-fishing');
     rodTiltTo = 0.4;
@@ -825,7 +832,7 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
 
     // aim ring
     if (state === 'ready' || state === 'charging') {
-      const d = state === 'charging' ? 3.5 + power * 9.5 : 6;
+      const d = state === 'charging' ? castReach(power) : 6;
       aimRing.position.copy(O).addScaledVector(dirAt(aim), d);
       aimRing.position.y = surface(aimRing.position, t) + 0.08;
       aimRing.scale.setScalar(state === 'charging' ? 1 + power * 0.6 : 1 + Math.sin(t * 4) * 0.08);
@@ -839,23 +846,19 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
       if (f === biter && (state === 'waiting' || state === 'bite') && now > biteAt - 2.4) target = bobW;
       else if (f === biter && state === 'reeling') target = bobW;
       if (f.mode === 'flee' && now > f.until) f.mode = 'roam';
+      let sp;
       if (target) {
-        const want = Math.atan2(target.x - f.pos.x, target.z - f.pos.z);
-        f.heading += Math.atan2(Math.sin(want - f.heading), Math.cos(want - f.heading)) * Math.min(1, dt * 4);
+        turnToward(f, target, Math.min(1, dt * 4));
         const d = Math.hypot(target.x - f.pos.x, target.z - f.pos.z);
-        const sp = state === 'reeling' ? Math.min(d * 6, 6) : Math.min(d * 1.5, 1.4);
-        f.pos.x += Math.sin(f.heading) * sp * dt;
-        f.pos.z += Math.cos(f.heading) * sp * dt;
+        sp = state === 'reeling' ? Math.min(d * 6, 6) : Math.min(d * 1.5, 1.4);
       } else {
         f.turn += (Math.sin(t * 0.7 + f.seed) * 0.8 - f.turn) * dt;
-        if (f.mode === 'roam' && !inZone(f.pos)) {
-          const want = Math.atan2(zoneCentre.x - f.pos.x, zoneCentre.z - f.pos.z);
-          f.heading += Math.atan2(Math.sin(want - f.heading), Math.cos(want - f.heading)) * Math.min(1, dt * 1.5);
-        } else f.heading += f.turn * dt;
-        const sp = f.mode === 'flee' ? 4 : f.speed;
-        f.pos.x += Math.sin(f.heading) * sp * dt;
-        f.pos.z += Math.cos(f.heading) * sp * dt;
+        if (f.mode === 'roam' && !inZone(f.pos)) turnToward(f, zoneCentre, Math.min(1, dt * 1.5));
+        else f.heading += f.turn * dt;
+        sp = f.mode === 'flee' ? 4 : f.speed;
       }
+      f.pos.x += Math.sin(f.heading) * sp * dt;
+      f.pos.z += Math.cos(f.heading) * sp * dt;
       f.m.position.set(f.pos.x, surface(f.pos, t) + 0.14, f.pos.z);
       f.m.rotation.y = f.heading + Math.sin(t * 6 + f.seed) * 0.12;
       // the hooked fish is right under the float, so its shadow fades rather than covering it
@@ -902,12 +905,8 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
       r.warned = false;
       r.next = now + (r.thrash ? rand(0.45, 0.8) + f * 0.35 : rand(1.0, 2.0) - f * 0.3);
       r.aimTo = clamp(r.aim + rand(-0.4, 0.4), -0.6, 0.6);
-      if (r.thrash) {
-        sfx.play('splash');
-      } else {
-        alert.classList.remove('show');
-        hud.classList.remove('warn');
-      }
+      if (r.thrash) sfx.play('splash');
+      else calm();
     }
     if (holding) {
       r.T += dt * (r.thrash ? 0.5 + 0.7 * f : 0.1 + 0.12 * f);
@@ -935,8 +934,7 @@ export function createFishing({ scene, camera, canvas, stage, labels, spot, data
     if (r.T >= 1) lost('snap! the line broke', 'snap');
     else if (r.dist >= r.max) lost('it pulled the line out and got away');
     else if (r.dist <= 1.4) {
-      alert.classList.remove('show');
-      hud.classList.remove('warn');
+      calm();
       dotEl.innerHTML = '';
       const model = catchModel(catchS);
       model.scale.setScalar(catchS.junk ? 0.8 : 0.55 + (catchS.size[1] / 110) * 0.5);

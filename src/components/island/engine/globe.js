@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { feature } from 'topojson-client';
 import { OutlinePipeline } from './outline.js';
+import { pointerNdc } from './util.js';
+
 const D2R = Math.PI / 180;
 const PIN_COLORS = [0xff9fae, 0x93b6ff, 0x8fdc9f, 0xffb370, 0x7fd6d0];
 
@@ -11,7 +13,7 @@ const loadLand = () =>
     .then((topo) => feature(topo, topo.objects.land))
     .catch(() => null));
 
-export const toVec = (lat, lng, r = 1) =>
+const toVec =(lat, lng, r = 1) =>
   new THREE.Vector3(
     Math.cos(lat * D2R) * Math.cos(lng * D2R) * r,
     Math.sin(lat * D2R) * r,
@@ -195,7 +197,7 @@ function createGlobe(cities) {
   const rot = { x: 0.35, y: -Math.PI / 2 - home.lng * D2R };
   const goal = { ...rot };
   let dragging = null, idleAt = 0, selected = null, onSelect = null, wrapEl = null, bubble = null, raf = 0;
-  const raycaster = new THREE.Raycaster();
+  const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
 
   const selectCity = (name) => {
     const p = pins.find((q) => q.userData.city.name === name);
@@ -236,8 +238,7 @@ function createGlobe(cities) {
     const click = dragging && dragging.moved < 5;
     dragging = null;
     if (!click) return;
-    const r = canvas.getBoundingClientRect();
-    raycaster.setFromCamera({ x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 }, camera);
+    raycaster.setFromCamera(pointerNdc(e, canvas, pointer), camera);
     const hit = raycaster.intersectObjects(pins, true)[0];
     let o = hit?.object;
     while (o && !o.userData.city) o = o.parent;

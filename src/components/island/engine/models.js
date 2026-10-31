@@ -22,7 +22,7 @@ export const C = {
   fur: 0x9c958d, furLight: 0xf4efe6, furDark: 0x4a4440, earPink: 0xe8b4a4,
 };
 
-export const shade = (hex, f) => new THREE.Color(hex).multiplyScalar(f).getHex();
+const shade = (hex, f) => new THREE.Color(hex).multiplyScalar(f).getHex();
 export const tint = (hex, f) => new THREE.Color(hex).lerp(new THREE.Color(0xffffff), f).getHex();
 
 // ---------------------------------------------------------------------------
@@ -83,7 +83,7 @@ export function extrudeXZ(shape, depth, o = {}) {
   return geo;
 }
 
-export function roundedRect(w, d, r) {
+function roundedRect(w, d, r) {
   const s = new THREE.Shape(), x = -w / 2, y = -d / 2;
   s.moveTo(x + r, y);
   s.lineTo(x + w - r, y);
@@ -509,11 +509,11 @@ export function lighthouse() {
 // ---------------------------------------------------------------------------
 // harbour
 
-export function lifebuoy(p, x, y, z, ry, color = C.red) {
+function lifebuoy(p, x, y, z, ry, color = C.red) {
   return add(p, new THREE.TorusGeometry(0.36, 0.13, 6, 12), mat(0xffffff, { map: stripes([C.white, color], 8) }), x, y, z, { ry });
 }
 
-export function crate(p, x, y, z, ry = 0, s = 1) {
+function crate(p, x, y, z, ry = 0, s = 1) {
   const g = group(p, x, y, z, ry);
   g.scale.setScalar(s);
   box(g, 0.7, 0.7, 0.7, C.woodLight, 0, 0, 0);
@@ -521,7 +521,7 @@ export function crate(p, x, y, z, ry = 0, s = 1) {
   return g;
 }
 
-export function barrel(p, x, y, z) {
+function barrel(p, x, y, z) {
   const g = group(p, x, y, z);
   cyl(g, 0.32, 0.32, 0.8, 8, C.wood, 0, 0, 0);
   for (const yy of [0.12, 0.6]) cyl(g, 0.34, 0.34, 0.08, 8, C.metal, 0, yy, 0);
