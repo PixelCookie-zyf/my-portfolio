@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 // Self-hosted copies of the Google Fonts latin subsets (variable files), so builds don't
@@ -56,9 +57,11 @@ const description =
   "Research notes on large language models, AI agents and recommendation, plus open-source projects by PixelCookie.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: title, template: "%s | PixelCookie" },
   description,
-  openGraph: { title, description, type: "website" },
+  alternates: { canonical: "/" },
+  openGraph: { title, description, type: "website", siteName: "PixelCookie" },
   twitter: { card: "summary_large_image", title, description },
 };
 

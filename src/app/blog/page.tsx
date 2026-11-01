@@ -6,6 +6,7 @@ import { getAllPosts, type PostMeta } from "@/lib/blog";
 export const metadata = {
   title: "Writing",
   description: "PixelCookie 的学习笔记：人工智能、强化学习与工程实践。",
+  alternates: { canonical: "/blog" },
 };
 
 export default function BlogPage() {

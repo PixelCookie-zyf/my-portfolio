@@ -40,10 +40,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.description,
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       title: post.frontmatter.title,
       description: post.frontmatter.description,
       type: "article",
+      url: `/blog/${slug}`,
+      publishedTime: post.frontmatter.date || undefined,
+      tags: post.frontmatter.tags,
+      // a page's own openGraph replaces the inherited one, so name the site-wide preview image again
+      images: [{ url: "/opengraph-image.jpg", width: 1200, height: 630 }],
     },
   };
 }

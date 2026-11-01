@@ -6,6 +6,7 @@ import { ProjectList } from "@/components/sections/Work";
 export const metadata: Metadata = {
   title: "Projects",
   description: "Open-source projects in recommendation systems, LLM research tooling and more.",
+  alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsPage() {
